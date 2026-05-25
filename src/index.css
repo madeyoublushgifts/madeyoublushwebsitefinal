@@ -1,0 +1,294 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Made You Blush — Flower & gift shop design system 
+Soft pastel palette with elegant floral aesthetics
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Base colors - Soft cream background */
+    --background: 30 50% 98%;
+    --foreground: 340 30% 25%;
+
+    /* Card colors - Pure white with soft shadows */
+    --card: 0 0% 100%;
+    --card-foreground: 340 30% 25%;
+
+    /* Popover colors */
+    --popover: 0 0% 100%;
+    --popover-foreground: 340 30% 25%;
+
+    /* Primary - Blush pink for main actions */
+    --primary: 340 60% 75%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 340 65% 70%;
+
+    /* Secondary - Mint green for accents */
+    --secondary: 150 40% 85%;
+    --secondary-foreground: 340 30% 25%;
+    --secondary-hover: 150 45% 80%;
+
+    /* Muted - Soft lavender grays */
+    --muted: 280 15% 92%;
+    --muted-foreground: 340 20% 45%;
+
+    /* Accent - Lavender for highlights */
+    --accent: 280 40% 85%;
+    --accent-foreground: 340 30% 25%;
+
+    /* Destructive - Soft coral for errors */
+    --destructive: 10 70% 70%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders and inputs - Soft pastels */
+    --border: 30 25% 90%;
+    --input: 30 25% 95%;
+    --ring: 340 60% 75%;
+
+    --radius: 0.75rem;
+
+    /* Custom floral design tokens */
+    --cream: 30 50% 98%;
+    --blush: 340 60% 75%;
+    --mint: 150 40% 85%;
+    --lavender: 280 40% 85%;
+    --sage: 120 25% 80%;
+    
+    /* Gradients */
+    --gradient-floral: linear-gradient(135deg, hsl(340 60% 75% / 0.1), hsl(280 40% 85% / 0.1));
+    --gradient-hero: linear-gradient(135deg, hsl(30 50% 98%), hsl(340 60% 95%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(30 30% 98%));
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px hsl(340 30% 25% / 0.08);
+    --shadow-bloom: 0 8px 30px hsl(340 60% 75% / 0.15);
+    --shadow-elegant: 0 12px 40px hsl(280 40% 85% / 0.12);
+    
+    /* Animations */
+    --transition-bloom: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-soft: all 0.3s ease-out;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode with deeper floral tones */
+    --background: 340 25% 8%;
+    --foreground: 30 50% 95%;
+
+    --card: 340 20% 12%;
+    --card-foreground: 30 50% 95%;
+
+    --popover: 340 20% 12%;
+    --popover-foreground: 30 50% 95%;
+
+    --primary: 340 50% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 150 30% 25%;
+    --secondary-foreground: 30 50% 95%;
+
+    --muted: 280 15% 15%;
+    --muted-foreground: 30 25% 70%;
+
+    --accent: 280 30% 25%;
+    --accent-foreground: 30 50% 95%;
+
+    --destructive: 10 60% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 340 20% 20%;
+    --input: 340 20% 15%;
+    --ring: 340 50% 65%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  /* Petal animation for hero section — pink tones only, higher contrast */
+  .petal {
+    position: absolute;
+    width: 11px;
+    height: 14px;
+    background: hsl(340 72% 68%);
+    border-radius: 50% 0 50% 0;
+    opacity: 0.9;
+    box-shadow: 0 1px 6px hsl(340 55% 50% / 0.35);
+    animation: fall linear infinite;
+  }
+
+  .petal:nth-child(odd) {
+    background: hsl(350 68% 62%);
+    width: 13px;
+    height: 16px;
+    animation-delay: -2s;
+  }
+
+  .petal:nth-child(3n) {
+    background: hsl(330 65% 74%);
+    width: 9px;
+    height: 12px;
+    animation-delay: -4s;
+  }
+
+  .petal:nth-child(4n) {
+    background: hsl(342 75% 58%);
+    animation-delay: -6s;
+  }
+
+  @keyframes fall {
+    0% {
+      transform: translateY(-100vh) rotate(0deg);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Hover effects for flower cards */
+  .flower-card {
+    transition: var(--transition-bloom);
+    transform-origin: center;
+  }
+
+  .flower-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-bloom);
+  }
+
+  /* Gradient backgrounds */
+  .bg-floral {
+    background: var(--gradient-floral);
+  }
+
+  .bg-hero {
+    background: var(--gradient-hero);
+  }
+
+  .bg-card-gradient {
+    background: var(--gradient-card);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bloom {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes petal-fall {
+  0% { transform: translateY(-10%) rotate(0deg); opacity: 0.95; }
+  85% { opacity: 0.75; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0.15; }
+}
+
+/* Utility classes */
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-fadeIn { animation: fadeIn 1s ease forwards; }
+.animate-slideInLeft { animation: slideInLeft 1s ease forwards; }
+.animate-slideInRight { animation: slideInRight 1s ease forwards; }
+.animate-bloom { animation: bloom 0.8s ease forwards; }
+.animate-petal-fall { animation: petal-fall linear infinite; }
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fadeUp 1s ease forwards;
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+.animate-float-slower {
+  animation: floatSlow 12s ease-in-out infinite;
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+.animate-pulse-slow {
+  animation: pulseSlow 3s ease-in-out infinite;
+}
+
