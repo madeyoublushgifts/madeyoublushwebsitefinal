@@ -247,13 +247,17 @@ const Shop = () => {
   };
 
   // ===== Handlers =====
-  const handleInquire = (itemName: string, palette?: TierPaletteSelection) => {
-    if (palette !== undefined && !isTierPaletteComplete(palette)) {
+  const handleInquire = (
+    itemName: string,
+    palette?: TierPaletteSelection,
+    bouquetId?: number
+  ) => {
+    if (palette !== undefined && !isTierPaletteComplete(palette, bouquetId)) {
       toast({
         title: "Choose a palette first",
         description:
           palette.mode === "template"
-            ? "Select a colour template, or switch to the colour picker and choose up to three colours."
+            ? "Select a colour template, or switch to the colour picker to choose your colours."
             : "Pick at least one colour from the colour picker.",
       });
       return;
@@ -265,7 +269,7 @@ const Shop = () => {
   };
 
   const handleTierInquire = (bouquetId: number, bouquetName: string) => {
-    handleInquire(bouquetName, getTierPalette(bouquetId));
+    handleInquire(bouquetName, getTierPalette(bouquetId), bouquetId);
   };
 
   const quadPosition: Record<QuadCorner, string> = {
@@ -408,6 +412,7 @@ const Shop = () => {
                   </p>
                 </div>
                 <BouquetPalettePicker
+                  bouquetId={bouquet.id}
                   selection={getTierPalette(bouquet.id)}
                   onChange={(next) => setTierPalette(bouquet.id, next)}
                 />

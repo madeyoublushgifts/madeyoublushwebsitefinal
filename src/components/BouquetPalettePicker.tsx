@@ -1,7 +1,7 @@
 import {
-  bouquetColorTemplates,
   bouquetStemColors,
-  MAX_TIER_CUSTOM_COLORS,
+  getMaxCustomColorsForTier,
+  getTemplatesForTier,
   type BouquetStemColor,
   type BouquetTierColorMode,
   type TierPaletteSelection,
@@ -9,11 +9,14 @@ import {
 import { cn } from "@/lib/utils";
 
 type BouquetPalettePickerProps = {
+  bouquetId: number;
   selection: TierPaletteSelection;
   onChange: (next: TierPaletteSelection) => void;
 };
 
-const BouquetPalettePicker = ({ selection, onChange }: BouquetPalettePickerProps) => {
+const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalettePickerProps) => {
+  const templates = getTemplatesForTier(bouquetId);
+  const maxCustomColors = getMaxCustomColorsForTier(bouquetId);
   const setMode = (mode: BouquetTierColorMode) => {
     onChange({
       mode,
@@ -36,7 +39,15 @@ const BouquetPalettePicker = ({ selection, onChange }: BouquetPalettePickerProps
       });
       return;
     }
-    if (current.length >= MAX_TIER_CUSTOM_COLORS) return;
+    if (maxCustomColors === 1) {
+      onChange({
+        mode: "custom",
+        templateId: null,
+        customColors: current.includes(colorId) ? [] : [colorId],
+      });
+      return;
+    }
+    if (current.length >= maxCustomColors) return;
     onChange({
       mode: "custom",
       templateId: null,
@@ -77,7 +88,7 @@ const BouquetPalettePicker = ({ selection, onChange }: BouquetPalettePickerProps
 
       {selection.mode === "template" ? (
         <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto pr-0.5">
-          {bouquetColorTemplates.map((template) => {
+          {templates.map((template) => {
             const active = selection.templateId === template.id;
             return (
               <button
@@ -118,13 +129,15 @@ const BouquetPalettePicker = ({ selection, onChange }: BouquetPalettePickerProps
       ) : (
         <div className="space-y-2">
           <p className="text-[10px] text-muted-foreground text-center">
-            Pick up to {MAX_TIER_CUSTOM_COLORS} colours
+            {maxCustomColors === 1
+              ? "Pick one colour for your stem"
+              : `Pick up to ${maxCustomColors} colours`}
           </p>
           <div className="flex flex-wrap gap-1.5 justify-center">
             {bouquetStemColors.map((color) => {
               const active = selection.customColors.includes(color.id);
               const atMax =
-                !active && selection.customColors.length >= MAX_TIER_CUSTOM_COLORS;
+                !active && selection.customColors.length >= maxCustomColors;
               return (
                 <button
                   key={color.id}
