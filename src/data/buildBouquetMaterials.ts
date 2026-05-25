@@ -35,12 +35,12 @@ export const materialGroupLabels: Record<
 > = {
   wrapping: {
     title: "Wrapping",
-    subtitle: "Choose one wrap style for your bouquet",
+    subtitle: "Choose one wrap style—pick a color too (except kraft)",
     pickOne: true,
   },
   ribbon: {
     title: "Ribbons",
-    subtitle: "Choose one ribbon finish",
+    subtitle: "Choose one ribbon finish and your ribbon color",
     pickOne: true,
   },
   addon: {
@@ -171,7 +171,7 @@ export const buildBouquetMaterials: BouquetMaterialOption[] = [
     name: "Teddy Bear",
     price: 5,
     image: addonTeddy,
-    description: "Plush teddy with blush ribbon & heart",
+    description: "Plush teddy keepsake with a soft heart",
     group: "addon",
   },
   {
@@ -191,6 +191,18 @@ export const buildBouquetMaterials: BouquetMaterialOption[] = [
     group: "addon",
   },
 ];
+
+/** Kraft wrap stays natural brown—no color picker. All ribbon types get a color choice. */
+const materialsWithoutColorPicker = new Set(["wrap-kraft"]);
+
+export const materialSupportsColor = (materialId: string) => {
+  const item = buildBouquetMaterials.find((m) => m.id === materialId);
+  if (!item) return false;
+  return (
+    (item.group === "wrapping" || item.group === "ribbon") &&
+    !materialsWithoutColorPicker.has(materialId)
+  );
+};
 
 export const materialsByGroup = (group: MaterialGroup) =>
   buildBouquetMaterials.filter((m) => m.group === group);

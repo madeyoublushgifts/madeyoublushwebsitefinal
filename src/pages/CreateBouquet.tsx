@@ -24,6 +24,7 @@ import {
   materialsByGroup,
   findMaterial,
   formatMaterialPrice,
+  materialSupportsColor,
   type MaterialGroup,
   type BouquetMaterialOption,
 } from "@/data/buildBouquetMaterials";
@@ -44,6 +45,8 @@ const CreateBouquet = () => {
   const [stemColors, setStemColors] = useState<Record<string, StemColorSelection>>({});
   const [selectedWrapping, setSelectedWrapping] = useState<string | null>(null);
   const [selectedRibbon, setSelectedRibbon] = useState<string | null>(null);
+  const [wrappingColor, setWrappingColor] = useState<BouquetStemColor | null>(null);
+  const [ribbonColor, setRibbonColor] = useState<BouquetStemColor | null>(null);
   const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
 
@@ -58,11 +61,25 @@ const CreateBouquet = () => {
   ];
 
   const selectWrapping = (id: string) => {
-    setSelectedWrapping((prev) => (prev === id ? null : id));
+    setSelectedWrapping((prev) => {
+      if (prev === id) {
+        setWrappingColor(null);
+        return null;
+      }
+      setWrappingColor(null);
+      return id;
+    });
   };
 
   const selectRibbon = (id: string) => {
-    setSelectedRibbon((prev) => (prev === id ? null : id));
+    setSelectedRibbon((prev) => {
+      if (prev === id) {
+        setRibbonColor(null);
+        return null;
+      }
+      setRibbonColor(null);
+      return id;
+    });
   };
 
   const toggleAddon = (id: string) => {
@@ -159,6 +176,28 @@ const CreateBouquet = () => {
     Object.keys(selectedStems).length > 0 &&
     (floralStemsNeedingColors().length === 0 || allFloralColorsChosen());
 
+  const materialColorComplete = (materialId: string | null, color: BouquetStemColor | null) =>
+    !materialId || !materialSupportsColor(materialId) || color !== null;
+
+  const step2Complete =
+    materialColorComplete(selectedWrapping, wrappingColor) &&
+    materialColorComplete(selectedRibbon, ribbonColor);
+
+  const getMaterialColorLabel = (item: BouquetMaterialOption) => {
+    if (item.group === "wrapping" && selectedWrapping === item.id && wrappingColor) {
+      return bouquetStemColors.find((c) => c.id === wrappingColor)?.name;
+    }
+    if (item.group === "ribbon" && selectedRibbon === item.id && ribbonColor) {
+      return bouquetStemColors.find((c) => c.id === ribbonColor)?.name;
+    }
+    return null;
+  };
+
+  const formatMaterialLineLabel = (item: BouquetMaterialOption) => {
+    const colorName = getMaterialColorLabel(item);
+    return colorName ? `${item.name} (${colorName})` : item.name;
+  };
+
   const calculateTotal = () => {
     const stemTotal = Object.entries(selectedStems).reduce((sum, [stemId, quantity]) => {
       const stem = findStem(stemId);
@@ -186,7 +225,7 @@ const CreateBouquet = () => {
       .map(([stemId, quantity]) => formatStemLineLabel(stemId, quantity))
       .filter(Boolean);
 
-    const materialItems = selectedMaterialEntries().map((m) => m.name);
+    const materialItems = selectedMaterialEntries().map((m) => formatMaterialLineLabel(m));
 
     return [...stemItems, ...materialItems].join(", ");
   };
@@ -208,35 +247,58 @@ const CreateBouquet = () => {
     />
   );
 
+  const renderColorSwatches = (
+    selected: BouquetStemColor | null,
+    onSelect: (color: BouquetStemColor) => void,
+    ariaPrefix: string
+  ) => (
+    <div className="flex flex-wrap gap-1.5 justify-center">
+      {bouquetStemColors.map((color) => {
+        const isActive = selected === color.id;
+        return (
+          <button
+            key={color.id}
+            type="button"
+            title={color.name}
+            aria-label={`${ariaPrefix}: ${color.name}`}
+            aria-pressed={isActive}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(color.id);
+            }}
+            className={`h-7 w-7 rounded-full border-2 transition-all shrink-0 ${
+              isActive
+                ? "border-primary ring-2 ring-primary/30 scale-110"
+                : "border-border hover:border-primary/50"
+            }`}
+            style={{ backgroundColor: color.hex }}
+          />
+        );
+      })}
+    </div>
+  );
+
   const renderColorPicker = (stemId: string, index: number, selected: BouquetStemColor | null) => (
     <div key={index} className="flex flex-wrap items-center gap-2 justify-center">
       <span className="text-xs text-muted-foreground w-6 shrink-0">#{index + 1}</span>
-      <div className="flex flex-wrap gap-1.5 justify-center">
-        {bouquetStemColors.map((color) => {
-          const isActive = selected === color.id;
-          return (
-            <button
-              key={color.id}
-              type="button"
-              title={color.name}
-              aria-label={`Stem ${index + 1}: ${color.name}`}
-              aria-pressed={isActive}
-              onClick={() => setStemColorAtIndex(stemId, index, color.id)}
-              className={`h-7 w-7 rounded-full border-2 transition-all shrink-0 ${
-                isActive
-                  ? "border-primary ring-2 ring-primary/30 scale-110"
-                  : "border-border hover:border-primary/50"
-              }`}
-              style={{ backgroundColor: color.hex }}
-            />
-          );
-        })}
-      </div>
+      {renderColorSwatches(selected, (c) => setStemColorAtIndex(stemId, index, c), `Stem ${index + 1}`)}
     </div>
   );
 
   const renderMaterialCard = (item: BouquetMaterialOption) => {
     const selected = isMaterialSelected(item);
+    const showColorPicker = selected && materialSupportsColor(item.id);
+    const activeColor =
+      item.group === "wrapping"
+        ? wrappingColor
+        : item.group === "ribbon"
+          ? ribbonColor
+          : null;
+    const setActiveColor = (color: BouquetStemColor) => {
+      if (item.group === "wrapping") setWrappingColor(color);
+      else if (item.group === "ribbon") setRibbonColor(color);
+    };
+
     return (
       <motion.div
         key={item.id}
@@ -259,6 +321,17 @@ const CreateBouquet = () => {
               {item.description}
             </p>
             <Badge variant="secondary">+{formatMaterialPrice(item.price)}</Badge>
+            {showColorPicker && (
+              <div
+                className="w-full pt-3 border-t border-border/60 space-y-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="text-xs font-medium text-center text-muted-foreground">
+                  Choose color
+                </p>
+                {renderColorSwatches(activeColor, setActiveColor, item.name)}
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>
@@ -503,6 +576,12 @@ const CreateBouquet = () => {
                       Pick a wrap and ribbon, then add any extras. Wrapping and ribbon are one
                       choice each; add-ons can be combined.
                     </p>
+                    {!step2Complete && (selectedWrapping || selectedRibbon) && (
+                      <p className="text-sm text-amber-700 dark:text-amber-400 max-w-xl mx-auto">
+                        Choose a color for your selected wrap (except kraft) and ribbon before
+                        continuing.
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-16">
@@ -589,15 +668,25 @@ const CreateBouquet = () => {
                                   <h4 className="font-semibold mb-3">
                                     {materialGroupLabels[group].title}:
                                   </h4>
-                                  {entries.map((m) => (
-                                    <div
-                                      key={m.id}
-                                      className="flex justify-between items-center text-sm mb-1"
-                                    >
-                                      <span>{m.name}</span>
-                                      <span>{formatMaterialPrice(m.price)}</span>
-                                    </div>
-                                  ))}
+                                  {entries.map((m) => {
+                                    const colorName = getMaterialColorLabel(m);
+                                    return (
+                                      <div
+                                        key={m.id}
+                                        className="flex justify-between items-start gap-4 text-sm mb-1"
+                                      >
+                                        <span>
+                                          {m.name}
+                                          {colorName && (
+                                            <span className="block text-muted-foreground text-xs mt-0.5">
+                                              {colorName}
+                                            </span>
+                                          )}
+                                        </span>
+                                        <span className="shrink-0">{formatMaterialPrice(m.price)}</span>
+                                      </div>
+                                    );
+                                  })}
                                 </div>
                               );
                             })}
@@ -641,7 +730,8 @@ const CreateBouquet = () => {
                 onClick={() => setCurrentStep(Math.min(3, currentStep + 1))}
                 disabled={
                   currentStep === 3 ||
-                  (currentStep === 1 && !step1Complete)
+                  (currentStep === 1 && !step1Complete) ||
+                  (currentStep === 2 && !step2Complete)
                 }
               >
                 Next <ChevronRight className="ml-2 h-4 w-4" />
