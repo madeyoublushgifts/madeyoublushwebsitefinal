@@ -1,0 +1,155 @@
+import {
+  bouquetColorTemplates,
+  bouquetStemColors,
+  MAX_TIER_CUSTOM_COLORS,
+  type BouquetStemColor,
+  type BouquetTierColorMode,
+  type TierPaletteSelection,
+} from "@/data/bouquetTierColors";
+import { cn } from "@/lib/utils";
+
+type BouquetPalettePickerProps = {
+  selection: TierPaletteSelection;
+  onChange: (next: TierPaletteSelection) => void;
+};
+
+const BouquetPalettePicker = ({ selection, onChange }: BouquetPalettePickerProps) => {
+  const setMode = (mode: BouquetTierColorMode) => {
+    onChange({
+      mode,
+      templateId: mode === "template" ? selection.templateId : null,
+      customColors: mode === "custom" ? selection.customColors : [],
+    });
+  };
+
+  const selectTemplate = (templateId: string) => {
+    onChange({ mode: "template", templateId, customColors: [] });
+  };
+
+  const toggleCustomColor = (colorId: BouquetStemColor) => {
+    const current = selection.customColors;
+    if (current.includes(colorId)) {
+      onChange({
+        mode: "custom",
+        templateId: null,
+        customColors: current.filter((c) => c !== colorId),
+      });
+      return;
+    }
+    if (current.length >= MAX_TIER_CUSTOM_COLORS) return;
+    onChange({
+      mode: "custom",
+      templateId: null,
+      customColors: [...current, colorId],
+    });
+  };
+
+  return (
+    <div className="space-y-3 pt-1 border-t border-border/50">
+      <p className="text-xs font-medium text-muted-foreground">Palette</p>
+
+      <div className="flex rounded-lg border border-border p-0.5 bg-muted/40">
+        <button
+          type="button"
+          onClick={() => setMode("template")}
+          className={cn(
+            "flex-1 text-xs py-1.5 rounded-md transition-colors",
+            selection.mode === "template"
+              ? "bg-background shadow-sm font-medium text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Color template
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode("custom")}
+          className={cn(
+            "flex-1 text-xs py-1.5 rounded-md transition-colors",
+            selection.mode === "custom"
+              ? "bg-background shadow-sm font-medium text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Color picker
+        </button>
+      </div>
+
+      {selection.mode === "template" ? (
+        <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto pr-0.5">
+          {bouquetColorTemplates.map((template) => {
+            const active = selection.templateId === template.id;
+            return (
+              <button
+                key={template.id}
+                type="button"
+                onClick={() => selectTemplate(template.id)}
+                className={cn(
+                  "flex items-center gap-2 rounded-lg border px-2.5 py-2 text-left transition-colors",
+                  active
+                    ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                    : "border-border hover:border-primary/40"
+                )}
+              >
+                <div className="flex -space-x-1 shrink-0">
+                  {template.colors.map((colorId) => {
+                    const color = bouquetStemColors.find((c) => c.id === colorId);
+                    if (!color) return null;
+                    return (
+                      <span
+                        key={colorId}
+                        className="h-5 w-5 rounded-full border-2 border-background"
+                        style={{ backgroundColor: color.hex }}
+                        title={color.name}
+                      />
+                    );
+                  })}
+                </div>
+                <span className="min-w-0">
+                  <span className="block text-xs font-medium leading-tight">{template.name}</span>
+                  <span className="block text-[10px] text-muted-foreground leading-tight truncate">
+                    {template.description}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="space-y-2">
+          <p className="text-[10px] text-muted-foreground text-center">
+            Pick up to {MAX_TIER_CUSTOM_COLORS} colours
+          </p>
+          <div className="flex flex-wrap gap-1.5 justify-center">
+            {bouquetStemColors.map((color) => {
+              const active = selection.customColors.includes(color.id);
+              const atMax =
+                !active && selection.customColors.length >= MAX_TIER_CUSTOM_COLORS;
+              return (
+                <button
+                  key={color.id}
+                  type="button"
+                  title={color.name}
+                  aria-label={color.name}
+                  aria-pressed={active}
+                  disabled={atMax}
+                  onClick={() => toggleCustomColor(color.id)}
+                  className={cn(
+                    "h-7 w-7 rounded-full border-2 transition-all shrink-0",
+                    active
+                      ? "border-primary ring-2 ring-primary/30 scale-110"
+                      : "border-border hover:border-primary/50",
+                    atMax && "opacity-40 cursor-not-allowed"
+                  )}
+                  style={{ backgroundColor: color.hex }}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default BouquetPalettePicker;

@@ -6,6 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import InquiryForm from "@/components/ui/inquiry-form";
+import BouquetPalettePicker from "@/components/BouquetPalettePicker";
+import {
+  defaultTierPaletteSelection,
+  formatTierPaletteChoice,
+  isTierPaletteComplete,
+  type TierPaletteSelection,
+} from "@/data/bouquetTierColors";
+import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Flower, Sparkles } from "lucide-react";
 
@@ -48,6 +56,7 @@ const Shop = () => {
 
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>("");
+  const [tierPalettes, setTierPalettes] = useState<Record<number, TierPaletteSelection>>({});
 
   // ===== Bouquets =====
   const bouquets = [
@@ -230,10 +239,33 @@ const Shop = () => {
     "Snail-Mail Note Add-On",
   ]);
 
+  const getTierPalette = (bouquetId: number) =>
+    tierPalettes[bouquetId] ?? defaultTierPaletteSelection();
+
+  const setTierPalette = (bouquetId: number, selection: TierPaletteSelection) => {
+    setTierPalettes((prev) => ({ ...prev, [bouquetId]: selection }));
+  };
+
   // ===== Handlers =====
-  const handleInquire = (itemName: string) => {
-    setSelectedItem(itemName);
+  const handleInquire = (itemName: string, palette?: TierPaletteSelection) => {
+    if (palette !== undefined && !isTierPaletteComplete(palette)) {
+      toast({
+        title: "Choose a palette first",
+        description:
+          palette.mode === "template"
+            ? "Select a colour template, or switch to the colour picker and choose up to three colours."
+            : "Pick at least one colour from the colour picker.",
+      });
+      return;
+    }
+    const paletteLabel =
+      palette && isTierPaletteComplete(palette) ? formatTierPaletteChoice(palette) : "";
+    setSelectedItem(paletteLabel ? `${itemName} — ${paletteLabel}` : itemName);
     setIsInquiryOpen(true);
+  };
+
+  const handleTierInquire = (bouquetId: number, bouquetName: string) => {
+    handleInquire(bouquetName, getTierPalette(bouquetId));
   };
 
   const quadPosition: Record<QuadCorner, string> = {
@@ -316,7 +348,8 @@ const Shop = () => {
       </h2>
       <p className="text-lg lg:text-xl text-muted-foreground">
         From a single stem to luxury—every tier is styled in-house with seasonal
-        stems whenever possible.
+        stems whenever possible. Pick a colour template or use the colour picker
+        on each tier before you inquire.
       </p>
       <div className="flex justify-center">
         <div className="w-20 h-1 bg-primary rounded-full mt-2"></div>
@@ -374,9 +407,13 @@ const Shop = () => {
                     {bouquet.description}
                   </p>
                 </div>
+                <BouquetPalettePicker
+                  selection={getTierPalette(bouquet.id)}
+                  onChange={(next) => setTierPalette(bouquet.id, next)}
+                />
                 <Button
                   className="w-full transition-transform duration-300 group-hover:scale-105"
-                  onClick={() => handleInquire(bouquet.name)}
+                  onClick={() => handleTierInquire(bouquet.id, bouquet.name)}
                 >
                   Inquire / Pre-order
                 </Button>
