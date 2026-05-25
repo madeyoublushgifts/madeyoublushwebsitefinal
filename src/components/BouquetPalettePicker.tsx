@@ -1,7 +1,8 @@
 import {
+  bouquetColorTemplates,
   bouquetStemColors,
   getMaxCustomColorsForTier,
-  getTemplatesForTier,
+  isSingleStemTier,
   type BouquetStemColor,
   type BouquetTierColorMode,
   type TierPaletteSelection,
@@ -15,8 +16,9 @@ type BouquetPalettePickerProps = {
 };
 
 const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalettePickerProps) => {
-  const templates = getTemplatesForTier(bouquetId);
+  const pickerOnly = isSingleStemTier(bouquetId);
   const maxCustomColors = getMaxCustomColorsForTier(bouquetId);
+
   const setMode = (mode: BouquetTierColorMode) => {
     onChange({
       mode,
@@ -43,7 +45,7 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
       onChange({
         mode: "custom",
         templateId: null,
-        customColors: current.includes(colorId) ? [] : [colorId],
+        customColors: [colorId],
       });
       return;
     }
@@ -54,6 +56,50 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
       customColors: [...current, colorId],
     });
   };
+
+  const colorPicker = (
+    <div className="space-y-2">
+      <p className="text-[10px] text-muted-foreground text-center">
+        {pickerOnly
+          ? "Pick one colour for your stem"
+          : `Pick up to ${maxCustomColors} colours`}
+      </p>
+      <div className="flex flex-wrap gap-1.5 justify-center">
+        {bouquetStemColors.map((color) => {
+          const active = selection.customColors.includes(color.id);
+          const atMax = !active && selection.customColors.length >= maxCustomColors;
+          return (
+            <button
+              key={color.id}
+              type="button"
+              title={color.name}
+              aria-label={color.name}
+              aria-pressed={active}
+              disabled={atMax}
+              onClick={() => toggleCustomColor(color.id)}
+              className={cn(
+                "h-7 w-7 rounded-full border-2 transition-all shrink-0",
+                active
+                  ? "border-primary ring-2 ring-primary/30 scale-110"
+                  : "border-border hover:border-primary/50",
+                atMax && "opacity-40 cursor-not-allowed"
+              )}
+              style={{ backgroundColor: color.hex }}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  if (pickerOnly) {
+    return (
+      <div className="space-y-3 pt-1 border-t border-border/50">
+        <p className="text-xs font-medium text-muted-foreground">Stem colour</p>
+        {colorPicker}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3 pt-1 border-t border-border/50">
@@ -88,7 +134,7 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
 
       {selection.mode === "template" ? (
         <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto pr-0.5">
-          {templates.map((template) => {
+          {bouquetColorTemplates.map((template) => {
             const active = selection.templateId === template.id;
             return (
               <button
@@ -127,39 +173,7 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
           })}
         </div>
       ) : (
-        <div className="space-y-2">
-          <p className="text-[10px] text-muted-foreground text-center">
-            {maxCustomColors === 1
-              ? "Pick one colour for your stem"
-              : `Pick up to ${maxCustomColors} colours`}
-          </p>
-          <div className="flex flex-wrap gap-1.5 justify-center">
-            {bouquetStemColors.map((color) => {
-              const active = selection.customColors.includes(color.id);
-              const atMax =
-                !active && selection.customColors.length >= maxCustomColors;
-              return (
-                <button
-                  key={color.id}
-                  type="button"
-                  title={color.name}
-                  aria-label={color.name}
-                  aria-pressed={active}
-                  disabled={atMax}
-                  onClick={() => toggleCustomColor(color.id)}
-                  className={cn(
-                    "h-7 w-7 rounded-full border-2 transition-all shrink-0",
-                    active
-                      ? "border-primary ring-2 ring-primary/30 scale-110"
-                      : "border-border hover:border-primary/50",
-                    atMax && "opacity-40 cursor-not-allowed"
-                  )}
-                  style={{ backgroundColor: color.hex }}
-                />
-              );
-            })}
-          </div>
-        </div>
+        colorPicker
       )}
     </div>
   );

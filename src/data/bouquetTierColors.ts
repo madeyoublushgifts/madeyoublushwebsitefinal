@@ -62,16 +62,7 @@ export const getMaxCustomColorsForTier = (bouquetId: number) =>
     ? MAX_TIER_CUSTOM_COLORS_SINGLE_STEM
     : MAX_TIER_CUSTOM_COLORS;
 
-/** Single-stem uses one colour per template; larger tiers use curated multi-colour looks. */
-export const getTemplatesForTier = (bouquetId: number): BouquetColorTemplate[] => {
-  if (bouquetId !== SINGLE_STEM_TIER_ID) return bouquetColorTemplates;
-  return bouquetStemColors.map((c) => ({
-    id: `solid-${c.id}`,
-    name: c.name,
-    description: "One stem in this colour",
-    colors: [c.id],
-  }));
-};
+export const isSingleStemTier = (bouquetId: number) => bouquetId === SINGLE_STEM_TIER_ID;
 
 export type TierPaletteSelection = {
   mode: BouquetTierColorMode;
@@ -79,41 +70,36 @@ export type TierPaletteSelection = {
   customColors: BouquetStemColor[];
 };
 
-export const defaultTierPaletteSelection = (): TierPaletteSelection => ({
-  mode: "template",
-  templateId: null,
-  customColors: [],
-});
+export const defaultTierPaletteSelection = (bouquetId?: number): TierPaletteSelection =>
+  isSingleStemTier(bouquetId ?? -1)
+    ? { mode: "custom", templateId: null, customColors: [] }
+    : { mode: "template", templateId: null, customColors: [] };
 
-export const findColorTemplate = (id: string) => {
-  const curated = bouquetColorTemplates.find((t) => t.id === id);
-  if (curated) return curated;
-  if (!id.startsWith("solid-")) return undefined;
-  const colorId = id.slice("solid-".length) as BouquetStemColor;
-  const color = bouquetStemColors.find((c) => c.id === colorId);
-  if (!color) return undefined;
-  return {
-    id,
-    name: color.name,
-    description: "One stem in this colour",
-    colors: [colorId],
-  };
-};
+export const findColorTemplate = (id: string) =>
+  bouquetColorTemplates.find((t) => t.id === id);
 
 export const isTierPaletteComplete = (
   selection: TierPaletteSelection | undefined,
   bouquetId?: number
 ) => {
   if (!selection) return false;
+  if (bouquetId !== undefined && isSingleStemTier(bouquetId)) {
+    return selection.customColors.length === 1;
+  }
   if (selection.mode === "template") {
     return selection.templateId !== null && !!findColorTemplate(selection.templateId);
   }
-  const count = selection.customColors.length;
-  if (bouquetId === SINGLE_STEM_TIER_ID) return count === 1;
-  return count > 0;
+  return selection.customColors.length > 0;
 };
 
-export const formatTierPaletteChoice = (selection: TierPaletteSelection) => {
+export const formatTierPaletteChoice = (
+  selection: TierPaletteSelection,
+  bouquetId?: number
+) => {
+  if (bouquetId !== undefined && isSingleStemTier(bouquetId)) {
+    if (selection.customColors.length === 0) return "";
+    return `Colour: ${formatStemColorSummary(selection.customColors)}`;
+  }
   if (selection.mode === "template") {
     const template = selection.templateId
       ? findColorTemplate(selection.templateId)

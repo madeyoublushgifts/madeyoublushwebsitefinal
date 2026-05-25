@@ -240,7 +240,7 @@ const Shop = () => {
   ]);
 
   const getTierPalette = (bouquetId: number) =>
-    tierPalettes[bouquetId] ?? defaultTierPaletteSelection();
+    tierPalettes[bouquetId] ?? defaultTierPaletteSelection(bouquetId);
 
   const setTierPalette = (bouquetId: number, selection: TierPaletteSelection) => {
     setTierPalettes((prev) => ({ ...prev, [bouquetId]: selection }));
@@ -263,7 +263,9 @@ const Shop = () => {
       return;
     }
     const paletteLabel =
-      palette && isTierPaletteComplete(palette) ? formatTierPaletteChoice(palette) : "";
+      palette && isTierPaletteComplete(palette, bouquetId)
+        ? formatTierPaletteChoice(palette, bouquetId)
+        : "";
     setSelectedItem(paletteLabel ? `${itemName} — ${paletteLabel}` : itemName);
     setIsInquiryOpen(true);
   };
