@@ -25,6 +25,8 @@ interface InquiryFormProps {
   source?: string;
   /** Which Formspree form receives the submission (defaults to shop inquiry). */
   formType?: FormspreeFormType;
+  /** Card / snail-mail add-ons only—message text for the handwritten note. */
+  showPersonalMessage?: boolean;
 }
 
 const InquiryForm = ({
@@ -35,6 +37,7 @@ const InquiryForm = ({
   itemName,
   source = "Website",
   formType = "inquiry",
+  showPersonalMessage = false,
 }: InquiryFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -63,7 +66,7 @@ const InquiryForm = ({
         phone: formData.phone,
         address: formData.address,
         isGift: formData.isGift,
-        personalMessage: formData.isGift ? formData.message : "",
+        personalMessage: showPersonalMessage ? formData.message : "",
       });
 
       toast({
@@ -178,15 +181,15 @@ const InquiryForm = ({
             </Label>
           </div>
 
-          {formData.isGift && (
+          {showPersonalMessage && (
             <div className="space-y-2">
-              <Label htmlFor="inq-message">Personal Message</Label>
+              <Label htmlFor="inq-message">Card message</Label>
               <Textarea
                 id="inq-message"
                 value={formData.message}
                 onChange={(e) => handleInputChange("message", e.target.value)}
                 disabled={isSubmitting}
-                placeholder="Add a personal message for the recipient..."
+                placeholder="What should we write on your card or snail-mail note?"
                 rows={3}
               />
             </div>

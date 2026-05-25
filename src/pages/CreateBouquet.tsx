@@ -179,7 +179,13 @@ const CreateBouquet = () => {
   const materialColorComplete = (materialId: string | null, color: BouquetStemColor | null) =>
     !materialId || !materialSupportsColor(materialId) || color !== null;
 
+  const hasMaterialSelection =
+    selectedWrapping !== null ||
+    selectedRibbon !== null ||
+    Object.values(selectedAddons).some(Boolean);
+
   const step2Complete =
+    hasMaterialSelection &&
     materialColorComplete(selectedWrapping, wrappingColor) &&
     materialColorComplete(selectedRibbon, ribbonColor);
 
@@ -573,13 +579,14 @@ const CreateBouquet = () => {
                       Choose Materials & Presentation
                     </h2>
                     <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto">
-                      Pick a wrap and ribbon, then add any extras. Wrapping and ribbon are one
-                      choice each; add-ons can be combined.
+                      Pick at least one wrap, ribbon, or add-on. Wrapping and ribbon are one choice
+                      each; add-ons can be combined.
                     </p>
-                    {!step2Complete && (selectedWrapping || selectedRibbon) && (
+                    {!step2Complete && (
                       <p className="text-sm text-amber-700 dark:text-amber-400 max-w-xl mx-auto">
-                        Choose a color for your selected wrap (except kraft) and ribbon before
-                        continuing.
+                        {!hasMaterialSelection
+                          ? "Choose at least one wrap, ribbon, or add-on to continue."
+                          : "Choose a color for your selected wrap (except kraft) and ribbon before continuing."}
                       </p>
                     )}
                   </div>
@@ -751,6 +758,7 @@ const CreateBouquet = () => {
         itemName={`Custom bouquet — ${getSelectedItemsText()} (Est. $${formatMoney(calculateTotal())})`}
         source="Build a Bouquet"
         formType="buildBouquet"
+        showPersonalMessage={!!selectedAddons["addon-card"]}
       />
     </div>
   );

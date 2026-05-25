@@ -225,6 +225,11 @@ const Shop = () => {
     },
   ];
 
+  const CARD_INQUIRY_ITEMS = new Set([
+    "Handmade Card Add-On",
+    "Snail-Mail Note Add-On",
+  ]);
+
   // ===== Handlers =====
   const handleInquire = (itemName: string) => {
     setSelectedItem(itemName);
@@ -735,6 +740,7 @@ const Shop = () => {
         description="We’ll reply with availability, pickup or delivery windows, and any personalization details—no cart yet, just humans."
         itemName={selectedItem}
         source="Shop"
+        showPersonalMessage={CARD_INQUIRY_ITEMS.has(selectedItem)}
       />
     </div>
   );
