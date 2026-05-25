@@ -1,52 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-</head>
-<body>
+# Made You Blush
 
-  <h1>📄 Read Me Note</h1>
+Toronto floral subscription & gift shop — Vite, React, TypeScript, Tailwind.
 
-  <p>⚠️ <strong>Important Notice:</strong> <strong>Flora Bloom</strong> is a React-based template built using <strong>Vite</strong>, <strong>Tailwind CSS</strong>, and <strong>TypeScript</strong>. It is <strong>not</strong> a WordPress or plain HTML theme. Please ensure your environment supports:
-    <br/><strong>React 18+</strong><br/>
-    <strong>Tailwind CSS 3+</strong><br/>
-    <strong>Vite</strong><br/>
-    <strong>TypeScript</strong>
-  </p>
+## Local development
 
-  <p>We do not offer support or refunds for incorrect installation or unsupported environments.</p>
+```bash
+npm install
+cp .env.example .env   # add Formspree form IDs
+npm run dev            # http://localhost:8080
+```
 
-  <p><strong>Flora Bloom</strong> is built with modular TypeScript (TSX) components and a clean, elegant design — making it easy to customize, deploy, and maintain. It’s the perfect foundation for creating a modern, responsive, and professional flower shop website.</p>
+## Production build
 
-  <blockquote>Note: Demo images used in the preview are for illustration purposes only and are not included in the downloadable package.</blockquote>
+```bash
+npm run build
+npm run preview
+```
 
-  <h2>✨ Template Highlights</h2>
-  <ul>
-    <li>Purpose-Built for Florists & Flower Shops – Ideal for boutiques, floral studios & online stores</li>
-    <li>React 18+ & TypeScript – Fast, scalable, and reliable modern tech stack</li>
-    <li>Tailwind CSS 3+ – Rapid design customization with utility-first classes</li>
-    <li>Vite-Powered – Ultra-fast build and development environment</li>
-    <li>SEO-Friendly & Mobile-First – Optimized for performance and ranking</li>
-    <li>Cross-Browser Compatible – Chrome, Firefox, Safari, Opera, Edge</li>
-    <li>4-Column Grid Layout – Neatly organized sections for floral products & categories</li>
-    <li>Modern, Elegant UI – Fresh, nature-inspired visuals and clean typography</li>
-    <li>Developer-Friendly Codebase – Modular TSX components with Tailwind styling</li>
-    <li>Dedicated Pages – Home, About, Shop, Gallery, Blog, Contact, and more</li>
-  </ul>
+See **[DEPLOY.md](./DEPLOY.md)** for Vercel/Netlify, custom domain, and Formspree setup.
 
-  <h2>🛠️ Getting Started</h2>
-  <ol>
-    <li><strong>Install dependencies</strong>
-      <pre><code>npm install</code></pre>
-    </li>
-    <li><strong>Run development server</strong>
-      <pre><code>npm run dev</code></pre>
-    </li>
-    <li><strong>Build for production</strong>
-      <pre><code>npm run build</code></pre>
-    </li>
-  </ol>
+## Push to GitHub
 
-</body>
-</html>
+This folder is already a Git repo with an initial commit on `main`.
+
+1. Create a **new empty repository** on [github.com/new](https://github.com/new) (e.g. `made-you-blush`) — do **not** add a README or .gitignore (this project already has them).
+
+2. In PowerShell (use Git Bash if `git` is not in PATH):
+
+```powershell
+cd c:\Users\nashi\Downloads\flora-bloom-download-main
+& "C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YOUR_USERNAME/made-you-blush.git
+& "C:\Program Files\Git\bin\git.exe" push -u origin main
+```
+
+Replace `YOUR_USERNAME` and the repo name with yours. Sign in when GitHub prompts you.
+
+**Optional — set your name for future commits (once):**
+
+```powershell
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
