@@ -20,14 +20,16 @@ import {
   type StemOption,
 } from "@/data/buildBouquetStems";
 import {
-  kraftPaper as kraft_paper,
-  silkRibbon as silk_ribbon,
-  basket,
-  vase,
-  buildGreetingCard as card,
-} from "../assets/images";
+  materialGroupLabels,
+  materialsByGroup,
+  findMaterial,
+  formatMaterialPrice,
+  type MaterialGroup,
+  type BouquetMaterialOption,
+} from "@/data/buildBouquetMaterials";
 
 const STEM_CATEGORIES: StemCategory[] = ["main", "filler", "greenery"];
+const MATERIAL_GROUPS: MaterialGroup[] = ["wrapping", "ribbon", "addon"];
 
 const findStem = (id: string) => buildBouquetStems.find((s) => s.id === id);
 
@@ -40,7 +42,9 @@ const CreateBouquet = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedStems, setSelectedStems] = useState<Record<string, number>>({});
   const [stemColors, setStemColors] = useState<Record<string, StemColorSelection>>({});
-  const [selectedMaterials, setSelectedMaterials] = useState<Record<string, boolean>>({});
+  const [selectedWrapping, setSelectedWrapping] = useState<string | null>(null);
+  const [selectedRibbon, setSelectedRibbon] = useState<string | null>(null);
+  const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
 
   const steps = [
@@ -49,17 +53,54 @@ const CreateBouquet = () => {
       title: "Choose Stems",
       description: "Main flowers, fillers, and greenery",
     },
-    { id: 2, title: "Choose Materials", description: "Wrapping, ribbons, vase, or basket" },
+    { id: 2, title: "Choose Materials", description: "Wrapping, ribbon & add-ons" },
     { id: 3, title: "Review & inquire", description: "We confirm details before anything is cut" },
   ];
 
-  const materials = [
-    { id: "kraft", name: "Kraft Paper", price: 1, image: kraft_paper, description: "Natural brown paper wrapping" },
-    { id: "silk", name: "Silk Ribbon Wrapping", price: 5, image: silk_ribbon, description: "Elegant silk ribbon finish" },
-    { id: "basket", name: "Wicker Basket", price: 8, image: basket, description: "Charming wicker presentation" },
-    { id: "vase", name: "Glass Vase", price: 15, image: vase, description: "Beautiful clear glass vase" },
-    { id: "card", name: "Greeting Card", price: 2, image: card, description: "Personalized message card" },
-  ];
+  const selectWrapping = (id: string) => {
+    setSelectedWrapping((prev) => (prev === id ? null : id));
+  };
+
+  const selectRibbon = (id: string) => {
+    setSelectedRibbon((prev) => (prev === id ? null : id));
+  };
+
+  const toggleAddon = (id: string) => {
+    setSelectedAddons((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const isMaterialSelected = (item: BouquetMaterialOption) => {
+    if (item.group === "wrapping") return selectedWrapping === item.id;
+    if (item.group === "ribbon") return selectedRibbon === item.id;
+    return Boolean(selectedAddons[item.id]);
+  };
+
+  const handleMaterialClick = (item: BouquetMaterialOption) => {
+    if (item.group === "wrapping") selectWrapping(item.id);
+    else if (item.group === "ribbon") selectRibbon(item.id);
+    else toggleAddon(item.id);
+  };
+
+  const selectedMaterialEntries = (): BouquetMaterialOption[] => {
+    const items: BouquetMaterialOption[] = [];
+    if (selectedWrapping) {
+      const w = findMaterial(selectedWrapping);
+      if (w) items.push(w);
+    }
+    if (selectedRibbon) {
+      const r = findMaterial(selectedRibbon);
+      if (r) items.push(r);
+    }
+    for (const [id, on] of Object.entries(selectedAddons)) {
+      if (!on) continue;
+      const a = findMaterial(id);
+      if (a) items.push(a);
+    }
+    return items;
+  };
 
   const updateStemQuantity = (stemId: string, change: number) => {
     const stem = findStem(stemId);
@@ -118,24 +159,13 @@ const CreateBouquet = () => {
     Object.keys(selectedStems).length > 0 &&
     (floralStemsNeedingColors().length === 0 || allFloralColorsChosen());
 
-  const toggleMaterial = (materialId: string) => {
-    setSelectedMaterials((prev) => ({
-      ...prev,
-      [materialId]: !prev[materialId],
-    }));
-  };
-
   const calculateTotal = () => {
     const stemTotal = Object.entries(selectedStems).reduce((sum, [stemId, quantity]) => {
       const stem = findStem(stemId);
       return sum + (stem ? stem.price * quantity : 0);
     }, 0);
 
-    const materialTotal = Object.entries(selectedMaterials).reduce((sum, [materialId, selected]) => {
-      if (!selected) return sum;
-      const material = materials.find((m) => m.id === materialId);
-      return sum + (material ? material.price : 0);
-    }, 0);
+    const materialTotal = selectedMaterialEntries().reduce((sum, m) => sum + m.price, 0);
 
     return Math.round((stemTotal + materialTotal) * 100) / 100;
   };
@@ -156,13 +186,7 @@ const CreateBouquet = () => {
       .map(([stemId, quantity]) => formatStemLineLabel(stemId, quantity))
       .filter(Boolean);
 
-    const materialItems = Object.entries(selectedMaterials)
-      .filter(([_, selected]) => selected)
-      .map(([materialId]) => {
-        const material = materials.find((m) => m.id === materialId);
-        return material ? material.name : "";
-      })
-      .filter(Boolean);
+    const materialItems = selectedMaterialEntries().map((m) => m.name);
 
     return [...stemItems, ...materialItems].join(", ");
   };
@@ -210,6 +234,67 @@ const CreateBouquet = () => {
       </div>
     </div>
   );
+
+  const renderMaterialCard = (item: BouquetMaterialOption) => {
+    const selected = isMaterialSelected(item);
+    return (
+      <motion.div
+        key={item.id}
+        variants={{
+          hidden: { opacity: 0, scale: 0.95, y: 15 },
+          visible: { opacity: 1, scale: 1, y: 0 },
+        }}
+        transition={{ duration: 0.4 }}
+      >
+        <Card
+          className={`border-2 shadow-md cursor-pointer transition-all h-full ${
+            selected ? "border-primary bg-primary/5" : "border-transparent bg-card-gradient"
+          }`}
+          onClick={() => handleMaterialClick(item)}
+        >
+          <CardContent className="p-5 sm:p-6 text-center space-y-3">
+            {renderImage(item.image, item.name)}
+            <h3 className="font-heading text-lg font-semibold">{item.name}</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed min-h-[2.5rem]">
+              {item.description}
+            </p>
+            <Badge variant="secondary">+{formatMaterialPrice(item.price)}</Badge>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  };
+
+  const renderMaterialGroup = (group: MaterialGroup) => {
+    const items = materialsByGroup(group);
+    const { title, subtitle, pickOne } = materialGroupLabels[group];
+    return (
+      <div key={group} className="space-y-6">
+        <div className="text-center space-y-2">
+          <h3 className="font-heading text-2xl font-semibold">{title}</h3>
+          <p className="text-muted-foreground">{subtitle}</p>
+          {pickOne && (
+            <p className="text-xs text-muted-foreground">Tap again to clear your choice</p>
+          )}
+          <div className="flex justify-center">
+            <div className="w-12 h-1 bg-primary rounded-full" />
+          </div>
+        </div>
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+          }}
+        >
+          {items.map((item) => renderMaterialCard(item))}
+        </motion.div>
+      </div>
+    );
+  };
 
   const renderStemCard = (stem: StemOption) => {
     const qty = selectedStems[stem.id] || 0;
@@ -414,47 +499,15 @@ const CreateBouquet = () => {
                     <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
                       Choose Materials & Presentation
                     </h2>
-                    <p className="text-lg lg:text-xl text-muted-foreground">
-                      Select how you&apos;d like your bouquet presented
+                    <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto">
+                      Pick a wrap and ribbon, then add any extras. Wrapping and ribbon are one
+                      choice each; add-ons can be combined.
                     </p>
                   </div>
 
-                  <motion.div
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                    initial="hidden"
-                    animate="visible"
-                    variants={{
-                      hidden: { opacity: 0 },
-                      visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
-                    }}
-                  >
-                    {materials.map((material) => (
-                      <motion.div
-                        key={material.id}
-                        variants={{
-                          hidden: { opacity: 0, scale: 0.95, y: 15 },
-                          visible: { opacity: 1, scale: 1, y: 0 },
-                        }}
-                        transition={{ duration: 0.4 }}
-                      >
-                        <Card
-                          className={`border-2 shadow-md cursor-pointer transition-all ${
-                            selectedMaterials[material.id]
-                              ? "border-primary bg-primary/5"
-                              : "border-transparent bg-card-gradient"
-                          }`}
-                          onClick={() => toggleMaterial(material.id)}
-                        >
-                          <CardContent className="p-6 text-center space-y-4">
-                            {renderImage(material.image, material.name)}
-                            <h3 className="font-heading text-lg font-semibold">{material.name}</h3>
-                            <p className="text-lg text-muted-foreground">{material.description}</p>
-                            <Badge variant="secondary">+${material.price}</Badge>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    ))}
-                  </motion.div>
+                  <div className="space-y-16">
+                    {MATERIAL_GROUPS.map((group) => renderMaterialGroup(group))}
+                  </div>
                 </motion.div>
               )}
 
@@ -524,23 +577,31 @@ const CreateBouquet = () => {
                           </>
                         )}
 
-                        {Object.values(selectedMaterials).some(Boolean) && (
-                          <div>
-                            <h4 className="font-semibold mb-3">Presentation & Materials:</h4>
-                            {Object.entries(selectedMaterials)
-                              .filter(([_, selected]) => selected)
-                              .map(([id]) => {
-                                const material = materials.find((m) => m.id === id);
-                                return (
-                                  material && (
-                                    <div key={id} className="flex justify-between items-center text-sm">
-                                      <span>{material.name}</span>
-                                      <span>${material.price}</span>
+                        {selectedMaterialEntries().length > 0 && (
+                          <>
+                            {MATERIAL_GROUPS.map((group) => {
+                              const entries = selectedMaterialEntries().filter(
+                                (m) => m.group === group
+                              );
+                              if (entries.length === 0) return null;
+                              return (
+                                <div key={group}>
+                                  <h4 className="font-semibold mb-3">
+                                    {materialGroupLabels[group].title}:
+                                  </h4>
+                                  {entries.map((m) => (
+                                    <div
+                                      key={m.id}
+                                      className="flex justify-between items-center text-sm mb-1"
+                                    >
+                                      <span>{m.name}</span>
+                                      <span>{formatMaterialPrice(m.price)}</span>
                                     </div>
-                                  )
-                                );
-                              })}
-                          </div>
+                                  ))}
+                                </div>
+                              );
+                            })}
+                          </>
                         )}
 
                         <div className="border-t pt-4">

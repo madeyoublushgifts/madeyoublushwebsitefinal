@@ -212,16 +212,33 @@ export const customPeonies = stemBabyEucalyptus;
 
 export const customEucalyptus = stemSilverDollarEucalyptus;
 
-// Build-a-bouquet — materials & presentation (step 2)
+// Build-a-bouquet — wrapping, ribbons, add-ons (step 2)
 
-export const kraftPaper = myb("myb-material-kraft.png");
+export const wrapKraft = myb("myb-wrap-kraft.png");
+export const wrapTissue = myb("myb-wrap-tissue.png");
+export const wrapCellophane = myb("myb-wrap-cellophane.png");
+export const wrapCotton = myb("myb-wrap-cotton.png");
+export const wrapSilk = myb("myb-wrap-silk.png");
 
-export const silkRibbon = myb("myb-material-silk-ribbon.png");
+export const ribbonCellophane = myb("myb-ribbon-cellophane.png");
+export const ribbonCotton = myb("myb-ribbon-cotton.png");
+export const ribbonLace = myb("myb-ribbon-lace.png");
+export const ribbonSatin = myb("myb-ribbon-satin.png");
+export const ribbonGrosgrain = myb("myb-ribbon-grosgrain.png");
+export const ribbonSilk = myb("myb-ribbon-silk.png");
 
-export const basket = myb("myb-material-basket.png");
+export const materialBasket = myb("myb-material-basket.png");
+export const materialVase = myb("myb-material-vase.png");
+export const materialCard = myb("myb-material-card.png");
+export const addonTeddy = myb("myb-addon-teddy.png");
+export const addonFerrero = myb("myb-addon-ferrero.png");
+export const addonLindor = myb("myb-addon-lindor.png");
 
-export const vase = myb("myb-material-vase.png");
-
-export const buildGreetingCard = myb("myb-material-card.png");
+/** @deprecated Use wrapKraft — kept for older imports */
+export const kraftPaper = wrapKraft;
+export const silkRibbon = ribbonSilk;
+export const basket = materialBasket;
+export const vase = materialVase;
+export const buildGreetingCard = materialCard;
 
 
