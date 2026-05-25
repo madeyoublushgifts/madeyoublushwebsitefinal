@@ -1,14 +1,16 @@
-export type FormspreeFormType = "contact" | "inquiry" | "waitlist";
+export type FormspreeFormType = "contact" | "inquiry" | "buildBouquet" | "waitlist";
 
 const envIds: Record<FormspreeFormType, string | undefined> = {
   contact: import.meta.env.VITE_FORMSPREE_CONTACT_ID,
   inquiry: import.meta.env.VITE_FORMSPREE_INQUIRY_ID,
+  buildBouquet: import.meta.env.VITE_FORMSPREE_BUILD_BOUQUET_ID,
   waitlist: import.meta.env.VITE_FORMSPREE_WAITLIST_ID,
 };
 
 const envLabels: Record<FormspreeFormType, string> = {
   contact: "VITE_FORMSPREE_CONTACT_ID",
   inquiry: "VITE_FORMSPREE_INQUIRY_ID",
+  buildBouquet: "VITE_FORMSPREE_BUILD_BOUQUET_ID",
   waitlist: "VITE_FORMSPREE_WAITLIST_ID",
 };
 

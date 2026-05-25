@@ -599,6 +599,7 @@ const CreateBouquet = () => {
         description="Share your build notes—we’ll reply with stem availability, add-on ideas, and a confirmed estimate before we finalize anything."
         itemName={`Custom bouquet — ${getSelectedItemsText()} (Est. $${formatMoney(calculateTotal())})`}
         source="Build a Bouquet"
+        formType="buildBouquet"
       />
     </div>
   );

@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
-import { submitToFormspree } from "@/lib/formspree";
+import { submitToFormspree, type FormspreeFormType } from "@/lib/formspree";
 import { Loader2 } from "lucide-react";
 
 interface InquiryFormProps {
@@ -23,6 +23,8 @@ interface InquiryFormProps {
   itemName?: string;
   /** Helps you filter Formspree submissions (e.g. Shop vs Build a Bouquet). */
   source?: string;
+  /** Which Formspree form receives the submission (defaults to shop inquiry). */
+  formType?: FormspreeFormType;
 }
 
 const InquiryForm = ({
@@ -32,6 +34,7 @@ const InquiryForm = ({
   description = "We’ll reply with Made You Blush availability, pickup or delivery options, and any personalization ideas.",
   itemName,
   source = "Website",
+  formType = "inquiry",
 }: InquiryFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -48,7 +51,7 @@ const InquiryForm = ({
     setIsSubmitting(true);
 
     try {
-      await submitToFormspree("inquiry", {
+      await submitToFormspree(formType, {
         _subject: itemName
           ? `Inquiry: ${itemName}`
           : "Made You Blush — product inquiry",
