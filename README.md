@@ -23,21 +23,21 @@ See **[DEPLOY.md](./DEPLOY.md)** for Vercel/Netlify, custom domain, and Formspre
 
 This folder is already a Git repo with an initial commit on `main`.
 
-1. Create the repo on GitHub (if you have not already): [github.com/new](https://github.com/new)  
-   Name: **`madeyoublushwebsitefinal`** — leave it empty (no README / .gitignore).
+**Repository:** [github.com/madeyoublushgifts/madeyoublushwebsitefinal](https://github.com/madeyoublushgifts/madeyoublushwebsitefinal)
 
-2. On the repo page, copy the **HTTPS clone URL** (looks like  
-   `https://github.com/YOUR_USERNAME/madeyoublushwebsitefinal.git`).
+Clone:
 
-3. In PowerShell (use Git Bash if `git` is not in PATH):
-
-```powershell
-cd c:\Users\nashi\Downloads\flora-bloom-download-main
-& "C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YOUR_USERNAME/madeyoublushwebsitefinal.git
-& "C:\Program Files\Git\bin\git.exe" push -u origin main
+```bash
+git clone https://github.com/madeyoublushgifts/madeyoublushwebsitefinal.git
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username (or use the full URL GitHub shows). Sign in when prompted.
+Push updates (from this folder):
+
+```powershell
+& "C:\Program Files\Git\bin\git.exe" add .
+& "C:\Program Files\Git\bin\git.exe" commit -m "Your message"
+& "C:\Program Files\Git\bin\git.exe" push
+```
 
 **Optional — set your name for future commits (once):**
 
