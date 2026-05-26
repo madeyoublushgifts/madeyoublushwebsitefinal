@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Flower, Menu, X } from "lucide-react";
+import { Flower, Home, Mail, Menu, ShoppingBag, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 
 const Header = () => {
@@ -8,10 +8,10 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navigation = [
-    { name: "Home", href: "/" },
-    { name: "Shop", href: "/shop" },
-    { name: "Coming Soon", href: "/coming-soon" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "/", icon: Home },
+    { name: "Shop", href: "/shop", icon: ShoppingBag },
+    { name: "Coming Soon", href: "/coming-soon", icon: Sparkles },
+    { name: "Contact", href: "/contact", icon: Mail },
   ];
 
   return (
@@ -33,12 +33,13 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
+                className={`inline-flex items-center gap-2 text-sm font-medium rounded-full border-2 px-3 py-1.5 transition-all duration-200 ${
                   location.pathname === item.href
-                    ? "text-primary"
-                    : "text-muted-foreground"
+                    ? "border-primary/60 bg-primary/10 text-primary shadow-sm"
+                    : "border-primary/25 text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/50"
                 }`}
               >
+                <item.icon className="h-4 w-4" />
                 {item.name}
               </Link>
             ))}
@@ -72,12 +73,13 @@ const Header = () => {
               key={item.name}
               to={item.href}
               onClick={() => setMobileMenuOpen(false)}
-              className={`block text-sm font-medium transition-colors hover:text-primary ${
+              className={`flex items-center gap-2 text-sm font-medium rounded-full border-2 px-3 py-2 transition-all duration-200 ${
                 location.pathname === item.href
-                  ? "text-primary"
-                  : "text-muted-foreground"
+                  ? "border-primary/60 bg-primary/10 text-primary shadow-sm"
+                  : "border-primary/25 text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/50"
               }`}
             >
+              <item.icon className="h-4 w-4" />
               {item.name}
             </Link>
           ))}

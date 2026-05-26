@@ -209,7 +209,9 @@ const ComingSoon = () => {
             </div>
 
             <div className="flex flex-wrap justify-center gap-3 mt-10">
-              <Badge className="text-sm py-2 px-4">Bi-weekly delivery</Badge>
+              <Badge variant="outline" className="text-sm py-2 px-4">
+                Bi-weekly delivery
+              </Badge>
               <Badge variant="outline" className="text-sm py-2 px-4">
                 Monthly delivery
               </Badge>
