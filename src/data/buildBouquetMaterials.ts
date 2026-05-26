@@ -35,7 +35,7 @@ export const materialGroupLabels: Record<
 > = {
   wrapping: {
     title: "Wrapping",
-    subtitle: "Choose one wrap style—pick a color too (except kraft)",
+    subtitle: "Choose one wrap style—pick a color too",
     pickOne: true,
   },
   ribbon: {

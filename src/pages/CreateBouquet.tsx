@@ -176,6 +176,17 @@ const CreateBouquet = () => {
     Object.keys(selectedStems).length > 0 &&
     (floralStemsNeedingColors().length === 0 || allFloralColorsChosen());
 
+  const stemsNeedingColor = floralStemsNeedingColors();
+  const floralColorErrors = stemsNeedingColor
+    .map(([stemId, qty]) => {
+      const stem = findStem(stemId);
+      const colors = stemColors[stemId] ?? [];
+      const filledCount = colors.filter((c): c is BouquetStemColor => c !== null).length;
+      const missingCount = Math.max(0, qty - filledCount);
+      return { stemId, stemName: stem?.name ?? stemId, missingCount };
+    })
+    .filter((e) => e.missingCount > 0);
+
   const materialColorComplete = (materialId: string | null, color: BouquetStemColor | null) =>
     !materialId || !materialSupportsColor(materialId) || color !== null;
 
@@ -188,6 +199,16 @@ const CreateBouquet = () => {
     hasMaterialSelection &&
     materialColorComplete(selectedWrapping, wrappingColor) &&
     materialColorComplete(selectedRibbon, ribbonColor);
+
+  const needsWrapColor =
+    selectedWrapping !== null &&
+    materialSupportsColor(selectedWrapping) &&
+    wrappingColor === null;
+
+  const needsRibbonColor =
+    selectedRibbon !== null &&
+    materialSupportsColor(selectedRibbon) &&
+    ribbonColor === null;
 
   const getMaterialColorLabel = (item: BouquetMaterialOption) => {
     if (item.group === "wrapping" && selectedWrapping === item.id && wrappingColor) {
@@ -379,6 +400,9 @@ const CreateBouquet = () => {
     const qty = selectedStems[stem.id] || 0;
     const showColors = qty > 0 && stemSupportsColor(stem.id, stem.category);
     const colors = stemColors[stem.id] ?? [];
+    const filledCount = colors.filter((c): c is BouquetStemColor => c !== null).length;
+    const missingCount = showColors ? Math.max(0, qty - filledCount) : 0;
+    const showStemColorError = !step1Complete && showColors && missingCount > 0;
 
     return (
       <motion.div
@@ -389,7 +413,11 @@ const CreateBouquet = () => {
         }}
         transition={{ duration: 0.4 }}
       >
-        <Card className="border-0 shadow-md bg-card-gradient h-full">
+        <Card
+          className={`border-0 shadow-md bg-card-gradient h-full ${
+            showStemColorError ? "ring-2 ring-destructive/60" : ""
+          }`}
+        >
           <CardContent className="p-6">
             <div className="flex flex-col items-center space-y-4">
               {renderImage(stem.image, stem.name)}
@@ -417,6 +445,11 @@ const CreateBouquet = () => {
                   </p>
                   {Array.from({ length: qty }, (_, i) =>
                     renderColorPicker(stem.id, i, colors[i] ?? null)
+                  )}
+                  {showStemColorError && (
+                    <p className="text-[11px] text-destructive text-center">
+                      Missing {missingCount} colour{missingCount === 1 ? "" : "s"}
+                    </p>
                   )}
                 </div>
               )}
@@ -529,10 +562,22 @@ const CreateBouquet = () => {
                       color for each flower stem you add—greenery stays natural. Final totals are confirmed
                       when we reply to your inquiry.
                     </p>
-                    {!step1Complete && Object.keys(selectedStems).length > 0 && (
-                      <p className="text-sm text-amber-700 dark:text-amber-400 max-w-xl mx-auto">
-                        Choose a color for every flower and filler stem before continuing.
-                      </p>
+                    {!step1Complete && floralColorErrors.length > 0 && (
+                      <div
+                        role="alert"
+                        className="text-sm text-amber-700 dark:text-amber-400 max-w-xl mx-auto bg-amber-50/40 dark:bg-amber-900/20 border border-amber-200/70 dark:border-amber-800/50 rounded-xl px-4 py-3 space-y-1"
+                      >
+                        <p className="font-medium">
+                          Choose a color for these stems before continuing:
+                        </p>
+                        <ul className="list-disc pl-5 space-y-0.5">
+                          {floralColorErrors.map((e) => (
+                            <li key={e.stemId}>
+                              {e.stemName} ({e.missingCount} missing)
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     )}
                   </div>
 
@@ -586,7 +631,11 @@ const CreateBouquet = () => {
                       <p className="text-sm text-amber-700 dark:text-amber-400 max-w-xl mx-auto">
                         {!hasMaterialSelection
                           ? "Choose at least one wrap, ribbon, or add-on to continue."
-                          : "Choose a color for your selected wrap (except kraft) and ribbon before continuing."}
+                          : needsWrapColor && needsRibbonColor
+                            ? "Choose a color for your selected wrap and ribbon before continuing."
+                            : needsWrapColor
+                              ? "Choose a color for your selected wrap before continuing."
+                              : "Choose a color for your ribbon before continuing."}
                       </p>
                     )}
                   </div>
