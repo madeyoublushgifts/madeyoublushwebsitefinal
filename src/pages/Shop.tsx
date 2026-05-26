@@ -322,7 +322,7 @@ const Shop = () => {
 
       <main>
         {/* ===== Hero Section ===== */}
-        <section className="pt-12 pb-6 lg:pt-16 lg:pb-8 bg-gradient-to-b from-primary/10 to-background animate-fade-in">
+        <section className="pt-12 pb-10 lg:pt-16 lg:pb-14 bg-gradient-to-b from-primary/10 to-background animate-fade-in">
   <div className="container mx-auto px-4 lg:px-8">
     <div className="max-w-4xl mx-auto text-center space-y-4">
       <h1 className="font-heading text-4xl lg:text-5xl font-bold animate-fade-in-up">
@@ -339,7 +339,7 @@ const Shop = () => {
 
 
         {/* ===== Bouquets Section ===== */}
-        <section id="bouquet-tiers" className="pt-8 pb-16 lg:pt-8 lg:pb-20 bg-background">
+        <section id="bouquet-tiers" className="pt-12 pb-16 lg:pt-16 lg:pb-20 bg-background">
   <div className="container mx-auto px-4 lg:px-8">
     {/* Heading */}
     <motion.div
