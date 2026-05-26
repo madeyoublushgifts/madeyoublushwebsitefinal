@@ -17,6 +17,13 @@ import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { ClipboardCheck, Flower, Sparkles } from "lucide-react";
 
+const fadeUp = {
+  initial: { opacity: 0, y: 28 },
+  whileInView: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, ease: "easeOut" },
+  viewport: { once: true, amount: 0.2 },
+} as const;
+
 // ===== Import Assets (import.meta.url via central registry) =====
 import {
   romanticGarden as romantic_garden,
@@ -321,49 +328,45 @@ const Shop = () => {
       <Header />
 
       <main>
-        {/* ===== Hero Section ===== */}
-        <section className="pt-12 pb-10 lg:pt-16 lg:pb-14 bg-gradient-to-b from-primary/10 to-background animate-fade-in">
-  <div className="container mx-auto px-4 lg:px-8">
-    <div className="max-w-4xl mx-auto text-center space-y-4">
-      <h1 className="font-heading text-4xl lg:text-5xl font-bold animate-fade-in-up">
-        Shop Gifts & Flowers
-      </h1>
-      <p className="text-lg text-muted-foreground leading-relaxed">
-        Toronto’s affordable & thoughtful floral subscription + gift shop. Browse
-        our tiers and add-ons, then inquire—we’ll confirm timing, pickup or
-        delivery options, and any personalization.
-      </p>
-    </div>
-  </div>
-</section>
+        {/* ===== Hero + Bouquet tiers (one flowing section) ===== */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-background to-background">
+          <div className="container mx-auto px-4 lg:px-8">
+            <motion.div
+              className="max-w-4xl mx-auto text-center space-y-4 pt-12 pb-10 lg:pt-16 lg:pb-12"
+              initial={{ opacity: 0, y: 36 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <h1 className="font-heading text-4xl lg:text-5xl font-bold">
+                Shop Gifts & Flowers
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Toronto’s affordable & thoughtful floral subscription + gift shop. Browse
+                our tiers and add-ons, then inquire—we’ll confirm timing, pickup or
+                delivery options, and any personalization.
+              </p>
+            </motion.div>
 
+            <div id="bouquet-tiers" className="scroll-mt-24 pb-16 lg:pb-20">
+              <motion.div
+                {...fadeUp}
+                className="text-center space-y-4 mb-16 max-w-2xl mx-auto"
+              >
+                <h2 className="font-heading text-5xl lg:text-4xl font-bold">
+                  Bouquet tiers
+                </h2>
+                <p className="text-lg lg:text-xl text-muted-foreground">
+                  From a single stem to luxury—every tier is styled in-house with seasonal
+                  stems whenever possible. Pick a colour template or use the colour picker
+                  on each tier before you inquire.
+                </p>
+                <div className="flex justify-center">
+                  <div className="w-20 h-1 bg-primary rounded-full mt-2" />
+                </div>
+              </motion.div>
 
-        {/* ===== Bouquets Section ===== */}
-        <section id="bouquet-tiers" className="pt-12 pb-16 lg:pt-16 lg:pb-20 bg-background">
-  <div className="container mx-auto px-4 lg:px-8">
-    {/* Heading */}
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      viewport={{ once: true }}
-      className="text-center space-y-4 mb-16 max-w-2xl mx-auto"
-    >
-      <h2 className="font-heading text-5xl lg:text-4xl font-bold">
-        Bouquet tiers
-      </h2>
-      <p className="text-lg lg:text-xl text-muted-foreground">
-        From a single stem to luxury—every tier is styled in-house with seasonal
-        stems whenever possible. Pick a colour template or use the colour picker
-        on each tier before you inquire.
-      </p>
-      <div className="flex justify-center">
-        <div className="w-20 h-1 bg-primary rounded-full mt-2"></div>
-      </div>
-    </motion.div>
-
-    {/* Bouquets Grid */}
-    <motion.div
+              {/* Bouquets Grid */}
+              <motion.div
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -430,9 +433,10 @@ const Shop = () => {
           </Card>
         </motion.div>
       ))}
-    </motion.div>
-  </div>
-</section>
+              </motion.div>
+            </div>
+          </div>
+        </section>
         {/* ===== Gifts Section ===== */}
        
 
