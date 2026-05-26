@@ -197,7 +197,7 @@ const Index = () => {
           </div>
 
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-8 xl:gap-10 items-center">
               {/* Hero Left Content */}
               <div className="lg:col-span-4 space-y-6 text-center lg:text-left order-2 lg:order-1 animate-slideInLeft">
                 <h1 className="leading-tight">
@@ -226,12 +226,12 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Hero Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-4 justify-center lg:justify-start animate-fadeIn delay-700">
-                  <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                {/* Hero Buttons — tight pair on desktop, comfortable stack on mobile */}
+                <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 pt-3 justify-center lg:justify-start animate-fadeIn delay-700 max-w-md mx-auto lg:mx-0">
+                  <Button asChild variant="outline" size="lg" className="w-full sm:w-auto sm:min-w-0 shrink-0">
                     <Link to="/shop">Shop Gifts & Flowers</Link>
                   </Button>
-                  <Button asChild size="lg" className="w-full sm:w-auto">
+                  <Button asChild size="lg" className="w-full sm:w-auto sm:min-w-0 shrink-0">
                     <Link to="/create-bouquet">Build a Bouquet</Link>
                   </Button>
                 </div>
