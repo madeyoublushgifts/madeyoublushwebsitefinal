@@ -1,10 +1,23 @@
 export type FormspreeFormType = "contact" | "inquiry" | "buildBouquet" | "waitlist";
 
+/** Fallbacks match `.env.example` — used when Vercel/env is missing or blank at build time. */
+const defaultFormIds: Record<FormspreeFormType, string> = {
+  contact: "mbdwvwzv",
+  inquiry: "xnjwkwge",
+  buildBouquet: "xzdwjevj",
+  waitlist: "xdabrbpo",
+};
+
 const envIds: Record<FormspreeFormType, string | undefined> = {
   contact: import.meta.env.VITE_FORMSPREE_CONTACT_ID,
   inquiry: import.meta.env.VITE_FORMSPREE_INQUIRY_ID,
   buildBouquet: import.meta.env.VITE_FORMSPREE_BUILD_BOUQUET_ID,
   waitlist: import.meta.env.VITE_FORMSPREE_WAITLIST_ID,
+};
+
+const resolveFormId = (type: FormspreeFormType) => {
+  const fromEnv = envIds[type]?.trim();
+  return fromEnv || defaultFormIds[type];
 };
 
 const envLabels: Record<FormspreeFormType, string> = {
@@ -15,7 +28,7 @@ const envLabels: Record<FormspreeFormType, string> = {
 };
 
 export function isFormspreeConfigured(type: FormspreeFormType): boolean {
-  return Boolean(envIds[type]?.trim());
+  return Boolean(resolveFormId(type));
 }
 
 function serializeValue(value: unknown): string {
@@ -32,7 +45,7 @@ export async function submitToFormspree(
   type: FormspreeFormType,
   fields: Record<string, unknown>,
 ): Promise<void> {
-  const formId = envIds[type]?.trim();
+  const formId = resolveFormId(type);
   if (!formId) {
     throw new Error(
       `Formspree is not set up for "${type}". Add ${envLabels[type]} to your .env file (see .env.example).`,
