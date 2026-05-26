@@ -339,7 +339,7 @@ const Shop = () => {
 
 
         {/* ===== Bouquets Section ===== */}
-        <section id="bouquet-tiers" className="pt-4 pb-16 lg:pt-6 lg:pb-20 bg-background">
+        <section id="bouquet-tiers" className="pt-8 pb-16 lg:pt-8 lg:pb-20 bg-background">
   <div className="container mx-auto px-4 lg:px-8">
     {/* Heading */}
     <motion.div

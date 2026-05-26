@@ -354,7 +354,7 @@ const CreateBouquet = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <p className="text-xs font-medium text-center text-muted-foreground">
-                  Choose color
+                  Choose colour
                 </p>
                 {renderColorSwatches(activeColor, setActiveColor, item.name)}
               </div>
@@ -441,7 +441,7 @@ const CreateBouquet = () => {
               {showColors && (
                 <div className="w-full pt-3 border-t border-border/60 space-y-2">
                   <p className="text-xs font-medium text-center text-muted-foreground">
-                    Color per stem
+                    Colour per stem
                   </p>
                   {Array.from({ length: qty }, (_, i) =>
                     renderColorPicker(stem.id, i, colors[i] ?? null)
@@ -559,7 +559,7 @@ const CreateBouquet = () => {
                     </h2>
                     <p className="text-lg lg:text-xl text-muted-foreground mt-3 max-w-2xl mx-auto">
                       Per-stem pricing reflects typical Toronto florist wholesale + hand-tied labour. Pick a
-                      color for each flower stem you add—greenery stays natural. Final totals are confirmed
+                      colour for each flower stem you add—greenery stays natural. Final totals are confirmed
                       when we reply to your inquiry.
                     </p>
                     {!step1Complete && floralColorErrors.length > 0 && (
@@ -568,7 +568,7 @@ const CreateBouquet = () => {
                         className="text-sm text-amber-700 dark:text-amber-400 max-w-xl mx-auto bg-amber-50/40 dark:bg-amber-900/20 border border-amber-200/70 dark:border-amber-800/50 rounded-xl px-4 py-3 space-y-1"
                       >
                         <p className="font-medium">
-                          Choose a color for these stems before continuing:
+                          Choose a colour for these stems before continuing:
                         </p>
                         <ul className="list-disc pl-5 space-y-0.5">
                           {floralColorErrors.map((e) => (
@@ -632,10 +632,10 @@ const CreateBouquet = () => {
                         {!hasMaterialSelection
                           ? "Choose at least one wrap, ribbon, or add-on to continue."
                           : needsWrapColor && needsRibbonColor
-                            ? "Choose a color for your selected wrap and ribbon before continuing."
+                            ? "Choose a colour for your selected wrap and ribbon before continuing."
                             : needsWrapColor
-                              ? "Choose a color for your selected wrap before continuing."
-                              : "Choose a color for your ribbon before continuing."}
+                              ? "Choose a colour for your selected wrap before continuing."
+                              : "Choose a colour for your ribbon before continuing."}
                       </p>
                     )}
                   </div>

@@ -100,7 +100,12 @@ export default {
         "petal-fall": {
           "0%": { transform: "translateY(-100vh) rotate(0deg)", opacity: "0.8" },
           "100%": { transform: "translateY(100vh) rotate(360deg)", opacity: "0" }
-        }
+        },
+        sparkle: {
+          "0%": { opacity: "0", transform: "translateY(4px) scale(0.98) rotate(-2deg)" },
+          "40%": { opacity: "1", transform: "translateY(0px) scale(1) rotate(0deg)" },
+          "100%": { opacity: "0", transform: "translateY(-3px) scale(1.04) rotate(2deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -108,7 +113,8 @@ export default {
         "fade-in": "fade-in 0.6s ease-out",
         "bloom": "bloom 0.8s ease-out",
         "float": "float 3s ease-in-out infinite",
-        "petal-fall": "petal-fall 8s linear infinite"
+        "petal-fall": "petal-fall 8s linear infinite",
+        sparkle: "sparkle 900ms ease-out",
       },
     },
   },

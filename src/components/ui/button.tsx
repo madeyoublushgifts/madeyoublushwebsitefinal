@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96] active:duration-75 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 select-none",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96] active:duration-75 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 select-none relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:pointer-events-none before:-z-10 before:opacity-0 before:bg-[radial-gradient(circle_at_15%_30%,rgba(236,72,153,0.42)_0%,transparent_55%),radial-gradient(circle_at_85%_20%,rgba(34,197,94,0.28)_0%,transparent_50%),radial-gradient(circle_at_60%_80%,rgba(168,85,247,0.26)_0%,transparent_55%)] before:transition-opacity before:duration-200 hover:before:opacity-100 hover:before:animate-sparkle active:before:opacity-60",
   {
     variants: {
       variant: {

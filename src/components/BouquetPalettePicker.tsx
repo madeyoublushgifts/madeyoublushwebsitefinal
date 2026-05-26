@@ -116,7 +116,7 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
               : "text-muted-foreground hover:text-foreground hover:bg-primary/10"
           )}
         >
-          Color template
+          Colour template
         </button>
         <button
           type="button"
@@ -128,7 +128,7 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
               : "text-muted-foreground hover:text-foreground hover:bg-primary/10"
           )}
         >
-          Color picker
+          Colour picker
         </button>
       </div>
 

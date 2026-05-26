@@ -35,12 +35,12 @@ export const materialGroupLabels: Record<
 > = {
   wrapping: {
     title: "Wrapping",
-    subtitle: "Choose one wrap style—pick a color too",
+    subtitle: "Choose one wrap style—pick a colour too",
     pickOne: true,
   },
   ribbon: {
     title: "Ribbons",
-    subtitle: "Choose one ribbon finish and your ribbon color",
+    subtitle: "Choose one ribbon finish and your ribbon colour",
     pickOne: true,
   },
   addon: {
@@ -192,7 +192,7 @@ export const buildBouquetMaterials: BouquetMaterialOption[] = [
   },
 ];
 
-/** Kraft wrap stays natural brown—no color picker. All ribbon types get a color choice. */
+/** Kraft wrap stays natural brown—no colour picker. All ribbon types get a colour choice. */
 const materialsWithoutColorPicker = new Set(["wrap-kraft"]);
 
 export const materialSupportsColor = (materialId: string) => {
