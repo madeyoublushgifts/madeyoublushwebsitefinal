@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import { submitToFormspree, type FormspreeFormType } from "@/lib/formspree";
-import { Loader2 } from "lucide-react";
+import { ClipboardCheck, Loader2 } from "lucide-react";
 
 interface InquiryFormProps {
   isOpen: boolean;
@@ -230,7 +230,10 @@ const InquiryForm = ({
                   Sending…
                 </>
               ) : (
-                "Inquire / Pre-order"
+                <>
+                  <ClipboardCheck className="mr-1.5 h-3.5 w-3.5" />
+                  Inquire / Pre-order
+                </>
               )}
             </Button>
           </div>

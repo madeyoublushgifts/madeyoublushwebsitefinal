@@ -15,7 +15,7 @@ import {
 } from "@/data/bouquetTierColors";
 import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { Flower, Sparkles } from "lucide-react";
+import { ClipboardCheck, Flower, Sparkles } from "lucide-react";
 
 // ===== Import Assets (import.meta.url via central registry) =====
 import {
@@ -422,6 +422,7 @@ const Shop = () => {
                   className="w-full transition-transform duration-300 group-hover:scale-105"
                   onClick={() => handleTierInquire(bouquet.id, bouquet.name)}
                 >
+                  <ClipboardCheck className="mr-2 h-5 w-5" />
                   Inquire / Pre-order
                 </Button>
               </div>
@@ -516,6 +517,7 @@ const Shop = () => {
                   className="w-full transition-transform duration-300 group-hover:scale-105"
                   onClick={() => handleInquire(gift.name)}
                 >
+                  <ClipboardCheck className="mr-2 h-5 w-5" />
                   Inquire / Pre-order
                 </Button>
               </div>
@@ -592,6 +594,7 @@ const Shop = () => {
                           className="w-full transition-transform duration-300 group-hover:scale-105"
                           onClick={() => handleInquire(bouquet.name)}
                         >
+                          <ClipboardCheck className="mr-2 h-5 w-5" />
                           Inquire / Pre-order
                         </Button>
                       </div>
@@ -670,6 +673,7 @@ const Shop = () => {
                           className="w-full transition-transform duration-300 group-hover:scale-105"
                           onClick={() => handleInquire(gift.name)}
                         >
+                          <ClipboardCheck className="mr-2 h-5 w-5" />
                           Inquire / Pre-order
                         </Button>
                       </div>

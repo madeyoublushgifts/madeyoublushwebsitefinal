@@ -13,7 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import { submitToFormspree } from "@/lib/formspree";
 import { instagram, tiktok } from "@/lib/social";
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { BellRing, Loader2, ShoppingCart } from "lucide-react";
 import {
   BookOpen,
   CalendarHeart,
@@ -140,10 +140,16 @@ const ComingSoon = () => {
               transition={{ delay: 0.2 }}
             >
               <Button asChild size="lg" className="rounded-full">
-                <a href="#waitlist">Join the waitlist</a>
+                <a href="#waitlist">
+                  <BellRing className="mr-2 h-5 w-5" />
+                  Join the waitlist
+                </a>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full">
-                <Link to="/shop">Shop while you wait</Link>
+                <Link to="/shop">
+                  <ShoppingCart className="mr-2 h-5 w-5" />
+                  Shop while you wait
+                </Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -335,7 +341,10 @@ const ComingSoon = () => {
                         Sending…
                       </>
                     ) : (
-                      "Join the waitlist"
+                      <>
+                        <BellRing className="mr-2 h-5 w-5" />
+                        Join the waitlist
+                      </>
                     )}
                   </Button>
                 </form>
@@ -381,7 +390,7 @@ const ComingSoon = () => {
                     Build a Bouquet
                   </Link>{" "}
                   flow today—we&apos;re evolving it into the full visual experience
-                  below.
+                  alongside these previews.
                 </p>
               </div>
 

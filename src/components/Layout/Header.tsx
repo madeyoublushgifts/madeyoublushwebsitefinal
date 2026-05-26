@@ -47,7 +47,10 @@ const Header = () => {
           {/* CTA Button + Mobile Menu Toggle */}
           <div className="flex items-center space-x-4">
             <Button asChild variant="default" size="sm" className="hidden md:inline-flex">
-              <Link to="/create-bouquet">Build a Bouquet</Link>
+              <Link to="/create-bouquet">
+                <Flower className="h-4 w-4" />
+                Build a Bouquet
+              </Link>
             </Button>
 
             {/* Mobile Hamburger */}
@@ -80,6 +83,7 @@ const Header = () => {
           ))}
           <Button asChild variant="default" size="sm" className="w-full">
             <Link to="/create-bouquet" onClick={() => setMobileMenuOpen(false)}>
+              <Flower className="mr-2 h-4 w-4" />
               Build a Bouquet
             </Link>
           </Button>

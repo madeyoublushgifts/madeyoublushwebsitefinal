@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
-import { ArrowRight, Sparkles, Heart, Leaf } from "lucide-react";
+import { ArrowRight, Flower, Heart, Mail, Phone, ShoppingCart, Sparkles, Leaf } from "lucide-react";
 import { motion } from "framer-motion";
 
 // ================= ASSETS =================
@@ -229,10 +229,16 @@ const Index = () => {
                 {/* Hero Buttons — tight pair on desktop, comfortable stack on mobile */}
                 <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 pt-3 justify-center lg:justify-start animate-fadeIn delay-700 max-w-md mx-auto lg:mx-0">
                   <Button asChild variant="outline" size="lg" className="w-full sm:w-auto sm:min-w-0 shrink-0">
-                    <Link to="/shop">Shop Gifts & Flowers</Link>
+                    <Link to="/shop">
+                      <ShoppingCart className="mr-2 h-5 w-5" />
+                      Shop Gifts & Flowers
+                    </Link>
                   </Button>
                   <Button asChild size="lg" className="w-full sm:w-auto sm:min-w-0 shrink-0">
-                    <Link to="/create-bouquet">Build a Bouquet</Link>
+                    <Link to="/create-bouquet">
+                      <Flower className="mr-2 h-5 w-5" />
+                      Build a Bouquet
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -626,7 +632,11 @@ const Index = () => {
 
                 <div className="sm:col-span-2 text-center pt-1">
                   <Button asChild size="lg" className="w-full sm:w-auto min-w-[10rem]">
-                    <Link to="/contact">Contact Us</Link>
+                    <Link to="/contact">
+                      <Phone className="mr-2 h-5 w-5" />
+                      <Mail className="mr-2 h-5 w-5" />
+                      Contact Us
+                    </Link>
                   </Button>
                 </div>
               </motion.form>

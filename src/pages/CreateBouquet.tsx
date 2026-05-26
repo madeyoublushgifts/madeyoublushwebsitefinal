@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import InquiryForm from "@/components/ui/inquiry-form";
-import { Plus, Minus, ChevronRight, ChevronLeft } from "lucide-react";
+import { ClipboardCheck, Plus, Minus, ChevronRight, ChevronLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   buildBouquetStems,
@@ -766,6 +766,7 @@ const CreateBouquet = () => {
                           onClick={handlePlaceOrder}
                           disabled={Object.keys(selectedStems).length === 0}
                         >
+                          <ClipboardCheck className="mr-2 h-5 w-5" />
                           Inquire / Pre-order
                         </Button>
                       </CardContent>
