@@ -77,13 +77,13 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
               aria-pressed={active}
               disabled={atMax}
               onClick={() => toggleCustomColor(color.id)}
-              className={cn(
-                "h-7 w-7 rounded-full border-2 transition-all shrink-0",
-                active
-                  ? "border-primary ring-2 ring-primary/30 scale-110"
-                  : "border-border hover:border-primary/50",
-                atMax && "opacity-40 cursor-not-allowed"
-              )}
+            className={cn(
+                    "h-7 w-7 rounded-full border-2 transition-all duration-200 shrink-0 active:scale-90",
+                    active
+                      ? "border-primary ring-2 ring-primary/40 scale-110 shadow-sm"
+                      : "border-border hover:border-primary hover:scale-105",
+                    atMax && "opacity-40 cursor-not-allowed"
+                  )}
               style={{ backgroundColor: color.hex }}
             />
           );
@@ -105,15 +105,15 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
     <div className="space-y-3 pt-1 border-t border-border/50">
       <p className="text-xs font-medium text-muted-foreground">Palette</p>
 
-      <div className="flex rounded-lg border border-border p-0.5 bg-muted/40">
+      <div className="flex rounded-full border border-border p-0.5 bg-muted/40">
         <button
           type="button"
           onClick={() => setMode("template")}
           className={cn(
-            "flex-1 text-xs py-1.5 rounded-md transition-colors",
+            "flex-1 text-xs py-1.5 rounded-full transition-all duration-200 active:scale-[0.97]",
             selection.mode === "template"
-              ? "bg-background shadow-sm font-medium text-foreground"
-              : "text-muted-foreground hover:text-foreground"
+              ? "bg-primary text-primary-foreground shadow-sm font-medium"
+              : "text-muted-foreground hover:text-foreground hover:bg-primary/10"
           )}
         >
           Color template
@@ -122,10 +122,10 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
           type="button"
           onClick={() => setMode("custom")}
           className={cn(
-            "flex-1 text-xs py-1.5 rounded-md transition-colors",
+            "flex-1 text-xs py-1.5 rounded-full transition-all duration-200 active:scale-[0.97]",
             selection.mode === "custom"
-              ? "bg-background shadow-sm font-medium text-foreground"
-              : "text-muted-foreground hover:text-foreground"
+              ? "bg-primary text-primary-foreground shadow-sm font-medium"
+              : "text-muted-foreground hover:text-foreground hover:bg-primary/10"
           )}
         >
           Color picker

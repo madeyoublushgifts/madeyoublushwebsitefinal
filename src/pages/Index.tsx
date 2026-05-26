@@ -200,9 +200,11 @@ const Index = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
               {/* Hero Left Content */}
               <div className="lg:col-span-4 space-y-6 text-center lg:text-left order-2 lg:order-1 animate-slideInLeft">
-                <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-                  {current.titleLine1}{" "}
-                  <span className="text-primary block animate-bloom">
+                <h1 className="leading-tight">
+                  <span className="font-script text-5xl sm:text-6xl lg:text-7xl text-foreground block">
+                    {current.titleLine1}
+                  </span>
+                  <span className="font-script text-5xl sm:text-6xl lg:text-7xl text-primary block animate-bloom">
                     {current.titleLine2}
                   </span>
                 </h1>
@@ -226,19 +228,10 @@ const Index = () => {
 
                 {/* Hero Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 pt-4 justify-center lg:justify-start animate-fadeIn delay-700">
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full w-full sm:w-auto hover:scale-105 transition-transform duration-300"
-                  >
+                  <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
                     <Link to="/shop">Shop Gifts & Flowers</Link>
                   </Button>
-                  <Button
-                    asChild
-                    size="lg"
-                    className="rounded-full w-full sm:w-auto hover:scale-105 transition-transform duration-300"
-                  >
+                  <Button asChild size="lg" className="w-full sm:w-auto">
                     <Link to="/create-bouquet">Build a Bouquet</Link>
                   </Button>
                 </div>
@@ -521,21 +514,12 @@ const Index = () => {
                 bouquets, gifts, or an in-person experience.
               </motion.p>
 
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-              >
-                <Button
-                  asChild
-                  size="lg"
-                  className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto"
-                >
-                  <Link to="/create-bouquet">
-                    Build a Bouquet
-                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  </Link>
-                </Button>
-              </motion.div>
+              <Button asChild size="lg" className="w-full sm:w-auto">
+                <Link to="/create-bouquet">
+                  Build a Bouquet
+                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+                </Link>
+              </Button>
             </motion.div>
           </div>
         </section>
@@ -544,14 +528,14 @@ const Index = () => {
         <section className="py-12 sm:py-16 lg:py-20 bg-background overflow-hidden">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
-              className="max-w-3xl mx-auto border-2 border-pink-200 rounded-2xl p-8 sm:p-12 bg-white shadow-soft"
+              className="max-w-2xl mx-auto border-2 border-pink-200 rounded-2xl p-5 sm:p-8 bg-white shadow-soft"
               initial={{ opacity: 0, y: 80 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: "easeOut" }}
               viewport={{ once: true, amount: 0.3 }}
             >
               <motion.h2
-                className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-6 sm:mb-8"
+                className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-4 sm:mb-5"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.1 }}
@@ -560,7 +544,7 @@ const Index = () => {
               </motion.h2>
 
               <motion.p
-                className="text-center text-muted-foreground text-lg mb-8"
+                className="text-center text-muted-foreground text-base mb-5"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
@@ -571,7 +555,7 @@ const Index = () => {
               </motion.p>
 
               <motion.form
-                className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 0.3 }}
@@ -588,7 +572,7 @@ const Index = () => {
                     id="home-name"
                     name="name"
                     placeholder="Who should we say hi to?"
-                    className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition"
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition"
                   />
                 </div>
 
@@ -604,7 +588,7 @@ const Index = () => {
                     id="home-email"
                     name="email"
                     placeholder="you@email.com"
-                    className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition"
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition"
                   />
                 </div>
 
@@ -620,7 +604,7 @@ const Index = () => {
                     id="home-subject"
                     name="subject"
                     placeholder="Bouquet inquiry, pop-up idea, subscription…"
-                    className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition"
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition"
                   />
                 </div>
 
@@ -634,21 +618,17 @@ const Index = () => {
                   <textarea
                     id="home-message"
                     name="message"
-                    rows={5}
+                    rows={3}
                     placeholder="Tell us dates, neighbourhood, vibe, and any add-ons (cards, snail-mail notes, gifts)."
-                    className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition resize-none"
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition resize-none"
                   />
                 </div>
 
-                <motion.div
-                  className="sm:col-span-2 text-center"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                >
-                  <Button asChild size="lg" className="rounded-lg px-8 py-4 text-lg">
+                <div className="sm:col-span-2 text-center pt-1">
+                  <Button asChild size="lg" className="w-full sm:w-auto min-w-[10rem]">
                     <Link to="/contact">Contact Us</Link>
                   </Button>
-                </motion.div>
+                </div>
               </motion.form>
             </motion.div>
           </div>

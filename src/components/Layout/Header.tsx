@@ -21,7 +21,7 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <Flower className="h-8 w-8 text-primary" />
-            <span className="font-heading text-xl sm:text-2xl font-semibold text-foreground">
+            <span className="font-script text-2xl sm:text-3xl text-foreground leading-none pt-0.5">
               Made You Blush
             </span>
           </Link>

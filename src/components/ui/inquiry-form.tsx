@@ -103,112 +103,130 @@ const InquiryForm = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-heading">{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+      <DialogContent className="sm:max-w-[22rem] p-0 gap-0 overflow-hidden flex flex-col max-h-[min(92dvh,calc(100%-1rem))] sm:max-h-[min(88dvh,36rem)]">
+        <DialogHeader className="shrink-0 px-4 pt-4 pb-2 sm:px-5 sm:pt-5 space-y-1">
+          <DialogTitle className="font-heading text-base sm:text-lg">{title}</DialogTitle>
+          <DialogDescription className="text-xs leading-snug">{description}</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {itemName && (
-            <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-              <strong>Item:</strong> {itemName}
-            </div>
-          )}
+        <form onSubmit={handleSubmit} className="flex flex-col min-h-0 flex-1">
+          <div className="overflow-y-auto flex-1 px-4 sm:px-5 space-y-2.5 pb-2">
+            {itemName && (
+              <div className="text-xs text-muted-foreground bg-muted/80 p-2 rounded-md max-h-16 overflow-y-auto leading-snug">
+                <strong>Item:</strong> {itemName}
+              </div>
+            )}
 
-          <div className="space-y-2">
-            <Label htmlFor="inq-name">Full Name *</Label>
-            <Input
-              id="inq-name"
-              value={formData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
-              required
-              disabled={isSubmitting}
-              placeholder="Your full name"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="inq-email">Email *</Label>
-            <Input
-              id="inq-email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              required
-              disabled={isSubmitting}
-              placeholder="your.email@example.com"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="inq-phone">Phone Number *</Label>
-            <Input
-              id="inq-phone"
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleInputChange("phone", e.target.value)}
-              required
-              disabled={isSubmitting}
-              placeholder="(555) 123-4567"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="inq-address">Delivery Address *</Label>
-            <Textarea
-              id="inq-address"
-              value={formData.address}
-              onChange={(e) => handleInputChange("address", e.target.value)}
-              required
-              disabled={isSubmitting}
-              placeholder="Full delivery address including city and postal code"
-              rows={3}
-            />
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="inq-isGift"
-              checked={formData.isGift}
-              disabled={isSubmitting}
-              onCheckedChange={(checked) =>
-                handleInputChange("isGift", checked as boolean)
-              }
-            />
-            <Label htmlFor="inq-isGift" className="text-sm">
-              Make it a gift
-            </Label>
-          </div>
-
-          {showPersonalMessage && (
-            <div className="space-y-2">
-              <Label htmlFor="inq-message">Card message</Label>
-              <Textarea
-                id="inq-message"
-                value={formData.message}
-                onChange={(e) => handleInputChange("message", e.target.value)}
+            <div className="space-y-1">
+              <Label htmlFor="inq-name" className="text-xs">
+                Full Name *
+              </Label>
+              <Input
+                id="inq-name"
+                value={formData.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+                required
                 disabled={isSubmitting}
-                placeholder="What should we write on your card or snail-mail note?"
-                rows={3}
+                placeholder="Your full name"
+                className="h-9 text-sm"
               />
             </div>
-          )}
 
-          <div className="flex space-x-3 pt-4">
+            <div className="space-y-1">
+              <Label htmlFor="inq-email" className="text-xs">
+                Email *
+              </Label>
+              <Input
+                id="inq-email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                required
+                disabled={isSubmitting}
+                placeholder="your.email@example.com"
+                className="h-9 text-sm"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="inq-phone" className="text-xs">
+                Phone Number *
+              </Label>
+              <Input
+                id="inq-phone"
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleInputChange("phone", e.target.value)}
+                required
+                disabled={isSubmitting}
+                placeholder="(555) 123-4567"
+                className="h-9 text-sm"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="inq-address" className="text-xs">
+                Delivery Address *
+              </Label>
+              <Textarea
+                id="inq-address"
+                value={formData.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
+                required
+                disabled={isSubmitting}
+                placeholder="Street, city, postal code"
+                rows={2}
+                className="text-sm min-h-[3.5rem] resize-none"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2 py-0.5">
+              <Checkbox
+                id="inq-isGift"
+                checked={formData.isGift}
+                disabled={isSubmitting}
+                onCheckedChange={(checked) =>
+                  handleInputChange("isGift", checked as boolean)
+                }
+              />
+              <Label htmlFor="inq-isGift" className="text-xs font-normal">
+                Make it a gift
+              </Label>
+            </div>
+
+            {showPersonalMessage && (
+              <div className="space-y-1">
+                <Label htmlFor="inq-message" className="text-xs">
+                  Card message
+                </Label>
+                <Textarea
+                  id="inq-message"
+                  value={formData.message}
+                  onChange={(e) => handleInputChange("message", e.target.value)}
+                  disabled={isSubmitting}
+                  placeholder="What should we write on your card?"
+                  rows={2}
+                  className="text-sm min-h-[3.5rem] resize-none"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="shrink-0 flex gap-2 border-t border-border bg-background px-4 py-3 sm:px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <Button
               type="button"
               variant="outline"
+              size="sm"
               onClick={onClose}
               disabled={isSubmitting}
               className="flex-1"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting} className="flex-1">
+            <Button type="submit" size="sm" disabled={isSubmitting} className="flex-1">
               {isSubmitting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
                   Sending…
                 </>
               ) : (

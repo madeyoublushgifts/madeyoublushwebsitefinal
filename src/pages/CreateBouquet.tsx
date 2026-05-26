@@ -272,10 +272,10 @@ const CreateBouquet = () => {
               e.stopPropagation();
               onSelect(color.id);
             }}
-            className={`h-7 w-7 rounded-full border-2 transition-all shrink-0 ${
+            className={`h-7 w-7 rounded-full border-2 transition-all duration-200 shrink-0 active:scale-90 ${
               isActive
-                ? "border-primary ring-2 ring-primary/30 scale-110"
-                : "border-border hover:border-primary/50"
+                ? "border-primary ring-2 ring-primary/40 scale-110 shadow-sm"
+                : "border-border hover:border-primary hover:scale-105"
             }`}
             style={{ backgroundColor: color.hex }}
           />
@@ -508,8 +508,8 @@ const CreateBouquet = () => {
           </motion.div>
         </section>
 
-        <section className="py-16">
-          <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
+        <section className="pb-24 sm:pb-28">
+          <div className="container mx-auto px-4 lg:px-8 max-w-6xl pt-8 sm:pt-10">
             <AnimatePresence mode="wait">
               {currentStep === 1 && (
                 <motion.div
@@ -712,7 +712,8 @@ const CreateBouquet = () => {
                         </div>
 
                         <Button
-                          className="w-full text-lg py-6"
+                          size="lg"
+                          className="w-full"
                           onClick={handlePlaceOrder}
                           disabled={Object.keys(selectedStems).length === 0}
                         >
@@ -724,16 +725,22 @@ const CreateBouquet = () => {
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
 
-            <div className="flex justify-between pt-12">
+          <div className="sticky bottom-0 z-30 mt-6 border-t border-primary/15 bg-background/95 backdrop-blur-md shadow-[0_-8px_24px_hsl(340_30%_25%_/0.08)]">
+            <div className="container mx-auto max-w-6xl px-4 lg:px-8 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex justify-between gap-3">
               <Button
                 variant="outline"
+                size="lg"
+                className="min-w-[7rem] sm:min-w-[9rem]"
                 onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
                 disabled={currentStep === 1}
               >
                 <ChevronLeft className="mr-2 h-4 w-4" /> Previous
               </Button>
               <Button
+                size="lg"
+                className="min-w-[7rem] sm:min-w-[9rem]"
                 onClick={() => setCurrentStep(Math.min(3, currentStep + 1))}
                 disabled={
                   currentStep === 3 ||

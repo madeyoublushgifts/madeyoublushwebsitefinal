@@ -136,8 +136,8 @@ const Contact = () => {
           viewport={{ once: true }}
         >
           <Card className="border-0 shadow-elegant bg-card-gradient">
-            <CardContent className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <CardContent className="p-5 sm:p-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name Field */}
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name *</Label>
@@ -175,11 +175,12 @@ const Contact = () => {
                     required
                     disabled={isSubmitting}
                     placeholder="Bouquet tier, add-ons (cards, snail-mail notes, gifts), subscription cadence, pop-up collab, or event details…"
-                    rows={6}
+                    rows={4}
+                    className="min-h-[5.5rem] resize-none"
                   />
                 </div>
 
-                <Button type="submit" disabled={isSubmitting} className="w-full text-lg py-6">
+                <Button type="submit" disabled={isSubmitting} className="w-full" size="lg">
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />

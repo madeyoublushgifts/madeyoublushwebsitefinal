@@ -322,13 +322,13 @@ const Shop = () => {
 
       <main>
         {/* ===== Hero Section ===== */}
-        <section className="py-20 lg:py-32 bg-gradient-to-b from-primary/10 to-background animate-fade-in">
+        <section className="pt-12 pb-6 lg:pt-16 lg:pb-8 bg-gradient-to-b from-primary/10 to-background animate-fade-in">
   <div className="container mx-auto px-4 lg:px-8">
-    <div className="max-w-4xl mx-auto text-center space-y-8">
-      <h1 className="font-heading text-5xl lg:text-6xl font-bold animate-fade-in-up">
+    <div className="max-w-4xl mx-auto text-center space-y-4">
+      <h1 className="font-heading text-4xl lg:text-5xl font-bold animate-fade-in-up">
         Shop Gifts & Flowers
       </h1>
-      <p className="text-xl text-muted-foreground leading-relaxed">
+      <p className="text-lg text-muted-foreground leading-relaxed">
         Toronto’s affordable & thoughtful floral subscription + gift shop. Browse
         our tiers and add-ons, then inquire—we’ll confirm timing, pickup or
         delivery options, and any personalization.
@@ -339,7 +339,7 @@ const Shop = () => {
 
 
         {/* ===== Bouquets Section ===== */}
-        <section id="bouquet-tiers" className="py-20 lg:py-28 bg-background">
+        <section id="bouquet-tiers" className="pt-4 pb-16 lg:pt-6 lg:pb-20 bg-background">
   <div className="container mx-auto px-4 lg:px-8">
     {/* Heading */}
     <motion.div
