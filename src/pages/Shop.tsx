@@ -17,11 +17,16 @@ import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { ClipboardCheck, Flower, Sparkles } from "lucide-react";
 
-const fadeUp = {
-  initial: { opacity: 0, y: 28 },
-  whileInView: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, ease: "easeOut" },
-  viewport: { once: true, amount: 0.2 },
+const staggerCards = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.1, delayChildren: 0.15 },
+  },
+} as const;
+
+const cardReveal = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0 },
 } as const;
 
 // ===== Import Assets (import.meta.url via central registry) =====
@@ -329,7 +334,7 @@ const Shop = () => {
 
       <main>
         {/* ===== Hero + Bouquet tiers (one flowing section) ===== */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-background to-background">
+        <section className="relative bg-gradient-to-b from-primary/10 via-background to-background">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               className="max-w-4xl mx-auto text-center space-y-4 pt-12 pb-10 lg:pt-16 lg:pb-12"
@@ -349,7 +354,9 @@ const Shop = () => {
 
             <div id="bouquet-tiers" className="scroll-mt-24 pb-16 lg:pb-20">
               <motion.div
-                {...fadeUp}
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: "easeOut", delay: 0.25 }}
                 className="text-center space-y-4 mb-16 max-w-2xl mx-auto"
               >
                 <h2 className="font-heading text-5xl lg:text-4xl font-bold">
@@ -365,32 +372,23 @@ const Shop = () => {
                 </div>
               </motion.div>
 
-              {/* Bouquets Grid */}
+              {/* Bouquets Grid — animate on mount so mobile never stays hidden */}
               <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: { staggerChildren: 0.2 },
-        },
-      }}
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8"
-    >
-      {bouquets.map((bouquet) => (
-        <motion.div
-          key={bouquet.id}
-          variants={{
-            hidden: { opacity: 0, y: 40 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          whileHover={{
-            scale: 1.04,
-            boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.15)",
-          }}
-        >
+                initial="hidden"
+                animate="visible"
+                variants={staggerCards}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8"
+              >
+                {bouquets.map((bouquet) => (
+                  <motion.div
+                    key={bouquet.id}
+                    variants={cardReveal}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    whileHover={{
+                      scale: 1.04,
+                      boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.15)",
+                    }}
+                  >
           <Card className="group cursor-pointer border-0 shadow-soft bg-card-gradient rounded-2xl overflow-hidden">
             <CardContent className="p-0">
               {/* Image */}
@@ -431,8 +429,8 @@ const Shop = () => {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
-      ))}
+                  </motion.div>
+                ))}
               </motion.div>
             </div>
           </div>
