@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
+import FloralDivider from "@/components/FloralDivider";
 import { ArrowRight, Flower, Heart, Mail, Phone, ShoppingCart, Sparkles, Leaf } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -353,9 +354,11 @@ const Index = () => {
           </div>
         </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* ================= FEATURED COLLECTIONS ================= */}
 
-        <section className="py-12 sm:py-16 lg:py-20 bg-background relative overflow-hidden">
+        <section className="pt-8 lg:pt-10 pb-12 sm:pb-16 lg:pb-20 bg-background relative overflow-hidden">
           {/* Floating background shapes */}
           <div className="absolute inset-0 pointer-events-none opacity-20">
             <motion.div
@@ -441,8 +444,10 @@ const Index = () => {
           </div>
         </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* ================= WHY CHOOSE US ================= */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-floral overflow-hidden">
+        <section className="pt-8 lg:pt-10 pb-12 sm:pb-16 lg:pb-20 bg-floral overflow-hidden">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -491,8 +496,11 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* ================= CALL TO ACTION ================= */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-primary/5 overflow-hidden">
+        <section className="pt-8 lg:pt-10 pb-12 sm:pb-16 lg:pb-20 bg-primary/5 overflow-hidden">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               className="max-w-3xl mx-auto space-y-4 sm:space-y-6"
@@ -530,8 +538,10 @@ const Index = () => {
           </div>
         </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* ================= CONTACT FORM ================= */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-background overflow-hidden">
+        <section className="pt-8 lg:pt-10 pb-12 sm:pb-16 lg:pb-20 bg-background overflow-hidden">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               className="max-w-2xl mx-auto border-2 border-pink-200 rounded-2xl p-5 sm:p-8 bg-white shadow-soft"

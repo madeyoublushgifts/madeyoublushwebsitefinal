@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
+import FloralDivider from "@/components/FloralDivider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -155,8 +156,10 @@ const ComingSoon = () => {
           </motion.div>
         </section>
 
+        <FloralDivider className="pt-8 lg:pt-10" />
+
         {/* Subscription */}
-        <section className="py-16 lg:py-20 bg-background">
+        <section className="pt-8 lg:pt-10 pb-16 lg:pb-20 bg-background">
           <motion.div className="container mx-auto px-4 lg:px-8" {...fadeUp}>
             <motion.div
               className="max-w-3xl mx-auto text-center space-y-4 mb-12"
@@ -222,8 +225,10 @@ const ComingSoon = () => {
           </motion.div>
         </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* Waitlist */}
-        <section id="waitlist" className="py-16 lg:py-24 bg-gradient-to-b from-primary/5 to-background scroll-mt-20">
+        <section id="waitlist" className="pt-8 lg:pt-10 pb-16 lg:pb-24 bg-gradient-to-b from-primary/5 to-background scroll-mt-20">
           <motion.div className="container mx-auto px-4 lg:px-8 max-w-xl" {...fadeUp}>
             <div className="text-center space-y-4 mb-10">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold">
@@ -355,8 +360,10 @@ const ComingSoon = () => {
           </motion.div>
         </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* Build your own */}
-        <section className="py-16 lg:py-20 bg-floral">
+        <section className="pt-8 lg:pt-10 pb-16 lg:pb-20 bg-floral">
           <motion.div className="container mx-auto px-4 lg:px-8" {...fadeUp}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
@@ -420,8 +427,10 @@ const ComingSoon = () => {
           </motion.div>
         </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* Events */}
-        <section className="py-16 lg:py-20 bg-background">
+        <section className="pt-8 lg:pt-10 pb-16 lg:pb-20 bg-background">
           <motion.div className="container mx-auto px-4 lg:px-8 max-w-4xl" {...fadeUp}>
             <div className="text-center space-y-4 mb-12">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold">
@@ -521,8 +530,10 @@ const ComingSoon = () => {
           </motion.div>
         </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* Blush Notes */}
-        <section id="blush-notes" className="py-16 lg:py-20 bg-floral scroll-mt-20">
+        <section id="blush-notes" className="pt-8 lg:pt-10 pb-16 lg:pb-20 bg-floral scroll-mt-20">
           <motion.div className="container mx-auto px-4 lg:px-8 max-w-4xl" {...fadeUp}>
             <div className="text-center space-y-4 mb-12">
               <Badge variant="secondary" className="text-sm px-4 py-1">

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
+import FloralDivider from "@/components/FloralDivider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -495,7 +496,9 @@ const CreateBouquet = () => {
           </motion.div>
         </section>
 
-        <section className="py-8 border-b border-border">
+        <FloralDivider className="pt-8 lg:pt-10" />
+
+        <section className="pt-8 lg:pt-10 pb-8 border-b border-border">
           <motion.div
             className="container mx-auto px-4 lg:px-8 max-w-4xl"
             initial={{ opacity: 0, y: 30 }}

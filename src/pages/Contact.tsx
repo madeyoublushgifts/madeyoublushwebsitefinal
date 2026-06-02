@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
+import FloralDivider from "@/components/FloralDivider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -98,8 +99,10 @@ const Contact = () => {
           </div>
         </section>
 
+        <FloralDivider className="pt-8 lg:pt-10" />
+
         {/* ================= CONTACT SECTION ================= */}
-       <section id="contact-form" className="py-20 bg-background scroll-mt-24">
+       <section id="contact-form" className="pt-8 lg:pt-10 pb-20 bg-background scroll-mt-24">
   <div className="container mx-auto px-4 lg:px-8">
     <motion.div
       className="grid grid-cols-1 lg:grid-cols-2 gap-16"
@@ -333,8 +336,10 @@ const Contact = () => {
   </div>
 </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* ================= WHERE TO FIND US NEXT ================= */}
-      <section className="py-20 bg-floral">
+      <section className="pt-8 lg:pt-10 pb-20 bg-floral">
   <div className="container mx-auto px-4 lg:px-8">
     <motion.div
       className="max-w-4xl mx-auto space-y-8"

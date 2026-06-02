@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import InquiryForm from "@/components/ui/inquiry-form";
 import BouquetPalettePicker from "@/components/BouquetPalettePicker";
+import FloralDivider from "@/components/FloralDivider";
 import {
   defaultTierPaletteSelection,
   formatTierPaletteChoice,
@@ -359,25 +360,7 @@ const Shop = () => {
               </p>
             </motion.div>
 
-            {/* Floral divider — sits just below hero */}
-            <motion.div
-              className="flex flex-col items-center px-4 pt-8 lg:pt-10"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              viewport={{ once: true, amount: 0.4 }}
-            >
-              <div
-                className="flex w-full max-w-lg items-center gap-3"
-                aria-hidden="true"
-              >
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-primary/45" />
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-primary/35 bg-background/90 shadow-sm">
-                  <Flower className="h-4 w-4 text-primary" />
-                </div>
-                <div className="h-px flex-1 bg-gradient-to-l from-transparent via-primary/30 to-primary/45" />
-              </div>
-            </motion.div>
+            <FloralDivider className="pt-8 lg:pt-10" />
 
             <div id="bouquet-tiers" className="scroll-mt-24 pt-8 lg:pt-10 pb-16 lg:pb-20">
               <motion.div
@@ -461,10 +444,11 @@ const Shop = () => {
             </div>
           </div>
         </section>
-        {/* ===== Gifts Section ===== */}
-       
 
-<section className="py-20 bg-floral">
+        <FloralDivider className="py-8 lg:py-10" />
+
+        {/* ===== Gifts Section ===== */}
+        <section className="pt-8 lg:pt-10 pb-20 bg-floral">
   <div className="container mx-auto px-4 lg:px-8">
     {/* Heading Animation */}
     <motion.div
@@ -557,8 +541,10 @@ const Shop = () => {
   </div>
 </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* ===== Signature Bouquets (template favourites) ===== */}
-        <section id="signature-bouquets" className="py-20 lg:py-28 bg-background">
+        <section id="signature-bouquets" className="pt-8 lg:pt-10 pb-20 lg:pb-28 bg-background">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -634,8 +620,10 @@ const Shop = () => {
           </div>
         </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* ===== Curated Gift Sets (template favourites) ===== */}
-        <section id="curated-gift-sets" className="py-20 bg-floral">
+        <section id="curated-gift-sets" className="pt-8 lg:pt-10 pb-20 bg-floral">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -741,8 +729,10 @@ const Shop = () => {
           </div>
         </section>
 
+        <FloralDivider className="py-8 lg:py-10" />
+
         {/* ===== Custom Note ===== */}
-        <section className="py-20 bg-background">
+        <section className="pt-8 lg:pt-10 pb-20 bg-background">
   <div className="container mx-auto px-4 lg:px-8">
     <motion.div
       className="max-w-4xl mx-auto text-center space-y-6"
