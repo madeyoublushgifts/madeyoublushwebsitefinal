@@ -17,6 +17,13 @@ import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { ClipboardCheck, Flower, Sparkles } from "lucide-react";
 
+const fadeUp = {
+  initial: { opacity: 0, y: 28 },
+  whileInView: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, ease: "easeOut" },
+  viewport: { once: true, amount: 0.15 },
+} as const;
+
 const staggerCards = {
   hidden: {},
   visible: {
@@ -337,7 +344,7 @@ const Shop = () => {
         <section className="relative bg-gradient-to-b from-primary/10 via-background to-background">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
-              className="max-w-4xl mx-auto text-center space-y-4 pt-12 pb-10 lg:pt-16 lg:pb-12"
+              className="max-w-4xl mx-auto text-center space-y-4 pt-12 lg:pt-16 pb-0"
               initial={{ opacity: 0, y: 36 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
@@ -352,11 +359,9 @@ const Shop = () => {
               </p>
             </motion.div>
 
-            <div id="bouquet-tiers" className="scroll-mt-24 pb-16 lg:pb-20">
+            <div id="bouquet-tiers" className="scroll-mt-24 pt-[4in] pb-16 lg:pb-20">
               <motion.div
-                initial={{ opacity: 0, y: 28 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: "easeOut", delay: 0.25 }}
+                {...fadeUp}
                 className="text-center space-y-4 mb-16 max-w-2xl mx-auto"
               >
                 <h2 className="font-heading text-5xl lg:text-4xl font-bold">
@@ -372,10 +377,11 @@ const Shop = () => {
                 </div>
               </motion.div>
 
-              {/* Bouquets Grid — animate on mount so mobile never stays hidden */}
+              {/* Bouquets Grid */}
               <motion.div
                 initial="hidden"
-                animate="visible"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.05 }}
                 variants={staggerCards}
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8"
               >
