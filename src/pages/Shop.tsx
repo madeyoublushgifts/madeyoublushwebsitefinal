@@ -379,7 +379,7 @@ const Shop = () => {
               </div>
             </motion.div>
 
-            <div id="bouquet-tiers" className="scroll-mt-24 pt-[2in] pb-16 lg:pb-20">
+            <div id="bouquet-tiers" className="scroll-mt-24 pt-8 lg:pt-10 pb-16 lg:pb-20">
               <motion.div
                 {...fadeUp}
                 className="text-center space-y-4 mb-16 max-w-2xl mx-auto"
