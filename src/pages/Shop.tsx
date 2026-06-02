@@ -359,9 +359,9 @@ const Shop = () => {
               </p>
             </motion.div>
 
-            {/* Floral divider — bridges hero into bouquet tiers */}
+            {/* Floral divider — sits just below hero */}
             <motion.div
-              className="flex min-h-[2in] flex-col items-center justify-end px-4 pb-8"
+              className="flex flex-col items-center px-4 pt-8 lg:pt-10"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
@@ -379,7 +379,7 @@ const Shop = () => {
               </div>
             </motion.div>
 
-            <div id="bouquet-tiers" className="scroll-mt-24 pb-16 lg:pb-20">
+            <div id="bouquet-tiers" className="scroll-mt-24 pt-[2in] pb-16 lg:pb-20">
               <motion.div
                 {...fadeUp}
                 className="text-center space-y-4 mb-16 max-w-2xl mx-auto"
