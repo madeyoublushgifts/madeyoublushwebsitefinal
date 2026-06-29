@@ -84,7 +84,7 @@ const Shop = () => {
       id: 1,
       name: "Single Stem",
       description: "One standout stem—perfect for desks, apologies, or tiny celebrations",
-      price: "$5.99",
+      price: "$4.99",
       image: romantic_garden,
       category: "bouquet",
     },

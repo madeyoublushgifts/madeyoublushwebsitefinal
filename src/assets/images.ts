@@ -54,7 +54,7 @@ export const signatureBohoBlush = myb("myb-signature-06.png");
 
 
 
-// Shop → Bouquet tiers ($5.99 / $16.99 / $34.99 / $56.99 / $75)
+// Shop → Bouquet tiers ($4.99 / $16.99 / $34.99 / $56.99 / $75)
 
 export const tierSingleStem = myb("myb-tier-single-stem.png");
 
