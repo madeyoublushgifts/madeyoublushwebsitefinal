@@ -1,6 +1,6 @@
 export const instagram = {
-  url: "https://www.instagram.com/madeyoublush.ca/",
-  handle: "@madeyoublush.ca",
+  url: "https://www.instagram.com/madeyoublush_ca/",
+  handle: "@madeyoublush_ca",
 } as const;
 
 export const tiktok = {
