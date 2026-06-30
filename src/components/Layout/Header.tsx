@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import BrandLogo from "@/components/BrandLogo";
 import { Flower, Home, Mail, Menu, ShoppingBag, Sparkles, X } from "lucide-react";
+import { isDemoMode } from "@/lib/demo";
 import { useState } from "react";
 
 const Header = () => {
@@ -15,17 +17,10 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={`sticky z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isDemoMode ? "top-7" : "top-0"}`}>
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <Flower className="h-8 w-8 text-primary" />
-            <span className="font-script text-2xl sm:text-3xl leading-none pt-0.5">
-              <span className="text-foreground">Made You </span>
-              <span className="text-primary">Blush</span>
-            </span>
-          </Link>
+        <div className="flex items-center justify-between h-[5.5rem] sm:h-[6.5rem] md:h-28">
+          <BrandLogo />
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">

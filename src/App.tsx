@@ -10,6 +10,7 @@ import Contact from "./pages/Contact";
 import ComingSoon from "./pages/ComingSoon";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
+import DemoBanner from "./components/DemoBanner";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <DemoBanner />
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />

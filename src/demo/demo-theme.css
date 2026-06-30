@@ -1,0 +1,91 @@
+/**
+ * Demo theme — logo blush mauve overlays & accents.
+ * Sampled from the "Blush" script in the mark (~rgb(175, 80, 104)).
+ * Light pink from "MADE YOU" kept as a soft accent only.
+ */
+
+[data-theme="demo"] {
+  --background: 0 0% 100%;
+  --foreground: 345 35% 28%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 345 35% 28%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 345 35% 28%;
+
+  /* Blush script mauve — between dusty rose and soft pink */
+  --primary: 344 44% 55%;
+  --primary-foreground: 0 0% 100%;
+  --primary-hover: 344 48% 49%;
+
+  --secondary: 342 55% 92%;
+  --secondary-foreground: 345 35% 28%;
+  --secondary-hover: 342 55% 88%;
+
+  --muted: 345 18% 94%;
+  --muted-foreground: 345 18% 42%;
+
+  /* "MADE YOU" light pink */
+  --accent: 342 89% 88%;
+  --accent-foreground: 345 35% 28%;
+
+  --destructive: 10 70% 70%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 345 20% 90%;
+  --input: 345 15% 96%;
+  --ring: 344 44% 55%;
+
+  --blush: 344 44% 55%;
+  --cream: 0 0% 100%;
+  --lavender: 342 55% 92%;
+  --mint: 150 35% 88%;
+
+  --gradient-floral: linear-gradient(
+    135deg,
+    hsl(344 44% 55% / 0.1),
+    hsl(342 89% 88% / 0.12)
+  );
+  --gradient-hero: linear-gradient(
+    135deg,
+    hsl(0 0% 100%),
+    hsl(344 44% 96%)
+  );
+  --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(345 20% 98%));
+
+  --shadow-soft: 0 4px 20px hsl(345 35% 28% / 0.08);
+  --shadow-bloom: 0 8px 30px hsl(344 44% 55% / 0.17);
+  --shadow-elegant: 0 12px 40px hsl(342 55% 92% / 0.2);
+}
+
+[data-theme="demo"] .demo-banner {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--primary)),
+    hsl(var(--primary) / 0.75)
+  );
+}
+
+[data-theme="demo"] .brand-logo-img {
+  display: block;
+  image-rendering: auto;
+}
+
+/* Petals — blush tones to match the mark */
+[data-theme="demo"] .petal {
+  background: hsl(344 44% 60%);
+  box-shadow: 0 1px 6px hsl(344 44% 55% / 0.32);
+}
+
+[data-theme="demo"] .petal:nth-child(odd) {
+  background: hsl(344 48% 53%);
+}
+
+[data-theme="demo"] .petal:nth-child(3n) {
+  background: hsl(343 40% 66%);
+}
+
+[data-theme="demo"] .petal:nth-child(4n) {
+  background: hsl(344 50% 49%);
+}

@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  readonly VITE_DEMO?: string;
   readonly VITE_FORMSPREE_CONTACT_ID?: string;
   readonly VITE_FORMSPREE_INQUIRY_ID?: string;
   readonly VITE_FORMSPREE_WAITLIST_ID?: string;
@@ -16,6 +17,11 @@ declare module "*.webp" {
 }
 
 declare module "*.webp?url" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.png" {
   const src: string;
   export default src;
 }

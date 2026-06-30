@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import FloralDivider from "@/components/FloralDivider";
+import BrandLogo from "@/components/BrandLogo";
 import { ArrowRight, Flower, Heart, Mail, Phone, ShoppingCart, Sparkles, Leaf } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -198,49 +199,47 @@ const Index = () => {
           </div>
 
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-8 xl:gap-10 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-8 xl:gap-10 items-start lg:pt-4">
               {/* Hero Left Content */}
-              <div className="lg:col-span-4 space-y-6 text-center lg:text-left order-2 lg:order-1 animate-slideInLeft">
-                <h1 className="leading-tight">
-                  <span className="font-script text-5xl sm:text-6xl lg:text-7xl text-foreground block">
-                    {current.titleLine1}
-                  </span>
-                  <span className="font-script text-5xl sm:text-6xl lg:text-7xl text-primary block animate-bloom">
-                    {current.titleLine2}
-                  </span>
-                </h1>
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto lg:mx-0 animate-fadeIn delay-300">
-                  {current.description}
-                </p>
-
-                {/* Price and Featured Tag */}
-                <div className="space-y-2 animate-fadeIn delay-500">
-                  <div className="text-2xl font-heading font-bold text-foreground">
-                    {current.price}
+              <div className="lg:col-span-4 text-center lg:text-left order-2 lg:order-1 animate-slideInLeft">
+                <div className="w-full space-y-1">
+                  <div className="w-full flex justify-center lg:justify-start">
+                    <BrandLogo variant="hero" className="w-full max-w-full" />
                   </div>
-                  <div className="flex items-center justify-center lg:justify-start space-x-2 text-lg text-muted-foreground">
-                    <span className="font-bold text-foreground">
-                      {String(current.id).padStart(2, "0")}
-                    </span>
-                    <span>/</span>
-                    <span>{current.featured}</span>
-                  </div>
+                  <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto lg:mx-0 lg:max-w-none animate-fadeIn delay-300">
+                    {current.description}
+                  </p>
                 </div>
+                <div className="space-y-6 mt-6">
+                  {/* Price and Featured Tag */}
+                  <div className="space-y-2 animate-fadeIn delay-500">
+                    <div className="text-2xl font-heading font-bold text-foreground">
+                      {current.price}
+                    </div>
+                    <div className="flex items-center justify-center lg:justify-start space-x-2 text-lg text-muted-foreground">
+                      <span className="font-bold text-foreground">
+                        {String(current.id).padStart(2, "0")}
+                      </span>
+                      <span>/</span>
+                      <span>{current.featured}</span>
+                    </div>
+                  </div>
 
-                {/* Hero Buttons — tight pair on desktop, comfortable stack on mobile */}
-                <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 pt-3 justify-center lg:justify-start animate-fadeIn delay-700 max-w-md mx-auto lg:mx-0">
-                  <Button asChild variant="outline" size="lg" className="w-full sm:w-auto sm:min-w-0 shrink-0">
-                    <Link to="/shop">
-                      <ShoppingCart className="mr-2 h-5 w-5" />
-                      Shop Gifts & Flowers
-                    </Link>
-                  </Button>
-                  <Button asChild size="lg" className="w-full sm:w-auto sm:min-w-0 shrink-0">
-                    <Link to="/create-bouquet">
-                      <Flower className="mr-2 h-5 w-5" />
-                      Build a Bouquet
-                    </Link>
-                  </Button>
+                  {/* Hero Buttons */}
+                  <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 pt-3 justify-center lg:justify-start animate-fadeIn delay-700 max-w-md mx-auto lg:mx-0">
+                    <Button asChild variant="outline" size="lg" className="w-full sm:w-auto sm:min-w-0 shrink-0">
+                      <Link to="/shop">
+                        <ShoppingCart className="mr-2 h-5 w-5" />
+                        Shop Gifts & Flowers
+                      </Link>
+                    </Button>
+                    <Button asChild size="lg" className="w-full sm:w-auto sm:min-w-0 shrink-0">
+                      <Link to="/create-bouquet">
+                        <Flower className="mr-2 h-5 w-5" />
+                        Build a Bouquet
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
 
