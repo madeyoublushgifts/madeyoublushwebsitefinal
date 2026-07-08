@@ -179,6 +179,24 @@ All colors MUST be HSL.
     image-rendering: auto;
   }
 
+  @media (max-width: 767px) {
+    .petal {
+      width: 8px;
+      height: 10px;
+      opacity: 0.75;
+    }
+
+    .petal:nth-child(odd) {
+      width: 9px;
+      height: 11px;
+    }
+
+    .petal:nth-child(3n) {
+      width: 7px;
+      height: 9px;
+    }
+  }
+
   @keyframes fall {
     0% {
       transform: translateY(-100vh) rotate(0deg);

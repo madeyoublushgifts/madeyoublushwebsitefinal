@@ -183,12 +183,12 @@ const Index = () => {
       <main>
         {/* ================= HERO SECTION ================= */}
         <section className="relative overflow-hidden bg-background min-h-screen flex items-center animate-fadeIn">
-          {/* Floating petals */}
-          <div className="absolute inset-0 pointer-events-none hidden md:block">
+          {/* Floating petals — lighter on small screens */}
+          <div className="absolute inset-0 pointer-events-none">
             {[...Array(12)].map((_, i) => (
               <div
                 key={i}
-                className="petal animate-petal-fall"
+                className="petal animate-petal-fall max-md:[&:nth-child(even)]:hidden"
                 style={{
                   left: `${Math.random() * 100}%`,
                   animationDelay: `${Math.random() * 8}s`,
@@ -204,7 +204,10 @@ const Index = () => {
               <div className="lg:col-span-4 text-center lg:text-left order-2 lg:order-1 animate-slideInLeft">
                 <div className="w-full space-y-1">
                   <div className="w-full flex justify-center lg:justify-start">
-                    <BrandLogo variant="hero" className="w-full max-w-full" />
+                    <BrandLogo
+                      variant="hero"
+                      className="w-full max-w-[16rem] sm:max-w-sm md:max-w-md lg:max-w-full mx-auto lg:mx-0"
+                    />
                   </div>
                   <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto lg:mx-0 lg:max-w-none animate-fadeIn delay-300">
                     {current.description}
