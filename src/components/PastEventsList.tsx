@@ -27,7 +27,7 @@ const PastEventPolaroid = ({ event, dateLabel }: PastEventPolaroidProps) => {
 
   return (
     <figure className="shrink-0 self-center sm:self-start -rotate-2 hover:rotate-0 transition-transform duration-300 ease-out">
-      <div className="bg-[#faf8f5] p-2.5 pb-9 shadow-[0_6px_24px_rgba(0,0,0,0.14)] ring-1 ring-black/5">
+      <div className="bg-secondary p-2.5 pb-9 shadow-[0_6px_24px_hsl(var(--primary)/0.12)] ring-1 ring-primary/10">
         <img
           src={event.imageSrc}
           alt={`${event.title} at ${event.detail}`}
@@ -35,7 +35,7 @@ const PastEventPolaroid = ({ event, dateLabel }: PastEventPolaroidProps) => {
           loading="lazy"
           decoding="async"
         />
-        <figcaption className="font-heading text-[11px] text-center text-foreground/65 mt-3 px-1 leading-snug">
+        <figcaption className="font-heading text-[11px] text-center text-foreground mt-3 px-1 leading-snug">
           {caption}
         </figcaption>
       </div>
