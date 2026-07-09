@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://flora-bloom-download-main.vercel.app/</loc>
+    <loc>https://www.madeyoublush.ca/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://flora-bloom-download-main.vercel.app/shop</loc>
+    <loc>https://www.madeyoublush.ca/shop</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://flora-bloom-download-main.vercel.app/create-bouquet</loc>
+    <loc>https://www.madeyoublush.ca/create-bouquet</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://flora-bloom-download-main.vercel.app/contact</loc>
+    <loc>https://www.madeyoublush.ca/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://flora-bloom-download-main.vercel.app/coming-soon</loc>
+    <loc>https://www.madeyoublush.ca/coming-soon</loc>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>

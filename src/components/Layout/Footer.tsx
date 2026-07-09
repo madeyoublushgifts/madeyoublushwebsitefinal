@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import BrandLogo from "@/components/BrandLogo";
 import SocialLinks from "@/components/SocialLinks";
+import { googleBusiness } from "@/lib/seo";
 
 const Footer = () => {
   return (
@@ -53,7 +54,17 @@ const Footer = () => {
             <h3 className="font-heading text-lg font-medium">Contact</h3>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>Toronto, ON</p>
-              <p>Pop-ups, markets & studio visits by appointment</p>
+              <p>Pop-ups & markets across Toronto</p>
+              <p>
+                <a
+                  href={googleBusiness.shareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary transition-colors"
+                >
+                  Find us on Google
+                </a>
+              </p>
               <p>
                 <a
                   href="tel:+16475508476"

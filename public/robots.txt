@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://flora-bloom-download-main.vercel.app/sitemap.xml
+Sitemap: https://www.madeyoublush.ca/sitemap.xml

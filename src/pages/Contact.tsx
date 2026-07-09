@@ -13,6 +13,7 @@ import { submitToFormspree } from "@/lib/formspree";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { instagram, tiktok } from "@/lib/social";
+import { googleBusiness } from "@/lib/seo";
 import LiveEventsCalendar from "@/components/LiveEventsCalendar";
 import { upcomingEvents } from "@/data/upcomingEvents";
 
@@ -93,7 +94,16 @@ const Contact = () => {
                   madeyoublushgifts@gmail.com
                 </a>
                 —we help with bouquet orders, floral subscriptions, gift bundles, Toronto pop-ups,
-                bouquet-building experiences, and event florals across the GTA.
+                bouquet-building experiences, and event florals across the GTA. You can also{" "}
+                <a
+                  href={googleBusiness.shareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  find us on Google
+                </a>
+                .
               </p>
             </div>
           </div>
