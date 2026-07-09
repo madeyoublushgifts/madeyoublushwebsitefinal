@@ -13,6 +13,7 @@ const Shop = lazy(() => import("./pages/Shop"));
 const CreateBouquet = lazy(() => import("./pages/CreateBouquet"));
 const Contact = lazy(() => import("./pages/Contact"));
 const ComingSoon = lazy(() => import("./pages/ComingSoon"));
+const Subscribe = lazy(() => import("./pages/Subscribe"));
 const CheckoutSuccess = lazy(() => import("./pages/CheckoutSuccess"));
 const CheckoutCancel = lazy(() => import("./pages/CheckoutCancel"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -25,6 +26,7 @@ const INDEXABLE_ROUTES = new Set([
   "/create-bouquet",
   "/contact",
   "/coming-soon",
+  "/subscribe",
 ]);
 
 const AppSeo = () => {
@@ -59,6 +61,7 @@ const App = () => (
             <Route path="/create-bouquet" element={<CreateBouquet />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
+            <Route path="/subscribe" element={<Subscribe />} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="*" element={<NotFound />} />

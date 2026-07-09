@@ -13,7 +13,7 @@ const CheckoutCancel = () => (
         subscription.
       </p>
       <Button asChild size="lg">
-        <Link to="/coming-soon#subscribe">Back to subscription</Link>
+        <Link to="/subscribe">Back to subscription</Link>
       </Button>
     </main>
     <Footer />

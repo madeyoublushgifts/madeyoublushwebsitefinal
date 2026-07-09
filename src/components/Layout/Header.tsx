@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BrandLogo from "@/components/BrandLogo";
-import { Flower, Home, Mail, Menu, ShoppingBag, Sparkles, X } from "lucide-react";
+import { Flower, Home, Mail, Menu, ShoppingBag, Sparkles, CalendarHeart, X } from "lucide-react";
 import { isDemoMode } from "@/lib/demo";
 import { useState } from "react";
 
@@ -12,6 +12,7 @@ const Header = () => {
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Shop", href: "/shop", icon: ShoppingBag },
+    { name: "Subscribe", href: "/subscribe", icon: CalendarHeart },
     { name: "Coming Soon", href: "/coming-soon", icon: Sparkles },
     { name: "Contact", href: "/contact", icon: Mail },
   ];

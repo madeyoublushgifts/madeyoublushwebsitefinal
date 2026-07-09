@@ -23,6 +23,11 @@
   <url>
     <loc>https://www.madeyoublush.ca/coming-soon</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.madeyoublush.ca/subscribe</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
   </url>
 </urlset>
