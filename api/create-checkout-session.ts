@@ -110,7 +110,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const occasionsJson = JSON.stringify(safeOccasions);
 
   const stripe = new Stripe(secretKey, {
-    apiVersion: "2025-01-27.acacia",
+    apiVersion: "2026-06-24.dahlia",
   });
 
   try {
