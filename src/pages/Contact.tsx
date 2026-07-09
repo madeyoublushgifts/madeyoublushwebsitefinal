@@ -138,9 +138,11 @@ const Contact = () => {
             Send Us a Message
           </h2>
           <p className="text-lg text-muted-foreground">
-            Share dates, neighbourhood, palette, allergies, and budget. We’re
-            inquiry-based for now—no cart—so the more context you give, the faster
-            we can help.
+            Share dates, neighbourhood, palette, allergies, and budget. Ready-made
+            bouquets are in the shop with cart checkout; use this form for custom
+            orders, events, and anything that needs a human touch. We&apos;re open to
+            partnerships and collaborations—the more context you give, the faster we
+            can help.
           </p>
         </div>
 
