@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Plus, Minus, ChevronRight, ChevronLeft, ShoppingCart } from "lucide-react";
-import { addCartItem } from "@/lib/checkoutCart";
+import { useCart } from "@/context/CartContext";
 import { saveSubscriptionBuildDraft } from "@/lib/subscriptionBuildDraft";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -50,6 +50,7 @@ type CreateBouquetProps = {
 const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
   const isSubscription = mode === "subscription";
   const navigate = useNavigate();
+  const { addItem } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedStems, setSelectedStems] = useState<Record<string, number>>({});
   const [stemColors, setStemColors] = useState<Record<string, StemColorSelection>>({});
@@ -311,7 +312,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
       return;
     }
 
-    addCartItem({
+    addItem({
       source: "build",
       itemName: "Custom bouquet",
       itemSummary: getSelectedItemsText(),

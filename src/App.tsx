@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import ScrollToTop from "./components/ScrollToTop";
 import DemoBanner from "./components/DemoBanner";
 import Seo from "./components/Seo";
+import { CartProvider } from "./context/CartContext";
 
 const Index = lazy(() => import("./pages/Index"));
 const Shop = lazy(() => import("./pages/Shop"));
@@ -53,12 +54,13 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <DemoBanner />
-        <ScrollToTop />
-        <AppSeo />
-        <Suspense fallback={<PageFallback />}>
-          <Routes>
+      <CartProvider>
+        <BrowserRouter>
+          <DemoBanner />
+          <ScrollToTop />
+          <AppSeo />
+          <Suspense fallback={<PageFallback />}>
+            <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<Navigate to="/" replace />} />
             <Route path="/explore" element={<Navigate to="/" replace />} />
@@ -74,9 +76,10 @@ const App = () => (
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </CartProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

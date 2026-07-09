@@ -19,7 +19,7 @@ import { motion } from "framer-motion";
 import { ClipboardCheck, Flower, ShoppingCart, Sparkles } from "lucide-react";
 import { getBouquetTier } from "@/data/bouquetTiers";
 import { shopBouquets, SHOP_BOUQUET_TIER_IDS } from "@/data/shopBouquets";
-import { addCartItem } from "@/lib/checkoutCart";
+import { useCart } from "@/context/CartContext";
 
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
@@ -40,18 +40,13 @@ const cardReveal = {
   visible: { opacity: 1, y: 0 },
 } as const;
 
+import { signatureBouquets } from "@/data/signatureBouquets";
+
 // ===== Import Assets (import.meta.url via central registry) =====
 import {
   chocolatesAndBlooms as blooms_chocolates,
   floralCandleSet as floral_candle,
   card as card_addon,
-  signatureRomanticGarden,
-  signatureSunshineDelight,
-  signaturePurpleElegance,
-  signaturePureSerenity,
-  signatureVelvetRed,
-  signatureBohoBlush,
-  giftGridSrc,
   curatedGiftChocolates,
   curatedGiftCandle,
   curatedGiftTeddy,
@@ -67,6 +62,7 @@ const BOUQUET_TIER_IDS = SHOP_BOUQUET_TIER_IDS;
 
 const Shop = () => {
   const navigate = useNavigate();
+  const { addItem } = useCart();
   useEffect(() => {
     const id = window.location.hash.slice(1);
     if (!id) return;
@@ -107,59 +103,6 @@ const Shop = () => {
       price: "Inquire",
       image: blooms_chocolates,
       category: "gift",
-    },
-  ];
-
-  const signatureBouquets: {
-    id: number;
-    name: string;
-    description: string;
-    price: string;
-    image: ShopCardImage;
-  }[] = [
-    {
-      id: 101,
-      name: "Romantic Garden",
-      description: "A dreamy mix of pink roses, white peonies, and eucalyptus",
-      price: "$55",
-      image: signatureRomanticGarden,
-    },
-    {
-      id: 102,
-      name: "Sunshine Delight",
-      description: "Cheerful yellow roses and sunflowers with greenery",
-      price: "$52",
-      image: signatureSunshineDelight,
-    },
-    {
-      id: 103,
-      name: "Purple Elegance",
-      description: "Sophisticated lavender roses with purple orchids",
-      price: "$56",
-      image: signaturePurpleElegance,
-    },
-    {
-      id: 104,
-      name: "Pure Serenity",
-      description: "All-white arrangement with lilies, roses, and baby's breath",
-      price: "$54",
-      image: signaturePureSerenity,
-    },
-    {
-      id: 105,
-      name: "Velvet Rouge",
-      description:
-        "Velvety crimson and wine-toned blooms with eucalyptus, wrapped in deep burgundy paper—made for anniversaries, apologies, and big-hearted gestures.",
-      price: "$55",
-      image: signatureVelvetRed,
-    },
-    {
-      id: 106,
-      name: "Toffee Skies",
-      description:
-        "Toffee and cream roses with silvery eucalyptus and airy pampas on kraft wrap—a soft, editorial look for entryways, photos, and modern gifting.",
-      price: "$53",
-      image: signatureBohoBlush,
     },
   ];
 
@@ -268,7 +211,7 @@ const Shop = () => {
     if (!tier) return;
 
     const paletteLabel = formatTierPaletteChoice(palette, bouquetId);
-    addCartItem({
+    addItem({
       source: "shop",
       itemName: bouquetName,
       itemSummary: paletteLabel ? `${bouquetName} — ${paletteLabel}` : bouquetName,
@@ -278,7 +221,7 @@ const Shop = () => {
     });
     toast({
       title: "Added to cart",
-      description: `${bouquetName} is in your cart. Add more bouquets or proceed to checkout.`,
+      description: `${bouquetName} is in your cart. Tap the cart icon to review and checkout.`,
     });
   };
 
