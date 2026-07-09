@@ -17,7 +17,7 @@ const CheckoutSuccess = () => {
   }, [isOrder]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
       <main className="container mx-auto px-4 lg:px-8 py-20 max-w-xl text-center space-y-6">
         <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
@@ -30,10 +30,10 @@ const CheckoutSuccess = () => {
             : "Thank you for joining Made You Blush. We'll be in touch with next steps."}
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-          <Button asChild>
+          <Button asChild className="w-full sm:w-auto min-h-11">
             <Link to="/shop">Shop more</Link>
           </Button>
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="w-full sm:w-auto min-h-11">
             <Link to="/contact">Contact us</Link>
           </Button>
         </div>

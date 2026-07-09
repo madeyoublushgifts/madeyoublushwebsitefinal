@@ -3,6 +3,9 @@ import BrandLogo from "@/components/BrandLogo";
 import SocialLinks from "@/components/SocialLinks";
 import { googleBusiness } from "@/lib/seo";
 
+const footerLinkClass =
+  "inline-flex items-center min-h-11 py-1.5 text-muted-foreground hover:text-primary transition-colors text-sm";
+
 const Footer = () => {
   return (
     <footer className="bg-card border-t border-border">
@@ -21,36 +24,24 @@ const Footer = () => {
           {/* Quick Links */}
           <div className="space-y-4">
             <h3 className="font-heading text-lg font-medium">Quick Links</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               <li>
-                <Link
-                  to="/shop"
-                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                >
+                <Link to="/shop" className={footerLinkClass}>
                   Shop
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/create-bouquet"
-                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                >
+                <Link to="/create-bouquet" className={footerLinkClass}>
                   Build a Bouquet
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/subscription"
-                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                >
+                <Link to="/subscription" className={footerLinkClass}>
                   Floral Subscription
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/coming-soon"
-                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                >
+                <Link to="/coming-soon" className={footerLinkClass}>
                   Coming Soon
                 </Link>
               </li>
@@ -60,7 +51,7 @@ const Footer = () => {
           {/* Contact Info */}
           <div className="space-y-4">
             <h3 className="font-heading text-lg font-medium">Contact</h3>
-            <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="space-y-1 text-sm text-muted-foreground">
               <p>Toronto, ON</p>
               <p>Pop-ups & markets across Toronto</p>
               <p>
@@ -68,23 +59,20 @@ const Footer = () => {
                   href={googleBusiness.shareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-primary transition-colors"
+                  className={`${footerLinkClass} break-words`}
                 >
                   Find us on Google
                 </a>
               </p>
               <p>
-                <a
-                  href="tel:+16475508476"
-                  className="hover:text-primary transition-colors"
-                >
+                <a href="tel:+16475508476" className={footerLinkClass}>
                   +1 647-550-8476
                 </a>
               </p>
               <p>
                 <a
                   href="mailto:madeyoublushgifts@gmail.com"
-                  className="hover:text-primary transition-colors break-all"
+                  className={`${footerLinkClass} break-all`}
                 >
                   madeyoublushgifts@gmail.com
                 </a>

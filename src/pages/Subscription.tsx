@@ -19,7 +19,7 @@ const fadeUp = {
 const Subscription = () => {
   return (
     <motion.div
-      className="min-h-screen bg-background"
+      className="min-h-screen bg-background overflow-x-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}

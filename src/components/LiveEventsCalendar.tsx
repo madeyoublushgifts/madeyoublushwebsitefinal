@@ -95,7 +95,7 @@ const LiveEventsCalendar = ({ events = [], emptyMessage }: LiveEventsCalendarPro
       </div>
 
       <div className="px-4 py-6 sm:px-8 sm:py-8">
-        <div className="grid grid-cols-7 gap-2 sm:gap-3 max-w-2xl mx-auto">
+        <div className="grid grid-cols-7 gap-1.5 sm:gap-3 max-w-2xl mx-auto">
           {WEEKDAY_LABELS.map((label, i) => (
             <div
               key={`week-h-${i}`}

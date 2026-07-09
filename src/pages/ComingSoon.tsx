@@ -23,7 +23,7 @@ const fadeUp = {
 const ComingSoon = () => {
   return (
     <motion.div
-      className="min-h-screen bg-background"
+      className="min-h-screen bg-background overflow-x-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -55,19 +55,19 @@ const ComingSoon = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <Button asChild size="lg" className="rounded-full">
+              <Button asChild size="lg" className="w-full sm:w-auto min-h-11 rounded-full">
                 <a href="#bouquet-builder">
                   <Sparkles className="mr-2 h-5 w-5" />
                   Bouquet builder preview
                 </a>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full">
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto min-h-11 rounded-full">
                 <a href="#blush-notes">
                   <PenLine className="mr-2 h-5 w-5" />
                   Blush Notes
                 </a>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full">
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto min-h-11 rounded-full">
                 <Link to="/subscription">
                   <CreditCard className="mr-2 h-5 w-5" />
                   Floral subscription

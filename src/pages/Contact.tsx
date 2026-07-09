@@ -73,7 +73,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* ================= HEADER ================= */}
       <Header />
 
@@ -118,7 +118,7 @@ const Contact = () => {
        <section id="contact-form" className="pt-8 lg:pt-10 pb-20 bg-background scroll-mt-24">
   <div className="container mx-auto px-4 lg:px-8">
     <motion.div
-      className="grid grid-cols-1 lg:grid-cols-2 gap-16"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}

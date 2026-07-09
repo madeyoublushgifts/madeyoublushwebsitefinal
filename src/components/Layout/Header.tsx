@@ -23,6 +23,15 @@ const Header = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileMenuOpen]);
+
   const isNavActive = (href: string) => {
     if (href === "/subscription") {
       return location.pathname === href || location.pathname.startsWith("/subscription/");
@@ -98,7 +107,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-4">
+        <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3 max-h-[calc(100dvh-5.5rem)] overflow-y-auto overscroll-contain pb-[max(1rem,env(safe-area-inset-bottom))]">
           {navigation.map((item) => (
             <Link
               key={item.name}

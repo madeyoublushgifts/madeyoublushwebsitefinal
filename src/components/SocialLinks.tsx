@@ -3,7 +3,7 @@ import { TikTokIcon } from "@/components/icons/TikTokIcon";
 import { instagram, tiktok } from "@/lib/social";
 
 const linkClass =
-  "text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-2 text-sm";
+  "text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-2 text-sm min-h-11 py-2";
 
 type SocialLinksProps = {
   className?: string;

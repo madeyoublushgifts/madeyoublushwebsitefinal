@@ -491,14 +491,22 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
               <div className="flex items-center space-x-3 mt-2">
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="icon"
+                  className="shrink-0"
                   onClick={() => updateStemQuantity(stem.id, -1)}
                   disabled={!qty}
+                  aria-label={`Remove one ${stem.name}`}
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
-                <span className="w-8 text-center font-medium">{qty}</span>
-                <Button variant="outline" size="sm" onClick={() => updateStemQuantity(stem.id, 1)}>
+                <span className="w-10 text-center font-medium text-base">{qty}</span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                  onClick={() => updateStemQuantity(stem.id, 1)}
+                  aria-label={`Add one ${stem.name}`}
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -525,7 +533,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
 
       <main>
@@ -854,7 +862,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
               <Button
                 variant="outline"
                 size="lg"
-                className="min-w-[7rem] sm:min-w-[9rem]"
+                className="flex-1 sm:flex-none sm:min-w-[9rem] min-h-11"
                 onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
                 disabled={currentStep === 1}
               >
@@ -862,7 +870,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
               </Button>
               <Button
                 size="lg"
-                className="min-w-[7rem] sm:min-w-[9rem]"
+                className="flex-1 sm:flex-none sm:min-w-[9rem] min-h-11"
                 onClick={() => setCurrentStep(Math.min(3, currentStep + 1))}
                 disabled={
                   currentStep === 3 ||
