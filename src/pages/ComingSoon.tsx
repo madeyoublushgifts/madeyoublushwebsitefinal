@@ -7,13 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { instagram, tiktok } from "@/lib/social";
 import { motion } from "framer-motion";
-import { CalendarHeart, CreditCard, Sparkles } from "lucide-react";
-import {
-  BookOpen,
-  Palette,
-  PenLine,
-  Users,
-} from "lucide-react";
+import { CalendarHeart, CreditCard, Sparkles, BookOpen, Palette, PenLine, Users } from "lucide-react";
 import {
   comingSoonBuilder,
   comingSoonBuilderDone,
@@ -52,8 +46,8 @@ const ComingSoon = () => {
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               We&apos;re building a visual bouquet builder on the site and launching{" "}
               <strong className="text-foreground font-medium">Blush Notes</strong>—our blog and
-              newsletter for Toronto stories, seasonal gifting, floral fun facts, flower care tips,
-              and local creativity. Subscribe today for floral delivery while you wait.
+              newsletter for Toronto stories, seasonal gifting, and local creativity. Subscribe
+              today for floral delivery while you wait.
             </p>
             <motion.div
               className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center pt-2"
@@ -164,13 +158,10 @@ const ComingSoon = () => {
                 Blush Notes
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                A blog and newsletter from Made You Blush—Toronto stories behind the stems,
-                seasonal gifting ideas, floral fun facts, flower care, and a home for local
-                creativity we love. We want to publish, collaborate, and partner with people and
-                studios working in zines, magazines, collages, mosaics, paintings, and more. Imagine
-                special Blush Notes editions on themes like months, horoscopes, colours, and social
-                justice causes—cozy reads in your inbox, with room for artists, writers, and
-                neighbours to share work alongside our floral world.
+                A blog and newsletter from Made You Blush—Toronto stories behind the
+                stems, seasonal gifting ideas, and a home for local creativity we
+                love. Think cozy reads in your inbox, with room for artists,
+                writers, and neighbours to share work alongside our floral world.
               </p>
             </div>
 
@@ -188,12 +179,12 @@ const ComingSoon = () => {
                 {
                   icon: BookOpen,
                   title: "Blog & newsletter",
-                  text: "Essays, shop updates, blush-toned inspiration, floral fun facts, and flower care—delivered when there’s something worth sharing.",
+                  text: "Essays, shop updates, and blush-toned inspiration—plus floral fun facts and flower care tips—delivered when there’s something worth sharing.",
                 },
                 {
                   icon: Palette,
-                  title: "Zines, art & makers",
-                  text: "We’d love to partner with studios and artists in zines, magazines, collages, mosaics, paintings, and visual work that pairs with blooms.",
+                  title: "Local art",
+                  text: "Spotlights on Toronto artists and small studios—visual work, crafts, and pieces that pair beautifully with blooms.",
                 },
                 {
                   icon: PenLine,
@@ -202,8 +193,8 @@ const ComingSoon = () => {
                 },
                 {
                   icon: Users,
-                  title: "Themed editions & collabs",
-                  text: "Special issues on months, horoscopes, colours, social justice causes, and more—plus markets, creatives, and community groups.",
+                  title: "Collaborations",
+                  text: "We want to publish, collaborate, and partner with people and studios working in zines, magazines, collages, mosaics, paintings, and more.",
                 },
               ].map((item) => (
                 <motion.div
@@ -228,6 +219,29 @@ const ComingSoon = () => {
                   </Card>
                 </motion.div>
               ))}
+            </motion.div>
+
+            <motion.div
+              className="mt-8 rounded-2xl border border-primary/15 bg-primary/5 px-6 py-7 sm:px-8 text-center space-y-3"
+              {...fadeUp}
+            >
+              <div className="inline-flex items-center justify-center gap-2 text-primary">
+                <Sparkles className="h-5 w-5" />
+                <h3 className="font-heading text-lg sm:text-xl font-semibold text-foreground">
+                  Themed editions
+                </h3>
+              </div>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                We can imagine special <strong className="text-foreground font-medium">Blush Notes</strong>{" "}
+                editions on specific themes—months, horoscopes, colours, social justice causes, and
+                more—little issues that feel like a bouquet tied to a moment.
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 pt-1">
+                <Badge variant="outline">Months</Badge>
+                <Badge variant="outline">Horoscopes</Badge>
+                <Badge variant="outline">Colours</Badge>
+                <Badge variant="outline">Social justice</Badge>
+              </div>
             </motion.div>
 
             <motion.div
@@ -264,8 +278,7 @@ const ComingSoon = () => {
                   reach out
                 </Link>{" "}
                 if you&apos;re a local artist, writer, zine maker, studio, or community org interested in
-                publishing or collaborating on Blush Notes—including themed editions on months,
-                horoscopes, colours, or social justice causes.
+                publishing or collaborating on Blush Notes.
               </p>
               <div className="flex flex-wrap justify-center gap-2 pt-1">
                 <Badge variant="outline">Floral fun facts</Badge>
