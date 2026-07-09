@@ -47,6 +47,7 @@ import {
   chocolatesAndBlooms as blooms_chocolates,
   floralCandleSet as floral_candle,
   card as card_addon,
+  giftGridSrc,
   curatedGiftChocolates,
   curatedGiftCandle,
   curatedGiftTeddy,
