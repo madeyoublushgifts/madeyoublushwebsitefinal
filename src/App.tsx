@@ -13,6 +13,8 @@ const Shop = lazy(() => import("./pages/Shop"));
 const CreateBouquet = lazy(() => import("./pages/CreateBouquet"));
 const Contact = lazy(() => import("./pages/Contact"));
 const ComingSoon = lazy(() => import("./pages/ComingSoon"));
+const CheckoutSuccess = lazy(() => import("./pages/CheckoutSuccess"));
+const CheckoutCancel = lazy(() => import("./pages/CheckoutCancel"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -27,7 +29,10 @@ const INDEXABLE_ROUTES = new Set([
 
 const AppSeo = () => {
   const { pathname } = useLocation();
-  return <Seo noindex={!INDEXABLE_ROUTES.has(pathname)} />;
+  const noindex =
+    !INDEXABLE_ROUTES.has(pathname) ||
+    pathname.startsWith("/checkout/");
+  return <Seo noindex={noindex} />;
 };
 
 const PageFallback = () => (
@@ -54,6 +59,8 @@ const App = () => (
             <Route path="/create-bouquet" element={<CreateBouquet />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
+            <Route path="/checkout/success" element={<CheckoutSuccess />} />
+            <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

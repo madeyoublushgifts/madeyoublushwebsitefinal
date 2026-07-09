@@ -79,9 +79,9 @@ const pages: Record<string, PageSeo> = {
     path: "/contact",
   },
   "/coming-soon": {
-    title: `Floral Subscription Toronto Waitlist | ${siteConfig.name}`,
+    title: `Floral Subscription Toronto | ${siteConfig.name}`,
     description:
-      "Join the Made You Blush waitlist for affordable floral subscriptions in Toronto — convenient, personal blooms delivered on your schedule. Shop bouquets and gifts while you wait.",
+      "Subscribe to affordable floral delivery in Toronto — bi-weekly, monthly, or $185/year. Choose your first delivery date, add birthdays and special occasions, and checkout securely with Stripe.",
     path: "/coming-soon",
   },
 };

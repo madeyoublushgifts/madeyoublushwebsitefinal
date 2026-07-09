@@ -1,20 +1,15 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import FloralDivider from "@/components/FloralDivider";
+import SubscriptionCheckoutForm from "@/components/SubscriptionCheckoutForm";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/hooks/use-toast";
-import { submitToFormspree } from "@/lib/formspree";
 import { instagram, tiktok } from "@/lib/social";
 import { motion } from "framer-motion";
-import { BellRing, Loader2, ShoppingCart } from "lucide-react";
+import { subscriptionPlans } from "@/data/subscriptionPlans";
+import { CreditCard, ShoppingCart } from "lucide-react";
 import {
   BookOpen,
   CalendarHeart,
@@ -39,72 +34,9 @@ const fadeUp = {
   viewport: { once: true, amount: 0.2 },
 };
 
+const annualPlan = subscriptionPlans.find((p) => p.id === "annual");
+
 const ComingSoon = () => {
-  const [waitlist, setWaitlist] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    cadence: "" as "" | "biweekly" | "monthly",
-    notes: "",
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleWaitlistSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!waitlist.cadence) {
-      toast({
-        title: "Choose a delivery cadence",
-        description: "Let us know if you prefer bi-weekly or monthly blooms.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      await submitToFormspree("waitlist", {
-        _subject: "Subscription waitlist — Made You Blush",
-        _replyto: waitlist.email,
-        source: "Coming Soon page",
-        name: waitlist.name,
-        email: waitlist.email,
-        phone: waitlist.phone,
-        deliveryAddress: waitlist.address,
-        cadence: waitlist.cadence === "biweekly" ? "Bi-weekly" : "Monthly",
-        bouquetNotes: waitlist.notes,
-      });
-
-      toast({
-        title: "You're on the list!",
-        description:
-          "Thanks for your interest in Made You Blush delivery. We'll email you when subscriptions open.",
-      });
-
-      setWaitlist({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        cadence: "",
-        notes: "",
-      });
-    } catch (err) {
-      toast({
-        title: "Could not join waitlist",
-        description:
-          err instanceof Error
-            ? err.message
-            : "Please try again or email madeyoublushgifts@gmail.com.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <motion.div
       className="min-h-screen bg-background"
@@ -122,16 +54,16 @@ const ComingSoon = () => {
             {...fadeUp}
           >
             <Badge variant="secondary" className="text-sm px-4 py-1">
-              Coming soon
+              Now open
             </Badge>
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
               Toronto Floral Subscription
               <span className="text-primary block">Gifting as a habit, not a luxury</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              Made You Blush is building affordable floral subscriptions for Toronto—convenient,
-              personal blooms on your schedule. Shop bouquets and flower gifts today; join the
-              waitlist for membership delivery and our full online builder.
+              Subscribe for affordable floral delivery across Toronto — bi-weekly, monthly, or
+              annual ({annualPlan?.priceLabel}). Pick your first delivery date, add birthdays and
+              special occasions, and checkout securely with Stripe.
             </p>
             <motion.div
               className="flex flex-col sm:flex-row gap-3 justify-center pt-2"
@@ -140,15 +72,15 @@ const ComingSoon = () => {
               transition={{ delay: 0.2 }}
             >
               <Button asChild size="lg" className="rounded-full">
-                <a href="#waitlist">
-                  <BellRing className="mr-2 h-5 w-5" />
-                  Join the waitlist
+                <a href="#subscribe">
+                  <CreditCard className="mr-2 h-5 w-5" />
+                  Subscribe now
                 </a>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full">
                 <Link to="/shop">
                   <ShoppingCart className="mr-2 h-5 w-5" />
-                  Shop while you wait
+                  Shop bouquets
                 </Link>
               </Button>
             </motion.div>
@@ -168,10 +100,9 @@ const ComingSoon = () => {
                 Floral subscription
               </h2>
               <p className="text-lg text-muted-foreground">
-                Fresh stems on your schedule—so celebrating doesn&apos;t wait for
-                a &ldquo;big&rdquo; occasion. Pick bi-weekly or monthly delivery,
-                choose your bouquet style, and we&apos;ll bring blooms to the
-                address you love most.
+                Fresh stems on your schedule—bi-weekly, monthly, or save with our{" "}
+                <strong className="text-foreground font-medium">$185/year</strong> annual plan.
+                Choose your bouquet style, first delivery date, and the dates that matter most.
               </p>
             </motion.div>
 
@@ -217,8 +148,8 @@ const ComingSoon = () => {
               <Badge variant="outline" className="text-sm py-2 px-4">
                 Monthly delivery
               </Badge>
-              <Badge variant="outline" className="text-sm py-2 px-4">
-                Your bouquet · your address
+              <Badge variant="outline" className="text-sm py-2 px-4 border-primary/40 text-primary">
+                Annual · $185/year · Best value
               </Badge>
             </div>
           </motion.div>
@@ -226,136 +157,20 @@ const ComingSoon = () => {
 
         <FloralDivider className="py-8 lg:py-10" />
 
-        {/* Waitlist */}
-        <section id="waitlist" className="pt-8 lg:pt-10 pb-16 lg:pb-24 bg-gradient-to-b from-primary/5 to-background scroll-mt-20">
-          <motion.div className="container mx-auto px-4 lg:px-8 max-w-xl" {...fadeUp}>
+        {/* Subscribe */}
+        <section id="subscribe" className="pt-8 lg:pt-10 pb-16 lg:pb-24 bg-gradient-to-b from-primary/5 to-background scroll-mt-20">
+          <motion.div className="container mx-auto px-4 lg:px-8 max-w-2xl" {...fadeUp}>
             <div className="text-center space-y-4 mb-10">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold">
-                Subscription waitlist
+                Start your subscription
               </h2>
               <p className="text-muted-foreground">
-                Be first to know when bi-weekly and monthly floral delivery opens.
-                No payment today—just your details and how often you&apos;d like
-                blooms.
+                Secure checkout with Stripe · first delivery at least one week from today ·
+                add special dates we can style blooms around.
               </p>
             </div>
 
-            <Card className="border-0 shadow-elegant bg-card-gradient">
-              <CardContent className="p-6 sm:p-8">
-                <form onSubmit={handleWaitlistSubmit} className="space-y-5">
-                  <motion.div className="space-y-2" {...fadeUp}>
-                    <Label htmlFor="wl-name">Full name *</Label>
-                    <Input
-                      id="wl-name"
-                      value={waitlist.name}
-                      onChange={(e) =>
-                        setWaitlist((p) => ({ ...p, name: e.target.value }))
-                      }
-                      required
-                      placeholder="Your name"
-                    />
-                  </motion.div>
-
-                  <motion.div className="space-y-2" {...fadeUp}>
-                    <Label htmlFor="wl-email">Email *</Label>
-                    <Input
-                      id="wl-email"
-                      type="email"
-                      value={waitlist.email}
-                      onChange={(e) =>
-                        setWaitlist((p) => ({ ...p, email: e.target.value }))
-                      }
-                      required
-                      placeholder="you@email.com"
-                    />
-                  </motion.div>
-
-                  <motion.div className="space-y-2" {...fadeUp}>
-                    <Label htmlFor="wl-phone">Phone (optional)</Label>
-                    <Input
-                      id="wl-phone"
-                      type="tel"
-                      value={waitlist.phone}
-                      onChange={(e) =>
-                        setWaitlist((p) => ({ ...p, phone: e.target.value }))
-                      }
-                      placeholder="+1 647-555-0123"
-                    />
-                  </motion.div>
-
-                  <motion.div className="space-y-2" {...fadeUp}>
-                    <Label htmlFor="wl-address">Preferred delivery address</Label>
-                    <Input
-                      id="wl-address"
-                      value={waitlist.address}
-                      onChange={(e) =>
-                        setWaitlist((p) => ({ ...p, address: e.target.value }))
-                      }
-                      placeholder="Neighbourhood or full address"
-                    />
-                  </motion.div>
-
-                  <fieldset className="space-y-3">
-                    <legend className="text-sm font-medium">
-                      Delivery cadence *
-                    </legend>
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <Checkbox
-                          checked={waitlist.cadence === "biweekly"}
-                          onCheckedChange={(checked) =>
-                            setWaitlist((p) => ({
-                              ...p,
-                              cadence: checked ? "biweekly" : "",
-                            }))
-                          }
-                        />
-                        <span className="text-sm">Bi-weekly</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <Checkbox
-                          checked={waitlist.cadence === "monthly"}
-                          onCheckedChange={(checked) =>
-                            setWaitlist((p) => ({
-                              ...p,
-                              cadence: checked ? "monthly" : "",
-                            }))
-                          }
-                        />
-                        <span className="text-sm">Monthly</span>
-                      </label>
-                    </div>
-                  </fieldset>
-
-                  <motion.div className="space-y-2" {...fadeUp}>
-                    <Label htmlFor="wl-notes">Bouquet style or notes</Label>
-                    <Textarea
-                      id="wl-notes"
-                      value={waitlist.notes}
-                      onChange={(e) =>
-                        setWaitlist((p) => ({ ...p, notes: e.target.value }))
-                      }
-                      placeholder="Mini vs standard, colours, allergies, gift vs self-care…"
-                      rows={4}
-                    />
-                  </motion.div>
-
-                  <Button type="submit" disabled={isSubmitting} className="w-full" size="lg">
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Sending…
-                      </>
-                    ) : (
-                      <>
-                        <BellRing className="mr-2 h-5 w-5" />
-                        Join the waitlist
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+            <SubscriptionCheckoutForm />
           </motion.div>
         </section>
 

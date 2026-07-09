@@ -14,7 +14,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!assets/|sitemap\\.xml|robots\\.txt|og-image\\.png|favicon\\.ico).*)",
+      "source": "/((?!api/|assets/|sitemap\\.xml|robots\\.txt|og-image\\.png|favicon\\.ico).*)",
       "destination": "/index.html"
     }
   ]
