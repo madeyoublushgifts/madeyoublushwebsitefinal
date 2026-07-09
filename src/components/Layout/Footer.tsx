@@ -40,7 +40,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/subscribe"
+                  to="/subscription"
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
                   Floral Subscription

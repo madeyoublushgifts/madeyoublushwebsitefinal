@@ -84,11 +84,11 @@ const pages: Record<string, PageSeo> = {
       "Preview the upcoming online bouquet builder and Blush Notes blog from Made You Blush — Toronto stories, seasonal gifting, and local creativity alongside our floral world.",
     path: "/coming-soon",
   },
-  "/subscribe": {
-    title: `Floral Subscription Toronto | ${siteConfig.name}`,
+  "/subscription": {
+    title: `Floral Subscription Waitlist Toronto | ${siteConfig.name}`,
     description:
-      "Subscribe to affordable floral delivery in Toronto — bi-weekly, monthly, or $185/year. Choose your first delivery date, add birthdays and special occasions, and checkout securely with Stripe.",
-    path: "/subscribe",
+      "Join the floral subscription waitlist in Toronto — bi-weekly, monthly, or $185/year annual plan. Choose a shop tier or custom build, add special occasions, and get notified when delivery memberships launch.",
+    path: "/subscription",
   },
 };
 

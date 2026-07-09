@@ -12,7 +12,7 @@ const Header = () => {
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Shop", href: "/shop", icon: ShoppingBag },
-    { name: "Subscribe", href: "/subscribe", icon: CalendarHeart },
+    { name: "Subscription", href: "/subscription", icon: CalendarHeart },
     { name: "Coming Soon", href: "/coming-soon", icon: Sparkles },
     { name: "Contact", href: "/contact", icon: Mail },
   ];

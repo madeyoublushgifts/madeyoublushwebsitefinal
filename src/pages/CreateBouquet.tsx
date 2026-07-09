@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import FloralDivider from "@/components/FloralDivider";
@@ -6,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import InquiryForm from "@/components/ui/inquiry-form";
-import { ClipboardCheck, Plus, Minus, ChevronRight, ChevronLeft } from "lucide-react";
+import { Plus, Minus, ChevronRight, ChevronLeft, ShoppingCart } from "lucide-react";
+import { saveCheckoutCart } from "@/lib/checkoutCart";
+import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   buildBouquetStems,
@@ -41,6 +43,7 @@ const formatMoney = (amount: number) =>
 type StemColorSelection = (BouquetStemColor | null)[];
 
 const CreateBouquet = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedStems, setSelectedStems] = useState<Record<string, number>>({});
   const [stemColors, setStemColors] = useState<Record<string, StemColorSelection>>({});
@@ -49,7 +52,6 @@ const CreateBouquet = () => {
   const [wrappingColor, setWrappingColor] = useState<BouquetStemColor | null>(null);
   const [ribbonColor, setRibbonColor] = useState<BouquetStemColor | null>(null);
   const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
-  const [isInquiryOpen, setIsInquiryOpen] = useState(false);
 
   const steps = [
     {
@@ -58,7 +60,7 @@ const CreateBouquet = () => {
       description: "Main flowers, fillers, and greenery",
     },
     { id: 2, title: "Choose Materials", description: "Wrapping, ribbon & add-ons" },
-    { id: 3, title: "Review & inquire", description: "We confirm details before anything is cut" },
+    { id: 3, title: "Review & checkout", description: "Confirm your build and pay securely with Stripe" },
   ];
 
   const selectWrapping = (id: string) => {
@@ -259,7 +261,32 @@ const CreateBouquet = () => {
   };
 
   const handlePlaceOrder = () => {
-    setIsInquiryOpen(true);
+    const total = calculateTotal();
+    if (Object.keys(selectedStems).length === 0) {
+      toast({
+        title: "Add stems first",
+        description: "Choose at least one stem before checkout.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (total < 1) {
+      toast({
+        title: "Invalid total",
+        description: "Your bouquet total must be at least $1.00.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    saveCheckoutCart({
+      source: "build",
+      itemName: "Custom bouquet",
+      itemSummary: getSelectedItemsText(),
+      amountCents: Math.round(total * 100),
+    });
+    navigate("/checkout");
   };
 
   const progress = (currentStep / steps.length) * 100;
@@ -759,8 +786,7 @@ const CreateBouquet = () => {
                             <span className="text-primary">${formatMoney(calculateTotal())}</span>
                           </div>
                           <p className="text-sm text-muted-foreground mt-2">
-                            Final price will be confirmed when we contact you—seasonal availability and stem
-                            size may adjust totals slightly.
+                            Total at checkout — seasonal availability may adjust stem selection slightly.
                           </p>
                         </div>
 
@@ -770,8 +796,8 @@ const CreateBouquet = () => {
                           onClick={handlePlaceOrder}
                           disabled={Object.keys(selectedStems).length === 0}
                         >
-                          <ClipboardCheck className="mr-2 h-5 w-5" />
-                          Inquire / Pre-order
+                          <ShoppingCart className="mr-2 h-5 w-5" />
+                          Continue to checkout
                         </Button>
                       </CardContent>
                     </Card>
@@ -810,17 +836,6 @@ const CreateBouquet = () => {
       </main>
 
       <Footer />
-
-      <InquiryForm
-        isOpen={isInquiryOpen}
-        onClose={() => setIsInquiryOpen(false)}
-        title="Inquire / Pre-order"
-        description="Share your build notes—we’ll reply with stem availability, add-on ideas, and a confirmed estimate before we finalize anything."
-        itemName={`Custom bouquet — ${getSelectedItemsText()} (Est. $${formatMoney(calculateTotal())})`}
-        source="Build a Bouquet"
-        formType="buildBouquet"
-        showPersonalMessage={!!selectedAddons["addon-card"]}
-      />
     </div>
   );
 };

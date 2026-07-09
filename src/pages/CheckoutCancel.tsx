@@ -9,12 +9,17 @@ const CheckoutCancel = () => (
     <main className="container mx-auto px-4 lg:px-8 py-20 max-w-xl text-center space-y-6">
       <h1 className="font-heading text-3xl sm:text-4xl font-bold">Checkout cancelled</h1>
       <p className="text-muted-foreground leading-relaxed">
-        No worries — your card was not charged. You can return anytime to start your floral
-        subscription.
+        No worries — your card was not charged. You can return to the shop or build a custom bouquet
+        anytime.
       </p>
-      <Button asChild size="lg">
-        <Link to="/subscribe">Back to subscription</Link>
-      </Button>
+      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <Button asChild size="lg">
+          <Link to="/shop">Back to shop</Link>
+        </Button>
+        <Button asChild size="lg" variant="outline">
+          <Link to="/create-bouquet">Build a bouquet</Link>
+        </Button>
+      </div>
     </main>
     <Footer />
   </div>

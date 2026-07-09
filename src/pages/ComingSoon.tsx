@@ -74,7 +74,7 @@ const ComingSoon = () => {
                 </a>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full">
-                <Link to="/subscribe">
+                <Link to="/subscription">
                   <CreditCard className="mr-2 h-5 w-5" />
                   Floral subscription
                 </Link>
@@ -271,7 +271,7 @@ const ComingSoon = () => {
               </div>
               <div className="pt-4">
                 <Button asChild variant="outline" className="rounded-full">
-                  <Link to="/subscribe">
+                  <Link to="/subscription">
                     <CalendarHeart className="mr-2 h-4 w-4" />
                     Subscribe for floral delivery
                   </Link>

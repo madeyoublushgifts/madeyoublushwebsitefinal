@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,9 @@ import {
 } from "@/data/bouquetTierColors";
 import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { ClipboardCheck, Flower, Sparkles } from "lucide-react";
+import { ClipboardCheck, Flower, ShoppingCart, Sparkles } from "lucide-react";
+import { getBouquetTier } from "@/data/bouquetTiers";
+import { saveCheckoutCart } from "@/lib/checkoutCart";
 
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
@@ -65,7 +67,16 @@ type QuadCorner = "tl" | "tr" | "bl" | "br";
 /** URL string, or one quadrant of a 2×2 composite */
 type ShopCardImage = string | { src: string; corner: QuadCorner };
 
+const BOUQUET_TIER_IDS: Record<number, string> = {
+  1: "single-stem",
+  2: "mini",
+  3: "standard",
+  4: "deluxe",
+  5: "luxury",
+};
+
 const Shop = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     const id = window.location.hash.slice(1);
     if (!id) return;
@@ -290,8 +301,33 @@ const Shop = () => {
     setIsInquiryOpen(true);
   };
 
-  const handleTierInquire = (bouquetId: number, bouquetName: string) => {
-    handleInquire(bouquetName, getTierPalette(bouquetId), bouquetId);
+  const handleBuyNow = (bouquetId: number, bouquetName: string) => {
+    const palette = getTierPalette(bouquetId);
+    if (!isTierPaletteComplete(palette, bouquetId)) {
+      toast({
+        title: "Choose a palette first",
+        description:
+          palette.mode === "template"
+            ? "Select a colour template, or switch to the colour picker to choose your colours."
+            : "Pick at least one colour from the colour picker.",
+      });
+      return;
+    }
+
+    const tierId = BOUQUET_TIER_IDS[bouquetId];
+    const tier = tierId ? getBouquetTier(tierId) : undefined;
+    if (!tier) return;
+
+    const paletteLabel = formatTierPaletteChoice(palette, bouquetId);
+    saveCheckoutCart({
+      source: "shop",
+      itemName: bouquetName,
+      itemSummary: paletteLabel ? `${bouquetName} — ${paletteLabel}` : bouquetName,
+      amountCents: tier.priceCents,
+      tierId,
+      paletteNotes: paletteLabel,
+    });
+    navigate("/checkout");
   };
 
   const quadPosition: Record<QuadCorner, string> = {
@@ -430,10 +466,10 @@ const Shop = () => {
                 />
                 <Button
                   className="w-full transition-transform duration-300 group-hover:scale-105"
-                  onClick={() => handleTierInquire(bouquet.id, bouquet.name)}
+                  onClick={() => handleBuyNow(bouquet.id, bouquet.name)}
                 >
-                  <ClipboardCheck className="mr-2 h-5 w-5" />
-                  Inquire / Pre-order
+                  <ShoppingCart className="mr-2 h-5 w-5" />
+                  Buy now
                 </Button>
               </div>
             </CardContent>
