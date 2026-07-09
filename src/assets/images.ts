@@ -244,4 +244,6 @@ export const buildGreetingCard = materialCard;
 
 /** Contact page — past pop-up events */
 export const pastEventMidsommarMarket = pastEvent("midsommar-market-fox-theatre.png");
+export const pastEventMidsommarYellowRoses = pastEvent("midsommar-market-yellow-roses.png");
+export const pastEventMidsommarMauveBouquet = pastEvent("midsommar-market-mauve-bouquet.png");
 
