@@ -10,6 +10,8 @@ const base = import.meta.env.BASE_URL;
 
 const myb = (file: string) => `${base}images/myb/${file}`;
 
+const pastEvent = (file: string) => `${base}images/past-events/${file}`;
+
 
 
 const q = "auto=format&fit=crop&w=200&q=80";
@@ -240,4 +242,6 @@ export const basket = materialBasket;
 export const vase = materialVase;
 export const buildGreetingCard = materialCard;
 
+/** Contact page — past pop-up events */
+export const pastEventMidsommarMarket = pastEvent("midsommar-market-fox-theatre.png");
 
