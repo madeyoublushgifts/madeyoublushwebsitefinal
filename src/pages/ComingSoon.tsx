@@ -44,8 +44,15 @@ const ComingSoon = () => {
               <span className="text-primary block">Made You Blush</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              We&apos;re building a visual bouquet builder on the site and launching{" "}
-              <strong className="text-foreground font-medium">Blush Notes</strong>—our blog and
+              You can already{" "}
+              <Link
+                to="/create-bouquet"
+                className="text-primary font-medium underline-offset-4 hover:underline"
+              >
+                build a bouquet
+              </Link>{" "}
+              on the site—we&apos;re working on a full visual bouquet visualizer next, plus{" "}
+              <strong className="text-foreground font-medium">Blush Notes</strong>, our blog and
               newsletter for Toronto stories, seasonal gifting, and local creativity. Subscribe
               today for floral delivery while you wait.
             </p>
@@ -58,7 +65,7 @@ const ComingSoon = () => {
               <Button asChild size="lg" className="w-full sm:w-auto min-h-11 rounded-full">
                 <a href="#bouquet-builder">
                   <Sparkles className="mr-2 h-5 w-5" />
-                  Bouquet builder preview
+                  Bouquet visualizer preview
                 </a>
               </Button>
               <Button asChild variant="outline" size="lg" className="w-full sm:w-auto min-h-11 rounded-full">
@@ -86,22 +93,27 @@ const ComingSoon = () => {
           <motion.div className="container mx-auto px-4 lg:px-8" {...fadeUp}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
-                <Badge variant="secondary">Interface preview</Badge>
+                <Badge variant="secondary">Coming soon</Badge>
                 <h2 className="font-heading text-3xl sm:text-4xl font-bold">
-                  Build-your-own bouquet—online
+                  Bouquet visualizer—a full visual experience
                 </h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  Soon you&apos;ll handcraft bouquets right on our site: pick the
-                  vibe, size, stem counts, colours, and how everything sits in the
-                  wrap—then layer on presentation with wrapping, add-ons, and
-                  messages before you inquire.
+                  <Link
+                    to="/create-bouquet"
+                    className="text-primary font-medium underline-offset-4 hover:underline"
+                  >
+                    Build a Bouquet
+                  </Link>{" "}
+                  already lives on the site—pick stems, colours, wrapping, and add-ons step by step.
+                  What we&apos;re building next is a true visualizer: a rich UX interface where you
+                  see your bouquet take shape as you design it, not just a form at the end.
                 </p>
                 <ul className="space-y-3 text-sm text-muted-foreground">
                   {[
-                    "Choose stems & greenery with live stem counts",
-                    "Set the mood—romantic, bright, moody, minimalist, and more",
-                    "Preview arrangement & wrapping before you send",
-                    "Add cards, treats, ribbon, vase, or basket finishes",
+                    "Live visual preview as stems, greenery, and fillers come together",
+                    "See wrapping, ribbon, and palette choices update on the bouquet in real time",
+                    "Explore mood, theme, and card message with the arrangement in view",
+                    "A polished, playful interface—from stem picker to finished bouquet",
                   ].map((line) => (
                     <li key={line} className="flex gap-2">
                       <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
@@ -110,16 +122,22 @@ const ComingSoon = () => {
                   ))}
                 </ul>
                 <p className="text-sm text-muted-foreground">
-                  Try our current{" "}
+                  The mockups below are early glimpses of that experience. Until the visualizer
+                  ships, use{" "}
                   <Link
                     to="/create-bouquet"
                     className="text-primary underline-offset-4 hover:underline"
                   >
                     Build a Bouquet
                   </Link>{" "}
-                  flow today—we&apos;re evolving it into the full visual experience
-                  alongside these previews.
+                  to craft your order today—or add it straight to cart.
                 </p>
+                <Button asChild className="w-full sm:w-auto min-h-11">
+                  <Link to="/create-bouquet">
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Build a bouquet now
+                  </Link>
+                </Button>
               </div>
 
               <motion.div
@@ -131,13 +149,13 @@ const ComingSoon = () => {
               >
                 <img
                   src={comingSoonBuilder}
-                  alt="Preview of the upcoming build-your-own bouquet interface with stems and add-ons"
+                  alt="Early mockup of the upcoming bouquet visualizer—stem picker and add-ons"
                   className="rounded-2xl shadow-soft w-full h-auto bg-card"
                   loading="lazy"
                 />
                 <img
                   src={comingSoonBuilderDone}
-                  alt="Preview of theme, card message, and finished bouquet in the upcoming builder"
+                  alt="Early mockup of theme, card message, and finished bouquet in the visualizer"
                   className="rounded-2xl shadow-soft w-full h-auto bg-card"
                   loading="lazy"
                 />

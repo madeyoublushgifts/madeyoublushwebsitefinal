@@ -79,9 +79,9 @@ const pages: Record<string, PageSeo> = {
     path: "/contact",
   },
   "/coming-soon": {
-    title: `Coming Soon — Bouquet Builder & Blush Notes | ${siteConfig.name}`,
+    title: `Coming Soon — Bouquet Visualizer & Blush Notes | ${siteConfig.name}`,
     description:
-      "Preview the upcoming online bouquet builder and Blush Notes blog from Made You Blush — Toronto stories, seasonal gifting, and local creativity alongside our floral world.",
+      "Build a bouquet on Made You Blush today—and preview the upcoming visual bouquet visualizer plus Blush Notes, our blog and newsletter for Toronto stories and seasonal gifting.",
     path: "/coming-soon",
   },
   "/subscription": {
