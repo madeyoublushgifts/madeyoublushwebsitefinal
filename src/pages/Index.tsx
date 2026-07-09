@@ -22,7 +22,7 @@ import {
 import { instagram, tiktok } from "@/lib/social";
 
 const HERO_INTRO =
-  "Toronto’s affordable & thoughtful floral subscription + gift shop. Build a bouquet, send a heartfelt note, or find a ready-to-gift surprise.";
+  "Toronto florist for affordable hand-tied bouquets, custom flower gifts, and curated gift sets. Build a bouquet, send a heartfelt note, or inquire for GTA pickup and delivery.";
 
 const HERO_PROMO = {
   title: "Pop-ups & markets",
@@ -165,7 +165,7 @@ const Index = () => {
       icon: Heart,
       title: "Toronto-rooted",
       description:
-        "Local pop-ups, vendor markets, and bouquet-building experiences in the city",
+        "Local florist pop-ups, vendor markets, and bouquet-building experiences across Toronto and the GTA",
     },
     {
       icon: Leaf,
@@ -183,6 +183,9 @@ const Index = () => {
       <main>
         {/* ================= HERO SECTION ================= */}
         <section className="relative overflow-hidden bg-background min-h-screen flex items-center animate-fadeIn">
+          <h1 className="sr-only">
+            Made You Blush — Affordable Toronto Florist for Custom Bouquets, Flower Gifts & Subscriptions
+          </h1>
           {/* Floating petals */}
           <div className="absolute inset-0 pointer-events-none">
             {[...Array(18)].map((_, i) => (
@@ -387,8 +390,8 @@ const Index = () => {
                 Shop highlights
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-                Luxury tiers, signature look-book bouquets, and curated gift sets—open the shop to
-                inquire or pre-order.
+                Luxury bouquet tiers, signature Toronto florist styles, and curated gift sets—browse
+                affordable flower gifts and inquire to pre-order for pickup or delivery.
               </p>
             </motion.div>
 
@@ -421,7 +424,9 @@ const Index = () => {
                           ></motion.div>
                           <motion.img
                             src={collection.image}
-                            alt={collection.title}
+                            alt={`${collection.title} — Toronto florist gift collection by Made You Blush`}
+                            loading="lazy"
+                            decoding="async"
                             className="w-32 sm:w-40 lg:w-48 h-auto object-contain z-10"
                             whileHover={{ scale: 1.1, y: -5 }}
                             transition={{ type: "spring", stiffness: 200 }}

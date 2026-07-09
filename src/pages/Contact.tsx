@@ -82,7 +82,7 @@ const Contact = () => {
             <div className="max-w-4xl mx-auto text-center space-y-8">
               {/* Main heading (consistent with Home page) */}
               <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight animate-fade-in">
-                Get in Touch
+                Contact Our Toronto Florist
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Use the form below or email{" "}
@@ -92,8 +92,8 @@ const Contact = () => {
                 >
                   madeyoublushgifts@gmail.com
                 </a>
-                —we’ll help with bouquets, subscriptions, gift bundles, pop-ups,
-                bouquet-building experiences, and event bookings.
+                —we help with bouquet orders, floral subscriptions, gift bundles, Toronto pop-ups,
+                bouquet-building experiences, and event florals across the GTA.
               </p>
             </div>
           </div>

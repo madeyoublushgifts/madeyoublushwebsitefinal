@@ -125,14 +125,13 @@ const ComingSoon = () => {
               Coming soon
             </Badge>
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-              Gifting as a habit,
-              <span className="text-primary block">not a luxury</span>
+              Toronto Floral Subscription
+              <span className="text-primary block">Gifting as a habit, not a luxury</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              Made You Blush is building something special for Toronto—floral
-              subscriptions that feel convenient, affordable, and deeply personal.
-              Shop and inquire today; delivery memberships and our full online
-              builder are on the way.
+              Made You Blush is building affordable floral subscriptions for Toronto—convenient,
+              personal blooms on your schedule. Shop bouquets and flower gifts today; join the
+              waitlist for membership delivery and our full online builder.
             </p>
             <motion.div
               className="flex flex-col sm:flex-row gap-3 justify-center pt-2"

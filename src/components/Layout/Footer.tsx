@@ -11,8 +11,8 @@ const Footer = () => {
           <div className="space-y-4">
             <BrandLogo variant="footer" />
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Toronto’s affordable and thoughtful floral subscription and gift
-              shop—bouquets, cards, small gifts, and personalized notes.
+              Toronto florist for affordable hand-tied bouquets, custom flower gifts, floral
+              subscriptions, pop-ups across the GTA, and personalized notes.
             </p>
             <SocialLinks className="pt-2" />
           </div>

@@ -481,7 +481,7 @@ const CreateBouquet = () => {
               transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              Build a Bouquet
+              Build a Custom Bouquet in Toronto
             </motion.h1>
             <motion.p
               className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto"
@@ -490,8 +490,9 @@ const CreateBouquet = () => {
               transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              Pick stems by the piece—main flowers, fillers, and greenery priced for Toronto. We follow up to
-              confirm availability, wrapping, and pickup or delivery before anything is cut.
+              Design your own bouquet online—pick stems, wrapping, ribbon, and add-ons with
+              transparent Toronto florist pricing. We confirm availability and GTA pickup or
+              delivery before anything is cut.
             </motion.p>
           </motion.div>
         </section>

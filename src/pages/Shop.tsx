@@ -351,12 +351,12 @@ const Shop = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <h1 className="font-heading text-4xl lg:text-5xl font-bold">
-                Shop Gifts & Flowers
+                Shop Bouquets & Flower Gifts in Toronto
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Toronto’s affordable & thoughtful floral subscription + gift shop. Browse
-                our tiers and add-ons, then inquire—we’ll confirm timing, pickup or
-                delivery options, and any personalization.
+                Browse affordable bouquet tiers, handmade cards, snail-mail notes, and curated gift
+                sets from a Toronto florist. Inquire to confirm timing, GTA pickup or delivery, and
+                personalization.
               </p>
             </motion.div>
 
