@@ -8,8 +8,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import DemoBanner from "./components/DemoBanner";
 import Seo from "./components/Seo";
 import { CartProvider } from "./context/CartContext";
+import Index from "./pages/Index";
 
-const Index = lazy(() => import("./pages/Index"));
 const Shop = lazy(() => import("./pages/Shop"));
 const CreateBouquet = lazy(() => import("./pages/CreateBouquet"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -44,8 +44,9 @@ const AppSeo = () => {
 };
 
 const PageFallback = () => (
-  <div className="min-h-[50vh] flex items-center justify-center bg-background" aria-hidden="true">
-    <div className="h-8 w-8 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+  <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-background px-6" role="status" aria-live="polite">
+    <div className="h-10 w-10 rounded-full border-2 border-primary/30 border-t-primary animate-spin" aria-hidden="true" />
+    <p className="font-heading text-lg text-foreground">Loading Made You Blush…</p>
   </div>
 );
 
