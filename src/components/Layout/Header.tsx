@@ -1,13 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BrandLogo from "@/components/BrandLogo";
-import { Flower, Home, Mail, Menu, ShoppingBag, Sparkles, CalendarHeart, X } from "lucide-react";
+import { Flower, Home, Mail, Menu, ShoppingBag, ShoppingCart, Sparkles, CalendarHeart, X } from "lucide-react";
 import { isDemoMode } from "@/lib/demo";
 import { useEffect, useState } from "react";
+import { useCartCount } from "@/hooks/useCartCount";
 
 const Header = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const cartCount = useCartCount();
 
   const navigation = [
     { name: "Home", href: "/", icon: Home },
@@ -24,6 +26,9 @@ const Header = () => {
   const isNavActive = (href: string) => {
     if (href === "/subscription") {
       return location.pathname === href || location.pathname.startsWith("/subscription/");
+    }
+    if (href === "/cart") {
+      return location.pathname === "/cart" || location.pathname === "/checkout";
     }
     return location.pathname === href;
   };
@@ -53,7 +58,24 @@ const Header = () => {
           </nav>
 
           {/* CTA Button + Mobile Menu Toggle */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3 sm:space-x-4">
+            <Link
+              to="/cart"
+              aria-label={cartCount > 0 ? `Cart, ${cartCount} items` : "Cart"}
+              className={`relative inline-flex items-center justify-center rounded-full border-2 p-2.5 min-h-11 min-w-11 transition-all duration-200 ${
+                location.pathname === "/cart" || location.pathname === "/checkout"
+                  ? "border-primary/60 bg-primary/10 text-primary"
+                  : "border-primary/25 text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/50"
+              }`}
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                  {cartCount > 9 ? "9+" : cartCount}
+                </span>
+              )}
+            </Link>
+
             <Button asChild variant="default" size="sm" className="hidden md:inline-flex">
               <Link to="/create-bouquet">
                 <Flower className="h-4 w-4" />
@@ -63,7 +85,9 @@ const Header = () => {
 
             {/* Mobile Hamburger */}
             <button
-              className="md:hidden p-2 rounded-md hover:bg-accent focus:outline-none"
+              type="button"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              className="md:hidden inline-flex items-center justify-center min-h-11 min-w-11 p-2.5 rounded-md hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -90,6 +114,12 @@ const Header = () => {
               {item.name}
             </Link>
           ))}
+          <Button asChild variant="outline" size="sm" className="w-full">
+            <Link to="/cart" onClick={() => setMobileMenuOpen(false)}>
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Cart{cartCount > 0 ? ` (${cartCount})` : ""}
+            </Link>
+          </Button>
           <Button asChild variant="default" size="sm" className="w-full">
             <Link to="/create-bouquet" onClick={() => setMobileMenuOpen(false)}>
               <Flower className="mr-2 h-4 w-4" />

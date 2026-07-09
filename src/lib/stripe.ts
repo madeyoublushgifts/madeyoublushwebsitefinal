@@ -1,4 +1,12 @@
 import type { SubscriptionOccasion } from "@/data/subscriptionOccasions";
+import type { CheckoutSource } from "@/lib/checkoutCart";
+
+export type OrderCheckoutLineItem = {
+  itemName: string;
+  itemSummary: string;
+  amountCents: number;
+  source: CheckoutSource;
+};
 
 export type OrderCheckoutPayload = {
   name: string;
@@ -6,10 +14,7 @@ export type OrderCheckoutPayload = {
   phone?: string;
   address: string;
   deliveryDate: string;
-  itemName: string;
-  itemSummary: string;
-  amountCents: number;
-  source: "shop" | "build";
+  items: OrderCheckoutLineItem[];
   notes?: string;
 };
 

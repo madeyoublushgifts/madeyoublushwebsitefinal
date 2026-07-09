@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import InquiryForm from "@/components/ui/inquiry-form";
-import BouquetPalettePicker from "@/components/BouquetPalettePicker";
+import ShopBouquetCard from "@/components/ShopBouquetCard";
 import FloralDivider from "@/components/FloralDivider";
 import {
   defaultTierPaletteSelection,
@@ -18,7 +18,8 @@ import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { ClipboardCheck, Flower, ShoppingCart, Sparkles } from "lucide-react";
 import { getBouquetTier } from "@/data/bouquetTiers";
-import { saveCheckoutCart } from "@/lib/checkoutCart";
+import { shopBouquets, SHOP_BOUQUET_TIER_IDS } from "@/data/shopBouquets";
+import { addCartItem } from "@/lib/checkoutCart";
 
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
@@ -41,11 +42,6 @@ const cardReveal = {
 
 // ===== Import Assets (import.meta.url via central registry) =====
 import {
-  romanticGarden as romantic_garden,
-  sunshineDelight as sunshine_delight,
-  purpleElegance as purple_elegance,
-  deluxeBouquet as deluxe_bouquet,
-  pureSerenity as purple_serenity,
   chocolatesAndBlooms as blooms_chocolates,
   floralCandleSet as floral_candle,
   card as card_addon,
@@ -67,13 +63,7 @@ type QuadCorner = "tl" | "tr" | "bl" | "br";
 /** URL string, or one quadrant of a 2×2 composite */
 type ShopCardImage = string | { src: string; corner: QuadCorner };
 
-const BOUQUET_TIER_IDS: Record<number, string> = {
-  1: "single-stem",
-  2: "mini",
-  3: "standard",
-  4: "deluxe",
-  5: "luxury",
-};
+const BOUQUET_TIER_IDS = SHOP_BOUQUET_TIER_IDS;
 
 const Shop = () => {
   const navigate = useNavigate();
@@ -89,49 +79,8 @@ const Shop = () => {
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [tierPalettes, setTierPalettes] = useState<Record<number, TierPaletteSelection>>({});
 
-  // ===== Bouquets =====
-  const bouquets = [
-    {
-      id: 1,
-      name: "Single Stem",
-      description: "One standout stem—perfect for desks, apologies, or tiny celebrations",
-      price: "$4.99",
-      image: romantic_garden,
-      category: "bouquet",
-    },
-    {
-      id: 2,
-      name: "Mini Bouquet",
-      description: "Petite bundle with big personality for birthdays, brunch hosts, or “thinking of you”",
-      price: "$16.99",
-      image: sunshine_delight,
-      category: "bouquet",
-    },
-    {
-      id: 3,
-      name: "Standard Bouquet",
-      description: "Our most-loved size for doorsteps, thank-yous, and everyday wow moments",
-      price: "$34.99",
-      image: purple_elegance,
-      category: "bouquet",
-    },
-    {
-      id: 4,
-      name: "Deluxe Bouquet",
-      description: "Fuller stems with lilies and layered blooms—our sweet spot for birthdays and “wow” moments",
-      price: "$56.99",
-      image: deluxe_bouquet,
-      category: "bouquet",
-    },
-    {
-      id: 5,
-      name: "Luxury Bouquet",
-      description: "Extra stems and drama for anniversaries, milestones, or extra-proud moments",
-      price: "$75",
-      image: purple_serenity,
-      category: "bouquet",
-    },
-  ];
+  // ===== Bouquets (shared with subscription preset picker) =====
+  const bouquets = shopBouquets;
 
   // ===== Gifts =====
   const gifts = [
@@ -319,7 +268,7 @@ const Shop = () => {
     if (!tier) return;
 
     const paletteLabel = formatTierPaletteChoice(palette, bouquetId);
-    saveCheckoutCart({
+    addCartItem({
       source: "shop",
       itemName: bouquetName,
       itemSummary: paletteLabel ? `${bouquetName} — ${paletteLabel}` : bouquetName,
@@ -327,7 +276,10 @@ const Shop = () => {
       tierId,
       paletteNotes: paletteLabel,
     });
-    navigate("/cart");
+    toast({
+      title: "Added to cart",
+      description: `${bouquetName} is in your cart. Add more bouquets or proceed to checkout.`,
+    });
   };
 
   const quadPosition: Record<QuadCorner, string> = {
@@ -434,46 +386,20 @@ const Shop = () => {
                       boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.15)",
                     }}
                   >
-          <Card className="group cursor-pointer border-0 shadow-soft bg-card-gradient rounded-2xl overflow-hidden">
-            <CardContent className="p-0">
-              {/* Image */}
-              <div className="relative overflow-hidden aspect-square bg-gradient-to-br from-primary/5 to-accent/5 flex items-center justify-center">
-                {renderImage(bouquet.image, bouquet.name)}
-                <div className="absolute top-4 right-4">
-                  <Badge
-                    variant="secondary"
-                    className="bg-background/80 backdrop-blur"
-                  >
-                    {bouquet.price}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="p-6 space-y-4">
-                <div>
-                  <h3 className="font-heading text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                    {bouquet.name}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {bouquet.description}
-                  </p>
-                </div>
-                <BouquetPalettePicker
-                  bouquetId={bouquet.id}
-                  selection={getTierPalette(bouquet.id)}
-                  onChange={(next) => setTierPalette(bouquet.id, next)}
-                />
-                <Button
-                  className="w-full transition-transform duration-300 group-hover:scale-105"
-                  onClick={() => handleBuyNow(bouquet.id, bouquet.name)}
-                >
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Add to cart
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                    <ShopBouquetCard
+                      bouquet={bouquet}
+                      palette={getTierPalette(bouquet.id)}
+                      onPaletteChange={(next) => setTierPalette(bouquet.id, next)}
+                      footer={
+                        <Button
+                          className="w-full min-h-11 transition-transform duration-300 group-hover:scale-105"
+                          onClick={() => handleBuyNow(bouquet.id, bouquet.name)}
+                        >
+                          <ShoppingCart className="mr-2 h-5 w-5" />
+                          Add to cart
+                        </Button>
+                      }
+                    />
                   </motion.div>
                 ))}
               </motion.div>

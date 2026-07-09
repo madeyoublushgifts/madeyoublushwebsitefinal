@@ -78,7 +78,7 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
               disabled={atMax}
               onClick={() => toggleCustomColor(color.id)}
             className={cn(
-                    "h-7 w-7 rounded-full border-2 transition-all duration-200 shrink-0 active:scale-90",
+                    "h-8 w-8 sm:h-7 sm:w-7 rounded-full border-2 transition-all duration-200 shrink-0 active:scale-90",
                     active
                       ? "border-primary ring-2 ring-primary/40 scale-110 shadow-sm"
                       : "border-border hover:border-primary hover:scale-105",

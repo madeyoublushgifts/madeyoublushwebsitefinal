@@ -106,7 +106,7 @@ const Subscription = () => {
           id="waitlist"
           className="pt-8 lg:pt-10 pb-16 lg:pb-24 bg-gradient-to-b from-primary/5 to-background scroll-mt-20"
         >
-          <motion.div className="container mx-auto px-4 lg:px-8 max-w-2xl" {...fadeUp}>
+          <motion.div className="container mx-auto px-4 lg:px-8 max-w-6xl" {...fadeUp}>
             <div className="text-center space-y-4 mb-10">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold">
                 Subscription waitlist

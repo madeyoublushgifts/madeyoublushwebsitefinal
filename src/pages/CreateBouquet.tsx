@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Plus, Minus, ChevronRight, ChevronLeft, ShoppingCart } from "lucide-react";
-import { saveCheckoutCart } from "@/lib/checkoutCart";
+import { addCartItem } from "@/lib/checkoutCart";
 import { saveSubscriptionBuildDraft } from "@/lib/subscriptionBuildDraft";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -311,11 +311,15 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
       return;
     }
 
-    saveCheckoutCart({
+    addCartItem({
       source: "build",
       itemName: "Custom bouquet",
       itemSummary: getSelectedItemsText(),
       amountCents: Math.round(total * 100),
+    });
+    toast({
+      title: "Added to cart",
+      description: "Your custom bouquet is in your cart.",
     });
     navigate("/cart");
   };
@@ -569,7 +573,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
           >
             <Progress value={progress} className="h-2 mb-6" />
             <motion.div
-              className="flex justify-between"
+              className="flex justify-between gap-1 sm:gap-2"
               initial="hidden"
               whileInView="visible"
               variants={{
@@ -586,7 +590,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                     visible: { opacity: 1, y: 0, scale: 1 },
                   }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className={`text-center ${currentStep >= step.id ? "text-primary" : "text-muted-foreground"}`}
+                  className={`text-center flex-1 min-w-0 px-0.5 sm:px-1 ${currentStep >= step.id ? "text-primary" : "text-muted-foreground"}`}
                 >
                   <div
                     className={`w-8 h-8 rounded-full border-2 mx-auto mb-2 flex items-center justify-center text-sm font-medium ${
@@ -597,7 +601,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                   >
                     {step.id}
                   </div>
-                  <h3 className="font-medium text-sm">{step.title}</h3>
+                  <h3 className="font-medium text-xs sm:text-sm leading-tight">{step.title}</h3>
                   <p className="text-xs text-muted-foreground hidden sm:block">{step.description}</p>
                 </motion.div>
               ))}
@@ -605,8 +609,8 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
           </motion.div>
         </section>
 
-        <section className="pb-24 sm:pb-28">
-          <div className="container mx-auto px-4 lg:px-8 max-w-6xl pt-8 sm:pt-10">
+        <section className="pb-28 sm:pb-32">
+          <div className="container mx-auto px-4 lg:px-8 max-w-6xl pt-8 sm:pt-10 overflow-x-hidden">
             <AnimatePresence mode="wait">
               {currentStep === 1 && (
                 <motion.div
@@ -829,7 +833,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
 
                         <Button
                           size="lg"
-                          className="w-full"
+                          className="w-full min-h-12"
                           onClick={handlePlaceOrder}
                           disabled={Object.keys(selectedStems).length === 0}
                         >

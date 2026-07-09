@@ -7,21 +7,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import OccasionPicker from "@/components/OccasionPicker";
-import BouquetPalettePicker from "@/components/BouquetPalettePicker";
-import {
-  formatDisplayDate,
-  getMinDeliveryDate,
-  isDeliveryDateValid,
-} from "@/data/subscriptionDates";
-import { subscriptionPlans, type SubscriptionCadence } from "@/data/subscriptionPlans";
-import { bouquetTiers, getBouquetTier } from "@/data/bouquetTiers";
+import ShopBouquetCard from "@/components/ShopBouquetCard";
 import {
   defaultTierPaletteSelection,
   formatTierPaletteChoice,
   isTierPaletteComplete,
   type TierPaletteSelection,
 } from "@/data/bouquetTierColors";
+import { shopBouquets } from "@/data/shopBouquets";
+import { getBouquetTier } from "@/data/bouquetTiers";
 import type { SubscriptionOccasion } from "@/data/subscriptionOccasions";
+import {
+  formatDisplayDate,
+  getMinDeliveryDate,
+  isDeliveryDateValid,
+} from "@/data/subscriptionDates";
+import { subscriptionPlans, type SubscriptionCadence } from "@/data/subscriptionPlans";
 import { submitToFormspree } from "@/lib/formspree";
 import {
   clearSubscriptionBuildDraft,
@@ -41,9 +42,7 @@ const SubscriptionWaitlistForm = () => {
   const [cadence, setCadence] = useState<SubscriptionCadence | "">("");
   const [bouquetSource, setBouquetSource] = useState<BouquetSource | "">("");
   const [tierId, setTierId] = useState("");
-  const [tierPalette, setTierPalette] = useState<TierPaletteSelection>(
-    defaultTierPaletteSelection()
-  );
+  const [tierPalettes, setTierPalettes] = useState<Record<number, TierPaletteSelection>>({});
   const [buildDraft, setBuildDraft] = useState<SubscriptionBuildDraft | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -64,10 +63,19 @@ const SubscriptionWaitlistForm = () => {
 
   const selectedTier = tierId ? getBouquetTier(tierId) : undefined;
 
-  const handleTierSelect = (id: string) => {
-    const tier = getBouquetTier(id);
+  const getTierPalette = (bouquetId: number) =>
+    tierPalettes[bouquetId] ?? defaultTierPaletteSelection(bouquetId);
+
+  const setTierPaletteForBouquet = (bouquetId: number, next: TierPaletteSelection) => {
+    setTierPalettes((prev) => ({ ...prev, [bouquetId]: next }));
+  };
+
+  const handleTierSelect = (id: string, shopBouquetId: number) => {
     setTierId(id);
-    setTierPalette(defaultTierPaletteSelection(tier?.shopBouquetId));
+    setTierPalettes((prev) => ({
+      ...prev,
+      [shopBouquetId]: prev[shopBouquetId] ?? defaultTierPaletteSelection(shopBouquetId),
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -101,11 +109,12 @@ const SubscriptionWaitlistForm = () => {
         return;
       }
 
-      if (!isTierPaletteComplete(tierPalette, selectedTier?.shopBouquetId)) {
+      if (!isTierPaletteComplete(getTierPalette(selectedTier.shopBouquetId), selectedTier.shopBouquetId)) {
+        const palette = getTierPalette(selectedTier.shopBouquetId);
         toast({
           title: "Choose a palette",
           description:
-            tierPalette.mode === "template"
+            palette.mode === "template"
               ? "Select a colour template, or switch to the colour picker."
               : "Pick at least one colour for your bouquet tier.",
           variant: "destructive",
@@ -137,7 +146,10 @@ const SubscriptionWaitlistForm = () => {
 
     const paletteLabel =
       bouquetSource === "preset" && selectedTier
-        ? formatTierPaletteChoice(tierPalette, selectedTier.shopBouquetId)
+        ? formatTierPaletteChoice(
+            getTierPalette(selectedTier.shopBouquetId),
+            selectedTier.shopBouquetId
+          )
         : "";
 
     const tierSummary =
@@ -180,7 +192,7 @@ const SubscriptionWaitlistForm = () => {
       setCadence("");
       setBouquetSource("");
       setTierId("");
-      setTierPalette(defaultTierPaletteSelection());
+      setTierPalettes({});
       setBuildDraft(null);
       setName("");
       setEmail("");
@@ -249,7 +261,7 @@ const SubscriptionWaitlistForm = () => {
                 onClick={() => {
                   setBouquetSource("preset");
                   setTierId("");
-                  setTierPalette(defaultTierPaletteSelection());
+                  setTierPalettes({});
                   setBuildDraft(null);
                   clearSubscriptionBuildDraft();
                 }}
@@ -260,9 +272,9 @@ const SubscriptionWaitlistForm = () => {
                     : "border-border hover:border-primary/40"
                 )}
               >
-                <span className="font-medium block">Shop bouquet tier</span>
+                <span className="font-medium block">Preset shop bouquets</span>
                 <span className="text-xs text-muted-foreground mt-1 block">
-                  Pick a tier and colour template or custom palette
+                  Same tiers as the shop—pick a bouquet and colour template or palette
                 </span>
               </button>
               <button
@@ -270,7 +282,7 @@ const SubscriptionWaitlistForm = () => {
                 onClick={() => {
                   setBouquetSource("custom");
                   setTierId("");
-                  setTierPalette(defaultTierPaletteSelection());
+                  setTierPalettes({});
                 }}
                 className={cn(
                   "rounded-xl border-2 p-4 text-left transition-all",
@@ -289,42 +301,34 @@ const SubscriptionWaitlistForm = () => {
 
           {bouquetSource === "preset" ? (
             <fieldset className="space-y-4">
-              <legend className="text-sm font-medium">Choose bouquet tier *</legend>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {bouquetTiers.map((tier) => (
-                  <button
-                    key={tier.id}
-                    type="button"
-                    onClick={() => handleTierSelect(tier.id)}
-                    className={cn(
-                      "rounded-lg border-2 p-3 text-left text-sm transition-all",
-                      tierId === tier.id
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/30"
-                    )}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-medium">{tier.name}</span>
-                      <span className="text-primary text-xs font-semibold">{tier.priceLabel}</span>
-                    </div>
-                    <span className="text-muted-foreground block text-xs mt-0.5">
-                      {tier.description}
-                    </span>
-                  </button>
+              <legend className="text-sm font-medium">
+                Choose a preset bouquet &amp; palette *
+              </legend>
+              <p className="text-xs text-muted-foreground -mt-1">
+                Select a tier, then pick a colour template or use the colour picker—just like the
+                shop page.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-6">
+                {shopBouquets.map((bouquet) => (
+                  <ShopBouquetCard
+                    key={bouquet.id}
+                    bouquet={bouquet}
+                    palette={getTierPalette(bouquet.id)}
+                    onPaletteChange={(next) => {
+                      setTierPaletteForBouquet(bouquet.id, next);
+                      if (tierId !== bouquet.tierId) {
+                        setTierId(bouquet.tierId);
+                      }
+                    }}
+                    selected={tierId === bouquet.tierId}
+                    onSelect={() => handleTierSelect(bouquet.tierId, bouquet.id)}
+                  />
                 ))}
               </div>
-
-              {selectedTier ? (
-                <div className="rounded-xl border border-border bg-background/60 p-4">
-                  <p className="text-xs font-medium text-muted-foreground mb-3">
-                    Colour template or colour picker *
-                  </p>
-                  <BouquetPalettePicker
-                    bouquetId={selectedTier.shopBouquetId}
-                    selection={tierPalette}
-                    onChange={setTierPalette}
-                  />
-                </div>
+              {!tierId ? (
+                <p className="text-xs text-muted-foreground text-center">
+                  Tap a bouquet card above to select your subscription tier.
+                </p>
               ) : null}
             </fieldset>
           ) : null}
