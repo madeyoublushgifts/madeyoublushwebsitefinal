@@ -88,9 +88,8 @@ export const showcaseSignatureBouquets = myb("myb-highlight-signatures-collage.p
 
 export const showcaseCuratedGiftSets = myb("myb-highlight-curated-gifts-collage.png");
 
-
-
-/** Hero & tiers */
+/** Home — Shop highlights → floral subscription waitlist */
+export const showcaseSubscription = tierDeluxe;
 
 export const showcaseMiniBouquet = tierMini;
 

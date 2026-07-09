@@ -18,6 +18,7 @@ import {
   showcaseLuxuryBouquet,
   showcaseSignatureBouquets,
   showcaseCuratedGiftSets,
+  showcaseSubscription,
 } from "../assets/images";
 import { instagram, tiktok } from "@/lib/social";
 
@@ -150,6 +151,13 @@ const Index = () => {
         "Blooms paired with chocolates, candles, teddy keepsakes, and more—gift-ready layers for birthdays, thank-yous, and “you deserve this” days.",
       image: showcaseCuratedGiftSets,
       link: "/shop#curated-gift-sets",
+    },
+    {
+      title: "Floral subscription",
+      description:
+        "Join the waitlist for recurring delivery—pick a shop tier or custom build, choose your cadence, and set the dates that matter most.",
+      image: showcaseSubscription,
+      link: "/subscription",
     },
   ];
 
@@ -390,12 +398,13 @@ const Index = () => {
                 Shop highlights
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-                Luxury bouquet tiers, signature Toronto florist styles, and curated gift sets—browse
-                affordable flower gifts and inquire to pre-order for pickup or delivery.
+                Luxury bouquet tiers, signature Toronto florist styles, curated gift sets, and our
+                floral subscription waitlist—browse affordable flower gifts or join for recurring
+                delivery.
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
               {featuredCollections.map((collection, idx) => (
                 <Link key={collection.title} to={collection.link}>
                   <motion.div
