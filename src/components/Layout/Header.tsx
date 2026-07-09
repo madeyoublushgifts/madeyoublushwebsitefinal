@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import BrandLogo from "@/components/BrandLogo";
 import { Flower, Home, Mail, Menu, ShoppingBag, Sparkles, CalendarHeart, X } from "lucide-react";
 import { isDemoMode } from "@/lib/demo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const location = useLocation();
@@ -16,6 +16,17 @@ const Header = () => {
     { name: "Coming Soon", href: "/coming-soon", icon: Sparkles },
     { name: "Contact", href: "/contact", icon: Mail },
   ];
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  const isNavActive = (href: string) => {
+    if (href === "/subscription") {
+      return location.pathname === href || location.pathname.startsWith("/subscription/");
+    }
+    return location.pathname === href;
+  };
 
   return (
     <header className={`sticky z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isDemoMode ? "top-7" : "top-0"}`}>
@@ -30,7 +41,7 @@ const Header = () => {
                 key={item.name}
                 to={item.href}
                 className={`inline-flex items-center gap-2 text-sm font-medium rounded-full border-2 px-3 py-1.5 transition-all duration-200 ${
-                  location.pathname === item.href
+                  isNavActive(item.href)
                     ? "border-primary/60 bg-primary/10 text-primary shadow-sm"
                     : "border-primary/25 text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/50"
                 }`}
@@ -70,7 +81,7 @@ const Header = () => {
               to={item.href}
               onClick={() => setMobileMenuOpen(false)}
               className={`flex items-center gap-2 text-sm font-medium rounded-full border-2 px-3 py-2 transition-all duration-200 ${
-                location.pathname === item.href
+                isNavActive(item.href)
                   ? "border-primary/60 bg-primary/10 text-primary shadow-sm"
                   : "border-primary/25 text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/50"
               }`}

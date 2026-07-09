@@ -87,8 +87,34 @@ const pages: Record<string, PageSeo> = {
   "/subscription": {
     title: `Floral Subscription Waitlist Toronto | ${siteConfig.name}`,
     description:
-      "Join the floral subscription waitlist in Toronto — bi-weekly, monthly, or $185/year annual plan. Choose a shop tier or custom build, add special occasions, and get notified when delivery memberships launch.",
+      "Join the floral subscription waitlist in Toronto — choose bi-weekly, monthly, or annual delivery, pick a shop tier or custom build, and get notified when memberships launch.",
     path: "/subscription",
+  },
+  "/subscription/build-bouquet": {
+    title: `Build Your Subscription Bouquet | ${siteConfig.name}`,
+    description:
+      "Design stems, wrap, and add-ons for your Made You Blush floral subscription waitlist — separate from one-time shop checkout.",
+    path: "/subscription/build-bouquet",
+  },
+  "/cart": {
+    title: `Your Cart | ${siteConfig.name}`,
+    description: "Review your bouquet order before secure checkout with Made You Blush.",
+    path: "/cart",
+  },
+  "/checkout": {
+    title: `Checkout | ${siteConfig.name}`,
+    description: "Complete your Made You Blush bouquet order with secure Stripe checkout.",
+    path: "/checkout",
+  },
+  "/checkout/success": {
+    title: `Order Confirmed | ${siteConfig.name}`,
+    description: "Thank you for your Made You Blush order.",
+    path: "/checkout/success",
+  },
+  "/checkout/cancel": {
+    title: `Checkout Cancelled | ${siteConfig.name}`,
+    description: "Your checkout was cancelled. Return to the shop anytime.",
+    path: "/checkout/cancel",
   },
 };
 

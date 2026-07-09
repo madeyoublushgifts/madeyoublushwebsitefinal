@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +37,7 @@ const minDeliveryDate = getMinDeliveryDate();
 type BouquetSource = "preset" | "custom";
 
 const SubscriptionWaitlistForm = () => {
+  const location = useLocation();
   const [cadence, setCadence] = useState<SubscriptionCadence | "">("");
   const [bouquetSource, setBouquetSource] = useState<BouquetSource | "">("");
   const [tierId, setTierId] = useState("");
@@ -59,7 +60,7 @@ const SubscriptionWaitlistForm = () => {
       setBuildDraft(draft);
       setBouquetSource("custom");
     }
-  }, []);
+  }, [location.pathname, location.hash]);
 
   const selectedTier = tierId ? getBouquetTier(tierId) : undefined;
 

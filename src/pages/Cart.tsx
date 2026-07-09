@@ -11,10 +11,12 @@ import {
   type CheckoutCart,
 } from "@/lib/checkoutCart";
 import { ArrowRight, ShoppingCart, Trash2 } from "lucide-react";
+import PageLoading from "@/components/PageLoading";
 
 const Cart = () => {
   const navigate = useNavigate();
   const [cart, setCart] = useState<CheckoutCart | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loaded = loadCheckoutCart();
@@ -23,6 +25,7 @@ const Cart = () => {
       return;
     }
     setCart(loaded);
+    setIsLoading(false);
   }, [navigate]);
 
   const handleRemove = () => {
@@ -30,8 +33,14 @@ const Cart = () => {
     navigate("/shop", { replace: true });
   };
 
-  if (!cart) {
-    return null;
+  if (isLoading || !cart) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <PageLoading />
+        <Footer />
+      </div>
+    );
   }
 
   return (
@@ -90,7 +99,7 @@ const Cart = () => {
         </Card>
 
         <Button asChild size="lg" className="w-full">
-          <Link to="/checkout">
+          <Link to="/checkout" className="inline-flex items-center justify-center">
             Proceed to checkout
             <ArrowRight className="ml-2 h-5 w-5" />
           </Link>

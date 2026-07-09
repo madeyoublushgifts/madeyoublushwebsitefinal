@@ -20,6 +20,7 @@ import {
 import { redirectToOrderCheckout } from "@/lib/stripe";
 import { toast } from "@/hooks/use-toast";
 import { CreditCard, Loader2, ShoppingBag } from "lucide-react";
+import PageLoading from "@/components/PageLoading";
 
 const minDeliveryDate = getMinDeliveryDate();
 
@@ -33,6 +34,7 @@ const Checkout = () => {
   const [deliveryDate, setDeliveryDate] = useState(minDeliveryDate);
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loaded = loadCheckoutCart();
@@ -41,6 +43,7 @@ const Checkout = () => {
       return;
     }
     setCart(loaded);
+    setIsLoading(false);
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,8 +88,14 @@ const Checkout = () => {
     }
   };
 
-  if (!cart) {
-    return null;
+  if (isLoading || !cart) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <PageLoading />
+        <Footer />
+      </div>
+    );
   }
 
   return (
