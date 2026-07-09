@@ -17,6 +17,11 @@ import {
 } from "@/data/bouquetTierColors";
 import { bouquetTiers, getBouquetTier } from "@/data/bouquetTiers";
 import { getSignatureBouquet, signatureBouquets } from "@/data/signatureBouquets";
+import {
+  defaultSignatureSizeId,
+  formatSignatureSizeLabel,
+  getSignatureSizeTier,
+} from "@/data/signatureBouquetSizes";
 import type { SubscriptionOccasion } from "@/data/subscriptionOccasions";
 import {
   formatDisplayDate,
@@ -69,6 +74,7 @@ const SubscriptionWaitlistForm = () => {
     defaultTierPaletteSelection()
   );
   const [signatureId, setSignatureId] = useState("");
+  const [signatureSizes, setSignatureSizes] = useState<Record<string, string>>({});
   const [buildDraft, setBuildDraft] = useState<SubscriptionBuildDraft | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -89,6 +95,16 @@ const SubscriptionWaitlistForm = () => {
 
   const selectedTier = tierId ? getBouquetTier(tierId) : undefined;
   const selectedSignature = signatureId ? getSignatureBouquet(signatureId) : undefined;
+  const selectedSignatureSize = signatureId
+    ? getSignatureSizeTier(signatureSizes[signatureId] ?? defaultSignatureSizeId)
+    : undefined;
+
+  const getSignatureSize = (bouquetId: string) =>
+    signatureSizes[bouquetId] ?? defaultSignatureSizeId;
+
+  const setSignatureSize = (bouquetId: string, sizeId: string) => {
+    setSignatureSizes((prev) => ({ ...prev, [bouquetId]: sizeId }));
+  };
 
   const handleTierSelect = (id: string) => {
     const tier = getBouquetTier(id);
@@ -101,6 +117,7 @@ const SubscriptionWaitlistForm = () => {
     setTierId("");
     setTierPalette(defaultTierPaletteSelection());
     setSignatureId("");
+    setSignatureSizes({});
     if (source === "custom") {
       setBuildDraft(loadSubscriptionBuildDraft());
     } else {
@@ -191,8 +208,8 @@ const SubscriptionWaitlistForm = () => {
     const tierSummary =
       bouquetSource === "tier" && selectedTier
         ? `${selectedTier.name} (${selectedTier.priceLabel})${paletteLabel ? ` — ${paletteLabel}` : ""}`
-        : bouquetSource === "signature" && selectedSignature
-          ? `${selectedSignature.name} (${selectedSignature.price})`
+        : bouquetSource === "signature" && selectedSignature && selectedSignatureSize
+          ? `${selectedSignature.name} — ${formatSignatureSizeLabel(selectedSignatureSize.id)}`
           : buildDraft
             ? `Custom build (est. $${buildDraft.estimatedTotal.toFixed(2)}/delivery) — ${buildDraft.summary}`
             : "Custom build";
@@ -239,6 +256,7 @@ const SubscriptionWaitlistForm = () => {
       setTierId("");
       setTierPalette(defaultTierPaletteSelection());
       setSignatureId("");
+      setSignatureSizes({});
       setBuildDraft(null);
       setName("");
       setEmail("");
@@ -284,11 +302,16 @@ const SubscriptionWaitlistForm = () => {
                   >
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <span className="font-medium">{plan.label}</span>
-                      {plan.badge ? (
-                        <Badge className="text-[10px] uppercase tracking-wide">
-                          {plan.badge}
-                        </Badge>
-                      ) : null}
+                      <div className="flex items-center gap-2 shrink-0">
+                        {plan.priceLabel ? (
+                          <span className="text-primary text-xs font-semibold">{plan.priceLabel}</span>
+                        ) : null}
+                        {plan.badge ? (
+                          <Badge className="text-[10px] uppercase tracking-wide">
+                            {plan.badge}
+                          </Badge>
+                        ) : null}
+                      </div>
                     </div>
                     <p className="text-xs text-muted-foreground leading-relaxed">
                       {plan.description}
@@ -378,6 +401,8 @@ const SubscriptionWaitlistForm = () => {
                     bouquet={bouquet}
                     selected={signatureId === bouquet.id}
                     onSelect={() => setSignatureId(bouquet.id)}
+                    selectedSizeId={getSignatureSize(bouquet.id)}
+                    onSizeChange={(sizeId) => setSignatureSize(bouquet.id, sizeId)}
                   />
                 ))}
               </div>

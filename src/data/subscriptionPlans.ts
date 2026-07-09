@@ -5,6 +5,7 @@ export type SubscriptionPlan = {
   label: string;
   description: string;
   badge?: string;
+  priceLabel?: string;
 };
 
 export const subscriptionPlans: SubscriptionPlan[] = [
@@ -23,6 +24,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
     label: "Annual",
     description: "Best value — a full year of blooms on your schedule.",
     badge: "Best value",
+    priceLabel: "$185",
   },
 ];
 

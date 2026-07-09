@@ -41,6 +41,12 @@ const cardReveal = {
 } as const;
 
 import { signatureBouquets } from "@/data/signatureBouquets";
+import BouquetSizePicker from "@/components/BouquetSizePicker";
+import {
+  defaultSignatureSizeId,
+  formatSignatureSizeLabel,
+  getSignatureSizeTier,
+} from "@/data/signatureBouquetSizes";
 
 // ===== Import Assets (import.meta.url via central registry) =====
 import {
@@ -75,6 +81,7 @@ const Shop = () => {
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [tierPalettes, setTierPalettes] = useState<Record<number, TierPaletteSelection>>({});
+  const [signatureSizes, setSignatureSizes] = useState<Record<string, string>>({});
 
   // ===== Bouquets (shared with subscription preset picker) =====
   const bouquets = shopBouquets;
@@ -168,6 +175,13 @@ const Shop = () => {
 
   const setTierPalette = (bouquetId: number, selection: TierPaletteSelection) => {
     setTierPalettes((prev) => ({ ...prev, [bouquetId]: selection }));
+  };
+
+  const getSignatureSize = (bouquetId: string) =>
+    signatureSizes[bouquetId] ?? defaultSignatureSizeId;
+
+  const setSignatureSize = (bouquetId: string, sizeId: string) => {
+    setSignatureSizes((prev) => ({ ...prev, [bouquetId]: sizeId }));
   };
 
   // ===== Handlers =====
@@ -480,7 +494,10 @@ const Shop = () => {
               }}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {signatureBouquets.map((bouquet) => (
+              {signatureBouquets.map((bouquet) => {
+                const sizeTier = getSignatureSizeTier(getSignatureSize(bouquet.id));
+                const priceLabel = sizeTier?.priceLabel ?? bouquet.price;
+                return (
                 <motion.div
                   key={bouquet.id}
                   variants={{
@@ -499,7 +516,7 @@ const Shop = () => {
                         {renderImage(bouquet.image, bouquet.name)}
                         <div className="absolute top-4 right-4">
                           <Badge variant="secondary" className="bg-background/80 backdrop-blur">
-                            {bouquet.price}
+                            {priceLabel}
                           </Badge>
                         </div>
                       </div>
@@ -510,9 +527,17 @@ const Shop = () => {
                           </h3>
                           <p className="text-muted-foreground text-sm leading-relaxed">{bouquet.description}</p>
                         </div>
+                        <BouquetSizePicker
+                          value={getSignatureSize(bouquet.id)}
+                          onChange={(sizeId) => setSignatureSize(bouquet.id, sizeId)}
+                        />
                         <Button
-                          className="w-full transition-transform duration-300 group-hover:scale-105"
-                          onClick={() => handleInquire(bouquet.name)}
+                          className="w-full min-h-11 transition-transform duration-300 group-hover:scale-105"
+                          onClick={() =>
+                            handleInquire(
+                              `${bouquet.name} — ${formatSignatureSizeLabel(getSignatureSize(bouquet.id))}`
+                            )
+                          }
                         >
                           <ClipboardCheck className="mr-2 h-5 w-5" />
                           Inquire / Pre-order
@@ -521,7 +546,8 @@ const Shop = () => {
                     </CardContent>
                   </Card>
                 </motion.div>
-              ))}
+              );
+              })}
             </motion.div>
           </div>
         </section>

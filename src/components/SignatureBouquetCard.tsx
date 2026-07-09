@@ -1,5 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import BouquetSizePicker from "@/components/BouquetSizePicker";
+import { getSignatureSizeTier } from "@/data/signatureBouquetSizes";
 import type { SignatureBouquet } from "@/data/signatureBouquets";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
@@ -8,9 +10,20 @@ type SignatureBouquetCardProps = {
   bouquet: SignatureBouquet;
   selected?: boolean;
   onSelect: () => void;
+  selectedSizeId: string;
+  onSizeChange: (sizeId: string) => void;
 };
 
-const SignatureBouquetCard = ({ bouquet, selected = false, onSelect }: SignatureBouquetCardProps) => {
+const SignatureBouquetCard = ({
+  bouquet,
+  selected = false,
+  onSelect,
+  selectedSizeId,
+  onSizeChange,
+}: SignatureBouquetCardProps) => {
+  const sizeTier = getSignatureSizeTier(selectedSizeId);
+  const priceLabel = sizeTier?.priceLabel ?? bouquet.price;
+
   return (
     <Card
       role="button"
@@ -39,7 +52,7 @@ const SignatureBouquetCard = ({ bouquet, selected = false, onSelect }: Signature
           />
           <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
             <Badge variant="secondary" className="bg-background/80 backdrop-blur">
-              {bouquet.price}
+              {priceLabel}
             </Badge>
             {selected ? (
               <Badge className="bg-primary text-primary-foreground gap-1">
@@ -49,11 +62,14 @@ const SignatureBouquetCard = ({ bouquet, selected = false, onSelect }: Signature
             ) : null}
           </div>
         </div>
-        <div className="p-5 sm:p-6">
-          <h3 className="font-heading text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-            {bouquet.name}
-          </h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">{bouquet.description}</p>
+        <div className="p-5 sm:p-6 space-y-4">
+          <div>
+            <h3 className="font-heading text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+              {bouquet.name}
+            </h3>
+            <p className="text-muted-foreground text-sm leading-relaxed">{bouquet.description}</p>
+          </div>
+          <BouquetSizePicker value={selectedSizeId} onChange={onSizeChange} />
         </div>
       </CardContent>
     </Card>
