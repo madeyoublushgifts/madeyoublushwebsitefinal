@@ -41,8 +41,8 @@ const Subscription = () => {
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               Join the waitlist for affordable floral delivery across Toronto. Choose your cadence,
-              bouquet tier or custom build, and the dates that matter most. Annual plan:{" "}
-              <strong className="text-foreground">$185/year</strong>.
+              bouquet tier or custom build, and the dates that matter most. Pricing follows the tier
+              or build you select.
             </p>
             <motion.div
               className="flex flex-col sm:flex-row gap-3 justify-center pt-2"
@@ -84,8 +84,8 @@ const Subscription = () => {
                 },
                 {
                   icon: Gift,
-                  title: "Annual value",
-                  text: "Lock in our best rate at $185/year when subscriptions launch.",
+                  title: "Flexible pricing",
+                  text: "Your subscription price follows the bouquet tier or custom build you choose.",
                 },
               ].map((item) => (
                 <Card key={item.title} className="border-0 shadow-soft bg-card-gradient">

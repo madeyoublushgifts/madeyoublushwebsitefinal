@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Plus, Minus, ChevronRight, ChevronLeft, ShoppingCart } from "lucide-react";
 import { saveCheckoutCart } from "@/lib/checkoutCart";
+import { saveSubscriptionBuildDraft } from "@/lib/subscriptionBuildDraft";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -42,7 +43,12 @@ const formatMoney = (amount: number) =>
 
 type StemColorSelection = (BouquetStemColor | null)[];
 
-const CreateBouquet = () => {
+type CreateBouquetProps = {
+  mode?: "order" | "subscription";
+};
+
+const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
+  const isSubscription = mode === "subscription";
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedStems, setSelectedStems] = useState<Record<string, number>>({});
@@ -53,15 +59,29 @@ const CreateBouquet = () => {
   const [ribbonColor, setRibbonColor] = useState<BouquetStemColor | null>(null);
   const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
 
-  const steps = [
-    {
-      id: 1,
-      title: "Choose Stems",
-      description: "Main flowers, fillers, and greenery",
-    },
-    { id: 2, title: "Choose Materials", description: "Wrapping, ribbon & add-ons" },
-    { id: 3, title: "Review & checkout", description: "Confirm your build and pay securely with Stripe" },
-  ];
+  const steps = isSubscription
+    ? [
+        {
+          id: 1,
+          title: "Choose Stems",
+          description: "Main flowers, fillers, and greenery",
+        },
+        { id: 2, title: "Choose Materials", description: "Wrapping, ribbon & add-ons" },
+        {
+          id: 3,
+          title: "Review & save",
+          description: "Save your build for the subscription waitlist",
+        },
+      ]
+    : [
+        {
+          id: 1,
+          title: "Choose Stems",
+          description: "Main flowers, fillers, and greenery",
+        },
+        { id: 2, title: "Choose Materials", description: "Wrapping, ribbon & add-ons" },
+        { id: 3, title: "Review & checkout", description: "Confirm your build and pay securely with Stripe" },
+      ];
 
   const selectWrapping = (id: string) => {
     setSelectedWrapping((prev) => {
@@ -265,7 +285,9 @@ const CreateBouquet = () => {
     if (Object.keys(selectedStems).length === 0) {
       toast({
         title: "Add stems first",
-        description: "Choose at least one stem before checkout.",
+        description: isSubscription
+          ? "Choose at least one stem for your subscription build."
+          : "Choose at least one stem before checkout.",
         variant: "destructive",
       });
       return;
@@ -280,13 +302,22 @@ const CreateBouquet = () => {
       return;
     }
 
+    if (isSubscription) {
+      saveSubscriptionBuildDraft({
+        summary: getSelectedItemsText(),
+        estimatedTotal: total,
+      });
+      navigate("/subscription#waitlist");
+      return;
+    }
+
     saveCheckoutCart({
       source: "build",
       itemName: "Custom bouquet",
       itemSummary: getSelectedItemsText(),
       amountCents: Math.round(total * 100),
     });
-    navigate("/checkout");
+    navigate("/cart");
   };
 
   const progress = (currentStep / steps.length) * 100;
@@ -508,7 +539,9 @@ const CreateBouquet = () => {
               transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              Build a Custom Bouquet in Toronto
+              {isSubscription
+                ? "Build Your Subscription Bouquet"
+                : "Build a Custom Bouquet in Toronto"}
             </motion.h1>
             <motion.p
               className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto"
@@ -517,9 +550,9 @@ const CreateBouquet = () => {
               transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              Design your own bouquet online—pick stems, wrapping, ribbon, and add-ons with
-              transparent Toronto florist pricing. We confirm availability and GTA pickup or
-              delivery before anything is cut.
+              {isSubscription
+                ? "Design stems, wrap, and add-ons for recurring delivery. This builder is for the subscription waitlist—not one-time shop checkout."
+                : "Design your own bouquet online—pick stems, wrapping, ribbon, and add-ons with transparent Toronto florist pricing. We confirm availability and GTA pickup or delivery before anything is cut."}
             </motion.p>
           </motion.div>
         </section>
@@ -688,10 +721,12 @@ const CreateBouquet = () => {
                   <div className="max-w-2xl mx-auto">
                     <div className="text-center mb-10">
                       <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
-                        Review Your Custom Bouquet
+                        {isSubscription ? "Review Your Subscription Build" : "Review Your Custom Bouquet"}
                       </h2>
                       <p className="text-lg lg:text-xl text-muted-foreground">
-                        Perfect! Let&apos;s finalize your beautiful creation
+                        {isSubscription
+                          ? "Save this build to your subscription waitlist preferences"
+                          : "Perfect! Let's finalize your beautiful creation"}
                       </p>
                     </div>
                     <Card className="border-0 shadow-lg bg-card-gradient">
@@ -786,7 +821,9 @@ const CreateBouquet = () => {
                             <span className="text-primary">${formatMoney(calculateTotal())}</span>
                           </div>
                           <p className="text-sm text-muted-foreground mt-2">
-                            Total at checkout — seasonal availability may adjust stem selection slightly.
+                            {isSubscription
+                              ? "Estimated per delivery — seasonal availability may adjust stem selection slightly."
+                              : "Total at checkout — seasonal availability may adjust stem selection slightly."}
                           </p>
                         </div>
 
@@ -797,7 +834,7 @@ const CreateBouquet = () => {
                           disabled={Object.keys(selectedStems).length === 0}
                         >
                           <ShoppingCart className="mr-2 h-5 w-5" />
-                          Continue to checkout
+                          {isSubscription ? "Save for subscription waitlist" : "Add to cart"}
                         </Button>
                       </CardContent>
                     </Card>

@@ -3,8 +3,6 @@ export type SubscriptionCadence = "biweekly" | "monthly" | "annual";
 export type SubscriptionPlan = {
   id: SubscriptionCadence;
   label: string;
-  /** Only annual shows a price for now */
-  priceLabel?: string;
   description: string;
   badge?: string;
 };
@@ -23,8 +21,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
   {
     id: "annual",
     label: "Annual",
-    priceLabel: "$185 / year",
-    description: "Best value — a full year of blooms. Pricing for other cadences coming soon.",
+    description: "Best value — a full year of blooms on your schedule.",
     badge: "Best value",
   },
 ];

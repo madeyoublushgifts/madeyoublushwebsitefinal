@@ -327,7 +327,7 @@ const Shop = () => {
       tierId,
       paletteNotes: paletteLabel,
     });
-    navigate("/checkout");
+    navigate("/cart");
   };
 
   const quadPosition: Record<QuadCorner, string> = {
@@ -469,7 +469,7 @@ const Shop = () => {
                   onClick={() => handleBuyNow(bouquet.id, bouquet.name)}
                 >
                   <ShoppingCart className="mr-2 h-5 w-5" />
-                  Buy now
+                  Add to cart
                 </Button>
               </div>
             </CardContent>

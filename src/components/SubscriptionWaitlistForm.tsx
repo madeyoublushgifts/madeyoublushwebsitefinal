@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,17 +7,29 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import OccasionPicker from "@/components/OccasionPicker";
+import BouquetPalettePicker from "@/components/BouquetPalettePicker";
 import {
   formatDisplayDate,
   getMinDeliveryDate,
   isDeliveryDateValid,
 } from "@/data/subscriptionDates";
 import { subscriptionPlans, type SubscriptionCadence } from "@/data/subscriptionPlans";
-import { bouquetTiers } from "@/data/bouquetTiers";
+import { bouquetTiers, getBouquetTier } from "@/data/bouquetTiers";
+import {
+  defaultTierPaletteSelection,
+  formatTierPaletteChoice,
+  isTierPaletteComplete,
+  type TierPaletteSelection,
+} from "@/data/bouquetTierColors";
 import type { SubscriptionOccasion } from "@/data/subscriptionOccasions";
 import { submitToFormspree } from "@/lib/formspree";
+import {
+  clearSubscriptionBuildDraft,
+  loadSubscriptionBuildDraft,
+  type SubscriptionBuildDraft,
+} from "@/lib/subscriptionBuildDraft";
 import { toast } from "@/hooks/use-toast";
-import { BellRing, Flower, Loader2 } from "lucide-react";
+import { BellRing, Flower, Loader2, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const minDeliveryDate = getMinDeliveryDate();
@@ -28,6 +40,10 @@ const SubscriptionWaitlistForm = () => {
   const [cadence, setCadence] = useState<SubscriptionCadence | "">("");
   const [bouquetSource, setBouquetSource] = useState<BouquetSource | "">("");
   const [tierId, setTierId] = useState("");
+  const [tierPalette, setTierPalette] = useState<TierPaletteSelection>(
+    defaultTierPaletteSelection()
+  );
+  const [buildDraft, setBuildDraft] = useState<SubscriptionBuildDraft | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -36,6 +52,22 @@ const SubscriptionWaitlistForm = () => {
   const [occasions, setOccasions] = useState<SubscriptionOccasion[]>([]);
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const draft = loadSubscriptionBuildDraft();
+    if (draft) {
+      setBuildDraft(draft);
+      setBouquetSource("custom");
+    }
+  }, []);
+
+  const selectedTier = tierId ? getBouquetTier(tierId) : undefined;
+
+  const handleTierSelect = (id: string) => {
+    const tier = getBouquetTier(id);
+    setTierId(id);
+    setTierPalette(defaultTierPaletteSelection(tier?.shopBouquetId));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,10 +90,33 @@ const SubscriptionWaitlistForm = () => {
       return;
     }
 
-    if (bouquetSource === "preset" && !tierId) {
+    if (bouquetSource === "preset") {
+      if (!tierId) {
+        toast({
+          title: "Choose a bouquet tier",
+          description: "Select which tier you'd like for your subscription.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!isTierPaletteComplete(tierPalette, selectedTier?.shopBouquetId)) {
+        toast({
+          title: "Choose a palette",
+          description:
+            tierPalette.mode === "template"
+              ? "Select a colour template, or switch to the colour picker."
+              : "Pick at least one colour for your bouquet tier.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
+    if (bouquetSource === "custom" && !buildDraft) {
       toast({
-        title: "Choose a bouquet tier",
-        description: "Select which tier you'd like for your subscription.",
+        title: "Build your subscription bouquet",
+        description: "Use the subscription builder to describe your custom stems.",
         variant: "destructive",
       });
       return;
@@ -76,9 +131,20 @@ const SubscriptionWaitlistForm = () => {
       return;
     }
 
-    const tier = bouquetTiers.find((t) => t.id === tierId);
     const cadenceLabel =
       cadence === "biweekly" ? "Bi-weekly" : cadence === "monthly" ? "Monthly" : "Annual";
+
+    const paletteLabel =
+      bouquetSource === "preset" && selectedTier
+        ? formatTierPaletteChoice(tierPalette, selectedTier.shopBouquetId)
+        : "";
+
+    const tierSummary =
+      bouquetSource === "preset" && selectedTier
+        ? `${selectedTier.name} (${selectedTier.priceLabel})${paletteLabel ? ` — ${paletteLabel}` : ""}`
+        : buildDraft
+          ? `Custom build (est. $${buildDraft.estimatedTotal.toFixed(2)}/delivery) — ${buildDraft.summary}`
+          : "Custom build";
 
     setIsSubmitting(true);
 
@@ -93,8 +159,8 @@ const SubscriptionWaitlistForm = () => {
         deliveryAddress: address,
         cadence: cadenceLabel,
         firstDeliveryDate: deliveryDate,
-        bouquetSource: bouquetSource === "preset" ? "Shop tier" : "Build a bouquet",
-        bouquetTier: bouquetSource === "preset" ? tier?.name ?? tierId : "Custom build",
+        bouquetSource: bouquetSource === "preset" ? "Shop tier" : "Subscription custom build",
+        bouquetTier: tierSummary,
         occasions: occasions.length
           ? occasions
               .map((o) => `${o.type}: ${o.label} (${o.date})`)
@@ -109,9 +175,12 @@ const SubscriptionWaitlistForm = () => {
           "Thanks for your interest. We'll email you when subscription delivery opens with your preferences saved.",
       });
 
+      clearSubscriptionBuildDraft();
       setCadence("");
       setBouquetSource("");
       setTierId("");
+      setTierPalette(defaultTierPaletteSelection());
+      setBuildDraft(null);
       setName("");
       setEmail("");
       setPhone("");
@@ -162,12 +231,7 @@ const SubscriptionWaitlistForm = () => {
                         </Badge>
                       ) : null}
                     </div>
-                    {plan.priceLabel ? (
-                      <p className="text-primary font-semibold text-sm">{plan.priceLabel}</p>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">Pricing coming soon</p>
-                    )}
-                    <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       {plan.description}
                     </p>
                   </button>
@@ -184,6 +248,9 @@ const SubscriptionWaitlistForm = () => {
                 onClick={() => {
                   setBouquetSource("preset");
                   setTierId("");
+                  setTierPalette(defaultTierPaletteSelection());
+                  setBuildDraft(null);
+                  clearSubscriptionBuildDraft();
                 }}
                 className={cn(
                   "rounded-xl border-2 p-4 text-left transition-all",
@@ -194,7 +261,7 @@ const SubscriptionWaitlistForm = () => {
               >
                 <span className="font-medium block">Shop bouquet tier</span>
                 <span className="text-xs text-muted-foreground mt-1 block">
-                  Pick a preset tier from our shop lineup
+                  Pick a tier and colour template or custom palette
                 </span>
               </button>
               <button
@@ -202,6 +269,7 @@ const SubscriptionWaitlistForm = () => {
                 onClick={() => {
                   setBouquetSource("custom");
                   setTierId("");
+                  setTierPalette(defaultTierPaletteSelection());
                 }}
                 className={cn(
                   "rounded-xl border-2 p-4 text-left transition-all",
@@ -212,24 +280,21 @@ const SubscriptionWaitlistForm = () => {
               >
                 <span className="font-medium block">Build a bouquet</span>
                 <span className="text-xs text-muted-foreground mt-1 block">
-                  Custom stems, wrap & add-ons —{" "}
-                  <Link to="/create-bouquet" className="text-primary underline-offset-4 hover:underline">
-                    try the builder
-                  </Link>
+                  Custom stems for your subscription — separate from shop orders
                 </span>
               </button>
             </div>
           </fieldset>
 
           {bouquetSource === "preset" ? (
-            <fieldset className="space-y-3">
+            <fieldset className="space-y-4">
               <legend className="text-sm font-medium">Choose bouquet tier *</legend>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {bouquetTiers.map((tier) => (
                   <button
                     key={tier.id}
                     type="button"
-                    onClick={() => setTierId(tier.id)}
+                    onClick={() => handleTierSelect(tier.id)}
                     className={cn(
                       "rounded-lg border-2 p-3 text-left text-sm transition-all",
                       tierId === tier.id
@@ -237,24 +302,64 @@ const SubscriptionWaitlistForm = () => {
                         : "border-border hover:border-primary/30"
                     )}
                   >
-                    <span className="font-medium">{tier.name}</span>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-medium">{tier.name}</span>
+                      <span className="text-primary text-xs font-semibold">{tier.priceLabel}</span>
+                    </div>
                     <span className="text-muted-foreground block text-xs mt-0.5">
                       {tier.description}
                     </span>
                   </button>
                 ))}
               </div>
+
+              {selectedTier ? (
+                <div className="rounded-xl border border-border bg-background/60 p-4">
+                  <p className="text-xs font-medium text-muted-foreground mb-3">
+                    Colour template or colour picker *
+                  </p>
+                  <BouquetPalettePicker
+                    bouquetId={selectedTier.shopBouquetId}
+                    selection={tierPalette}
+                    onChange={setTierPalette}
+                  />
+                </div>
+              ) : null}
             </fieldset>
           ) : null}
 
           {bouquetSource === "custom" ? (
-            <div className="rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-muted-foreground">
-              <Flower className="inline h-4 w-4 text-primary mr-1.5 -mt-0.5" />
-              Describe your ideal custom build in notes below, or{" "}
-              <Link to="/create-bouquet" className="text-primary underline-offset-4 hover:underline">
-                build a bouquet now
-              </Link>{" "}
-              to explore stems and pricing.
+            <div className="rounded-xl border border-primary/20 bg-primary/5 px-4 py-4 space-y-3 text-sm">
+              {buildDraft ? (
+                <>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-medium text-foreground">Your subscription build</p>
+                      <p className="text-muted-foreground mt-1 leading-relaxed">{buildDraft.summary}</p>
+                      <p className="text-primary font-semibold mt-2">
+                        Est. ${buildDraft.estimatedTotal.toFixed(2)} per delivery
+                      </p>
+                    </div>
+                    <Button asChild type="button" variant="outline" size="sm">
+                      <Link to="/subscription/build-bouquet">
+                        <Pencil className="mr-1.5 h-3.5 w-3.5" />
+                        Edit
+                      </Link>
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Flower className="inline h-4 w-4 text-primary mr-1.5 -mt-0.5" />
+                  <span className="text-muted-foreground">
+                    Use our subscription-only builder to pick stems, wrap, and add-ons for recurring
+                    delivery.
+                  </span>
+                  <Button asChild type="button" variant="secondary" size="sm" className="mt-2">
+                    <Link to="/subscription/build-bouquet">Open subscription builder</Link>
+                  </Button>
+                </>
+              )}
             </div>
           ) : null}
 
@@ -332,7 +437,7 @@ const SubscriptionWaitlistForm = () => {
               id="wl-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Colours, allergies, custom build details, gift vs self-care…"
+              placeholder="Allergies, gift vs self-care, delivery instructions…"
               rows={4}
             />
           </div>
@@ -352,7 +457,8 @@ const SubscriptionWaitlistForm = () => {
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
-            No payment today — we&apos;ll reach out when subscriptions launch. Annual plan: $185/year.
+            No payment today — pricing follows your bouquet tier or custom build. We&apos;ll email you
+            when subscriptions launch.
           </p>
         </form>
       </CardContent>

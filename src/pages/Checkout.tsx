@@ -37,7 +37,7 @@ const Checkout = () => {
   useEffect(() => {
     const loaded = loadCheckoutCart();
     if (!loaded) {
-      navigate("/shop", { replace: true });
+      navigate("/cart", { replace: true });
       return;
     }
     setCart(loaded);
@@ -207,11 +207,8 @@ const Checkout = () => {
         </Card>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          <Link
-            to={cart.source === "build" ? "/create-bouquet" : "/shop"}
-            className="text-primary underline-offset-4 hover:underline"
-          >
-            ← {cart.source === "build" ? "Back to builder" : "Back to shop"}
+          <Link to="/cart" className="text-primary underline-offset-4 hover:underline">
+            ← Back to cart
           </Link>
         </p>
       </main>

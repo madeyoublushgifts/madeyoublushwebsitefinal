@@ -14,7 +14,9 @@ const CreateBouquet = lazy(() => import("./pages/CreateBouquet"));
 const Contact = lazy(() => import("./pages/Contact"));
 const ComingSoon = lazy(() => import("./pages/ComingSoon"));
 const Subscription = lazy(() => import("./pages/Subscription"));
+const Cart = lazy(() => import("./pages/Cart"));
 const Checkout = lazy(() => import("./pages/Checkout"));
+const SubscriptionBuildBouquet = lazy(() => import("./pages/SubscriptionBuildBouquet"));
 const CheckoutSuccess = lazy(() => import("./pages/CheckoutSuccess"));
 const CheckoutCancel = lazy(() => import("./pages/CheckoutCancel"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -35,7 +37,8 @@ const AppSeo = () => {
   const noindex =
     !INDEXABLE_ROUTES.has(pathname) ||
     pathname.startsWith("/checkout/") ||
-    pathname === "/checkout";
+    pathname === "/checkout" ||
+    pathname === "/cart";
   return <Seo noindex={noindex} />;
 };
 
@@ -64,7 +67,9 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/subscription" element={<Subscription />} />
+            <Route path="/subscription/build-bouquet" element={<SubscriptionBuildBouquet />} />
             <Route path="/subscribe" element={<Navigate to="/subscription" replace />} />
+            <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
