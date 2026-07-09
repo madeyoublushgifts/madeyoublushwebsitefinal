@@ -52,8 +52,8 @@ const ComingSoon = () => {
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               We&apos;re building a visual bouquet builder on the site and launching{" "}
               <strong className="text-foreground font-medium">Blush Notes</strong>—our blog and
-              newsletter for Toronto stories, seasonal gifting, and local creativity. Subscribe
-              today for floral delivery while you wait.
+              newsletter for Toronto stories, seasonal gifting, floral fun facts, flower care tips,
+              and local creativity. Subscribe today for floral delivery while you wait.
             </p>
             <motion.div
               className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center pt-2"
@@ -164,10 +164,13 @@ const ComingSoon = () => {
                 Blush Notes
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                A blog and newsletter from Made You Blush—Toronto stories behind the
-                stems, seasonal gifting ideas, and a home for local creativity we
-                love. Think cozy reads in your inbox, with room for artists,
-                writers, and neighbours to share work alongside our floral world.
+                A blog and newsletter from Made You Blush—Toronto stories behind the stems,
+                seasonal gifting ideas, floral fun facts, flower care, and a home for local
+                creativity we love. We want to publish, collaborate, and partner with people and
+                studios working in zines, magazines, collages, mosaics, paintings, and more. Imagine
+                special Blush Notes editions on themes like months, horoscopes, colours, and social
+                justice causes—cozy reads in your inbox, with room for artists, writers, and
+                neighbours to share work alongside our floral world.
               </p>
             </div>
 
@@ -185,12 +188,12 @@ const ComingSoon = () => {
                 {
                   icon: BookOpen,
                   title: "Blog & newsletter",
-                  text: "Essays, shop updates, and blush-toned inspiration—delivered when there’s something worth sharing.",
+                  text: "Essays, shop updates, blush-toned inspiration, floral fun facts, and flower care—delivered when there’s something worth sharing.",
                 },
                 {
                   icon: Palette,
-                  title: "Local art & makers",
-                  text: "Spotlights on Toronto artists and small studios—visual work, crafts, and collabs that pair with blooms.",
+                  title: "Zines, art & makers",
+                  text: "We’d love to partner with studios and artists in zines, magazines, collages, mosaics, paintings, and visual work that pairs with blooms.",
                 },
                 {
                   icon: PenLine,
@@ -199,8 +202,8 @@ const ComingSoon = () => {
                 },
                 {
                   icon: Users,
-                  title: "Collaborations",
-                  text: "Partner features with markets, creatives, and community groups—florals meeting local culture.",
+                  title: "Themed editions & collabs",
+                  text: "Special issues on months, horoscopes, colours, social justice causes, and more—plus markets, creatives, and community groups.",
                 },
               ].map((item) => (
                 <motion.div
@@ -260,12 +263,15 @@ const ComingSoon = () => {
                 >
                   reach out
                 </Link>{" "}
-                if you&apos;re a local artist, writer, or community org interested in
-                collaborating.
+                if you&apos;re a local artist, writer, zine maker, studio, or community org interested in
+                publishing or collaborating on Blush Notes—including themed editions on months,
+                horoscopes, colours, or social justice causes.
               </p>
               <div className="flex flex-wrap justify-center gap-2 pt-1">
-                <Badge variant="outline">Art features</Badge>
-                <Badge variant="outline">Original writing</Badge>
+                <Badge variant="outline">Floral fun facts</Badge>
+                <Badge variant="outline">Flower care</Badge>
+                <Badge variant="outline">Zines & magazines</Badge>
+                <Badge variant="outline">Themed editions</Badge>
                 <Badge variant="outline">Toronto collabs</Badge>
                 <Badge variant="outline">Newsletter</Badge>
               </div>

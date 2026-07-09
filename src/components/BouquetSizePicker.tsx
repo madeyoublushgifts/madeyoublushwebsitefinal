@@ -11,9 +11,9 @@ const BouquetSizePicker = ({ value, onChange, className }: BouquetSizePickerProp
   return (
     <div className={cn("space-y-2", className)} onClick={(e) => e.stopPropagation()}>
       <p className="text-xs font-medium text-muted-foreground">Size</p>
-      <div className="grid grid-cols-2 gap-1.5">
+      <div className="grid grid-cols-2 gap-2">
         {signatureSizeTiers.map((tier) => {
-          const selected = value === tier.id;
+          const isActive = value === tier.id;
           const shortName = tier.name.replace(" Bouquet", "");
           return (
             <button
@@ -21,8 +21,8 @@ const BouquetSizePicker = ({ value, onChange, className }: BouquetSizePickerProp
               type="button"
               onClick={() => onChange(tier.id)}
               className={cn(
-                "rounded-lg border px-2 py-2 text-left text-xs transition-all",
-                selected
+                "rounded-lg border px-2.5 py-2.5 min-h-11 text-left text-xs transition-all active:scale-[0.98]",
+                isActive
                   ? "border-primary bg-primary/5 ring-1 ring-primary/20"
                   : "border-border hover:border-primary/40"
               )}

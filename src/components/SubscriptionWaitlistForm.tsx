@@ -280,9 +280,9 @@ const SubscriptionWaitlistForm = () => {
   };
 
   return (
-    <Card className="border-0 shadow-elegant bg-card-gradient">
-      <CardContent className="p-6 sm:p-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <Card className="border-0 shadow-elegant bg-card-gradient overflow-hidden">
+      <CardContent className="p-4 sm:p-8">
+        <form onSubmit={handleSubmit} className="space-y-6 overflow-x-hidden">
           <fieldset className="space-y-3">
             <legend className="text-sm font-medium">Delivery cadence *</legend>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -294,7 +294,7 @@ const SubscriptionWaitlistForm = () => {
                     type="button"
                     onClick={() => setCadence(plan.id)}
                     className={cn(
-                      "rounded-xl border-2 p-4 text-left transition-all",
+                      "rounded-xl border-2 p-4 text-left transition-all min-h-11",
                       selected
                         ? "border-primary bg-primary/5 shadow-sm"
                         : "border-border hover:border-primary/40"
@@ -331,7 +331,7 @@ const SubscriptionWaitlistForm = () => {
                   type="button"
                   onClick={() => handleBouquetSourceChange(option.id)}
                   className={cn(
-                    "rounded-xl border-2 p-4 text-left transition-all",
+                    "rounded-xl border-2 p-4 text-left transition-all min-h-11",
                     bouquetSource === option.id
                       ? "border-primary bg-primary/5 shadow-sm"
                       : "border-border hover:border-primary/40"
@@ -356,7 +356,7 @@ const SubscriptionWaitlistForm = () => {
                     type="button"
                     onClick={() => handleTierSelect(tier.id)}
                     className={cn(
-                      "rounded-lg border-2 p-3 text-left text-sm transition-all",
+                      "rounded-lg border-2 p-3 text-left text-sm transition-all min-h-11",
                       tierId === tier.id
                         ? "border-primary bg-primary/5"
                         : "border-border hover:border-primary/30"
@@ -399,10 +399,19 @@ const SubscriptionWaitlistForm = () => {
                   <SignatureBouquetCard
                     key={bouquet.id}
                     bouquet={bouquet}
+                    singleSelectMode
                     selected={signatureId === bouquet.id}
-                    onSelect={() => setSignatureId(bouquet.id)}
+                    onSelect={() => {
+                      setSignatureId(bouquet.id);
+                      if (!signatureSizes[bouquet.id]) {
+                        setSignatureSize(bouquet.id, defaultSignatureSizeId);
+                      }
+                    }}
                     selectedSizeId={getSignatureSize(bouquet.id)}
-                    onSizeChange={(sizeId) => setSignatureSize(bouquet.id, sizeId)}
+                    onSizeChange={(sizeId) => {
+                      setSignatureSize(bouquet.id, sizeId);
+                      setSignatureId(bouquet.id);
+                    }}
                   />
                 ))}
               </div>
@@ -526,7 +535,7 @@ const SubscriptionWaitlistForm = () => {
             />
           </div>
 
-          <Button type="submit" disabled={isSubmitting} className="w-full" size="lg">
+          <Button type="submit" disabled={isSubmitting} className="w-full min-h-12" size="lg">
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />

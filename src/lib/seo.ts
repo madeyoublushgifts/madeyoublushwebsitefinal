@@ -73,9 +73,9 @@ const pages: Record<string, PageSeo> = {
     path: "/create-bouquet",
   },
   "/contact": {
-    title: `Contact Toronto Florist | ${siteConfig.name}`,
+    title: `Contact Us | ${siteConfig.name}`,
     description:
-      "Contact Made You Blush for bouquet inquiries, floral subscriptions, gift bundles, pop-up dates, bouquet-building nights, and event florals across Toronto and the GTA.",
+      "Contact Made You Blush for bouquet inquiries, floral subscriptions, gift bundles, pop-up dates, partnerships, collaborations, and event florals across Toronto and the GTA.",
     path: "/contact",
   },
   "/coming-soon": {

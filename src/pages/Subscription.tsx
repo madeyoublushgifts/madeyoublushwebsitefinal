@@ -26,7 +26,7 @@ const Subscription = () => {
     >
       <Header />
 
-      <main>
+      <main className="overflow-x-hidden">
         <section className="py-16 lg:py-24 bg-gradient-to-b from-primary/10 via-background to-background">
           <motion.div
             className="container mx-auto px-4 lg:px-8 max-w-4xl text-center space-y-6"
@@ -50,13 +50,13 @@ const Subscription = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <Button asChild size="lg" className="rounded-full">
+              <Button asChild size="lg" className="rounded-full min-h-12 w-full sm:w-auto">
                 <a href="#waitlist">
                   <BellRing className="mr-2 h-5 w-5" />
                   Join the waitlist
                 </a>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full">
+              <Button asChild variant="outline" size="lg" className="rounded-full min-h-12 w-full sm:w-auto">
                 <Link to="/shop">
                   <ShoppingCart className="mr-2 h-5 w-5" />
                   Shop bouquets now

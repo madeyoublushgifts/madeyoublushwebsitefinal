@@ -104,7 +104,7 @@ const Header = () => {
               key={item.name}
               to={item.href}
               onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2 text-sm font-medium rounded-full border-2 px-3 py-2 transition-all duration-200 ${
+              className={`flex items-center gap-2 text-sm font-medium rounded-full border-2 px-3 py-3 min-h-11 transition-all duration-200 ${
                 isNavActive(item.href)
                   ? "border-primary/60 bg-primary/10 text-primary shadow-sm"
                   : "border-primary/25 text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/50"
@@ -114,13 +114,13 @@ const Header = () => {
               {item.name}
             </Link>
           ))}
-          <Button asChild variant="outline" size="sm" className="w-full">
+          <Button asChild variant="outline" size="sm" className="w-full min-h-11">
             <Link to="/cart" onClick={() => setMobileMenuOpen(false)}>
               <ShoppingCart className="mr-2 h-4 w-4" />
               Cart{cartCount > 0 ? ` (${cartCount})` : ""}
             </Link>
           </Button>
-          <Button asChild variant="default" size="sm" className="w-full">
+          <Button asChild variant="default" size="sm" className="w-full min-h-11">
             <Link to="/create-bouquet" onClick={() => setMobileMenuOpen(false)}>
               <Flower className="mr-2 h-4 w-4" />
               Build a Bouquet

@@ -15,7 +15,8 @@ import { motion } from "framer-motion";
 import { instagram, tiktok } from "@/lib/social";
 import { googleBusiness } from "@/lib/seo";
 import LiveEventsCalendar from "@/components/LiveEventsCalendar";
-import { upcomingEvents } from "@/data/upcomingEvents";
+import PastEventsList from "@/components/PastEventsList";
+import { pastEvents, upcomingEvents } from "@/data/upcomingEvents";
 
 const Contact = () => {
   // ---------------------------
@@ -83,7 +84,7 @@ const Contact = () => {
             <div className="max-w-4xl mx-auto text-center space-y-8">
               {/* Main heading (consistent with Home page) */}
               <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight animate-fade-in">
-                Contact Our Toronto Florist
+                Contact us
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Use the form below or email{" "}
@@ -94,7 +95,9 @@ const Contact = () => {
                   madeyoublushgifts@gmail.com
                 </a>
                 —we help with bouquet orders, floral subscriptions, gift bundles, Toronto pop-ups,
-                bouquet-building experiences, and event florals across the GTA. You can also{" "}
+                bouquet-building experiences, and event florals across the GTA. We&apos;re also open
+                to partnerships and collaborations—markets, studios, brands, and community projects.
+                You can also{" "}
                 <a
                   href={googleBusiness.shareUrl}
                   target="_blank"
@@ -416,6 +419,16 @@ const Contact = () => {
             </p>
           }
         />
+      </motion.div>
+
+      <motion.div
+        className="mt-10"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.1 }}
+        viewport={{ once: true }}
+      >
+        <PastEventsList events={pastEvents} />
       </motion.div>
     </motion.div>
   </div>
