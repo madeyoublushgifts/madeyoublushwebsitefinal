@@ -7,8 +7,20 @@ import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import FloralDivider from "@/components/FloralDivider";
 import BrandLogo from "@/components/BrandLogo";
-import { ArrowRight, Flower, Heart, Mail, Phone, ShoppingCart, Sparkles, Leaf } from "lucide-react";
+import {
+  ArrowRight,
+  Flower,
+  Heart,
+  Loader2,
+  Mail,
+  Phone,
+  ShoppingCart,
+  Sparkles,
+  Leaf,
+} from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "@/hooks/use-toast";
+import { submitToFormspree } from "@/lib/formspree";
 
 // ================= ASSETS =================
 import {
@@ -118,6 +130,13 @@ const slides: Slide[] = [
 // ================= MAIN COMPONENT =================
 const Index = () => {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [isContactSubmitting, setIsContactSubmitting] = useState(false);
 
   // Auto-slide rotation
   useEffect(() => {
@@ -128,6 +147,47 @@ const Index = () => {
   }, []);
 
   const current = slides[activeSlide];
+
+  const handleContactChange = (field: keyof typeof contactForm, value: string) => {
+    setContactForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsContactSubmitting(true);
+
+    try {
+      await submitToFormspree("contact", {
+        _subject: contactForm.subject.trim()
+          ? `Made You Blush — ${contactForm.subject.trim()}`
+          : "Made You Blush — homepage contact form",
+        _replyto: contactForm.email,
+        source: "Homepage Get in Touch",
+        name: contactForm.name,
+        email: contactForm.email,
+        subject: contactForm.subject,
+        message: contactForm.message,
+      });
+
+      toast({
+        title: "Message sent!",
+        description: "Thank you for reaching out. We'll get back to you soon.",
+      });
+
+      setContactForm({ name: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      toast({
+        title: "Could not send message",
+        description:
+          err instanceof Error
+            ? err.message
+            : "Please try again or email madeyoublushgifts@gmail.com.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsContactSubmitting(false);
+    }
+  };
 
   // Featured collections
   const featuredCollections = [
@@ -582,11 +642,11 @@ const Index = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
                 Ask about subscriptions, same-week bouquets, or pop-up dates—we
-                reply within 1–2 business days. Prefer the full form? You’ll find
-                it on our Contact page too.
+                reply within 1–2 business days.
               </motion.p>
 
               <motion.form
+                onSubmit={handleContactSubmit}
                 className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -603,8 +663,12 @@ const Index = () => {
                     type="text"
                     id="home-name"
                     name="name"
+                    required
+                    disabled={isContactSubmitting}
+                    value={contactForm.name}
+                    onChange={(e) => handleContactChange("name", e.target.value)}
                     placeholder="Who should we say hi to?"
-                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition"
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition disabled:opacity-60"
                   />
                 </div>
 
@@ -619,8 +683,12 @@ const Index = () => {
                     type="email"
                     id="home-email"
                     name="email"
+                    required
+                    disabled={isContactSubmitting}
+                    value={contactForm.email}
+                    onChange={(e) => handleContactChange("email", e.target.value)}
                     placeholder="you@email.com"
-                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition"
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition disabled:opacity-60"
                   />
                 </div>
 
@@ -635,8 +703,11 @@ const Index = () => {
                     type="text"
                     id="home-subject"
                     name="subject"
+                    disabled={isContactSubmitting}
+                    value={contactForm.subject}
+                    onChange={(e) => handleContactChange("subject", e.target.value)}
                     placeholder="Bouquet inquiry, pop-up idea, subscription…"
-                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition"
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition disabled:opacity-60"
                   />
                 </div>
 
@@ -651,18 +722,34 @@ const Index = () => {
                     id="home-message"
                     name="message"
                     rows={3}
+                    required
+                    disabled={isContactSubmitting}
+                    value={contactForm.message}
+                    onChange={(e) => handleContactChange("message", e.target.value)}
                     placeholder="Tell us dates, neighbourhood, vibe, and any add-ons (cards, snail-mail notes, gifts)."
-                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition resize-none"
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 transition resize-none disabled:opacity-60"
                   />
                 </div>
 
                 <div className="sm:col-span-2 text-center pt-1">
-                  <Button asChild size="lg" className="w-full sm:w-auto min-w-[10rem]">
-                    <Link to="/contact">
-                      <Phone className="mr-2 h-5 w-5" />
-                      <Mail className="mr-2 h-5 w-5" />
-                      Contact Us
-                    </Link>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isContactSubmitting}
+                    className="w-full sm:w-auto min-w-[10rem]"
+                  >
+                    {isContactSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Sending…
+                      </>
+                    ) : (
+                      <>
+                        <Phone className="mr-2 h-5 w-5" />
+                        <Mail className="mr-2 h-5 w-5" />
+                        Contact Us
+                      </>
+                    )}
                   </Button>
                 </div>
               </motion.form>
