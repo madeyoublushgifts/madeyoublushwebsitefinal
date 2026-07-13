@@ -1,11 +1,13 @@
 import type { SubscriptionOccasion } from "@/data/subscriptionOccasions";
-import type { CheckoutSource } from "@/lib/checkoutCart";
+import type { BuildPricingPayload, CheckoutSource } from "@/lib/checkoutCart";
 
 export type OrderCheckoutLineItem = {
   itemName: string;
   itemSummary: string;
   amountCents: number;
   source: CheckoutSource;
+  tierId?: string;
+  buildPricing?: BuildPricingPayload;
 };
 
 export type OrderCheckoutPayload = {

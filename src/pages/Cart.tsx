@@ -75,6 +75,8 @@ const Cart = () => {
           itemSummary: item.itemSummary,
           amountCents: item.amountCents,
           source: item.source,
+          tierId: item.tierId,
+          buildPricing: item.buildPricing,
         })),
         notes,
       });

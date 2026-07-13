@@ -1,0 +1,8 @@
+kenney-nature-extract
+kenney-nature.zip
+public/models
+.tmp
+node_modules
+dist
+.env
+.env.*

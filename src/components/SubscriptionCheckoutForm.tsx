@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,13 +14,15 @@ import {
 } from "@/data/subscriptionDates";
 import { subscriptionPlans, type SubscriptionCadence } from "@/data/subscriptionPlans";
 import type { SubscriptionOccasion } from "@/data/subscriptionOccasions";
-import { redirectToStripeCheckout } from "@/lib/stripe";
 import { toast } from "@/hooks/use-toast";
-import { CreditCard, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const minDeliveryDate = getMinDeliveryDate();
 
+/**
+ * Legacy paid-subscription form. Live subscriptions use the waitlist on /subscription.
+ * Kept for backwards compatibility if routes are re-enabled later.
+ */
 const SubscriptionCheckoutForm = () => {
   const [cadence, setCadence] = useState<SubscriptionCadence | "">("");
   const [name, setName] = useState("");
@@ -29,7 +32,6 @@ const SubscriptionCheckoutForm = () => {
   const [deliveryDate, setDeliveryDate] = useState(minDeliveryDate);
   const [occasions, setOccasions] = useState<SubscriptionOccasion[]>([]);
   const [notes, setNotes] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,36 +54,27 @@ const SubscriptionCheckoutForm = () => {
       return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      await redirectToStripeCheckout({
-        cadence,
-        name,
-        email,
-        phone,
-        address,
-        deliveryDate,
-        occasions,
-        notes,
-      });
-    } catch (err) {
-      toast({
-        title: "Checkout could not start",
-        description:
-          err instanceof Error
-            ? err.message
-            : "Please try again or email madeyoublushgifts@gmail.com.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    toast({
+      title: "Subscriptions are on the waitlist",
+      description:
+        "Paid recurring checkout isn’t live yet — join the waitlist on the Subscription page.",
+    });
   };
 
   return (
     <Card className="border-0 shadow-elegant bg-card-gradient">
-      <CardContent className="p-6 sm:p-8">
+      <CardContent className="p-6 sm:p-8 space-y-6">
+        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-relaxed">
+          Recurring Stripe checkout isn’t live yet.{" "}
+          <Link
+            to="/subscription#waitlist"
+            className="font-medium text-primary underline-offset-4 hover:underline"
+          >
+            Join the subscription waitlist
+          </Link>{" "}
+          (no payment today).
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <fieldset className="space-y-3">
             <legend className="text-sm font-medium">Choose your plan *</legend>
@@ -150,13 +143,13 @@ const SubscriptionCheckoutForm = () => {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+1 647-550-8476"
+                placeholder="(416) 000-0000"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="sub-delivery-date">First delivery date *</Label>
+              <Label htmlFor="sub-date">First delivery *</Label>
               <Input
-                id="sub-delivery-date"
+                id="sub-date"
                 type="date"
                 min={minDeliveryDate}
                 value={deliveryDate}
@@ -164,56 +157,39 @@ const SubscriptionCheckoutForm = () => {
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Earliest: {formatDisplayDate(minDeliveryDate)} (1 week from today)
+                Earliest: {formatDisplayDate(minDeliveryDate)}
               </p>
             </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="sub-address">Delivery address *</Label>
-            <Input
+            <Textarea
               id="sub-address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               required
-              placeholder="Full GTA delivery address"
+              rows={2}
+              placeholder="Street, city, postal code"
             />
           </div>
 
-          <OccasionPicker
-            occasions={occasions}
-            onChange={setOccasions}
-            minDate={minDeliveryDate}
-          />
+          <OccasionPicker value={occasions} onChange={setOccasions} />
 
           <div className="space-y-2">
-            <Label htmlFor="sub-notes">Bouquet style or notes</Label>
+            <Label htmlFor="sub-notes">Notes (optional)</Label>
             <Textarea
               id="sub-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Mini vs standard, colours, allergies, gift vs self-care…"
-              rows={4}
+              rows={3}
+              placeholder="Preferences, allergies, gate codes…"
             />
           </div>
 
-          <Button type="submit" disabled={isSubmitting} className="w-full" size="lg">
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Redirecting to secure checkout…
-              </>
-            ) : (
-              <>
-                <CreditCard className="mr-2 h-5 w-5" />
-                Continue to Stripe checkout
-              </>
-            )}
+          <Button asChild type="button" className="w-full" size="lg">
+            <Link to="/subscription#waitlist">Go to subscription waitlist</Link>
           </Button>
-
-          <p className="text-xs text-center text-muted-foreground">
-            Secure payment by Stripe · CAD · Cancel anytime from your Stripe receipt
-          </p>
         </form>
       </CardContent>
     </Card>

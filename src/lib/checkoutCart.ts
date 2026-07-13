@@ -1,5 +1,11 @@
 export type CheckoutSource = "shop" | "build";
 
+/** Server re-prices custom builds from this payload (never trust client cents alone). */
+export type BuildPricingPayload = {
+  stems: Record<string, number>;
+  materialIds: string[];
+};
+
 export type CartItem = {
   id: string;
   source: CheckoutSource;
@@ -9,6 +15,8 @@ export type CartItem = {
   /** Tier id when ordering a preset shop bouquet */
   tierId?: string;
   paletteNotes?: string;
+  /** Stem/material breakdown for custom builds */
+  buildPricing?: BuildPricingPayload;
 };
 
 const STORAGE_KEY = "myb-checkout-cart";

@@ -10,7 +10,9 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:api": "vercel dev",
+    "download-sketchfab-models": "node scripts/download-sketchfab-mirror.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.2",
@@ -20,6 +22,8 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-toast": "^1.2.14",
     "@radix-ui/react-tooltip": "^1.2.7",
+    "@react-three/drei": "^9.117.3",
+    "@react-three/fiber": "^8.17.10",
     "@stripe/stripe-js": "^9.9.0",
     "@tanstack/react-query": "^5.83.0",
     "class-variance-authority": "^0.7.1",
@@ -33,7 +37,8 @@
     "sonner": "^1.7.4",
     "stripe": "^22.3.0",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.170.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",

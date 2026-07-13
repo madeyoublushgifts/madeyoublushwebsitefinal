@@ -239,7 +239,7 @@ const Index = () => {
       icon: Leaf,
       title: "Affordable & fresh",
       description:
-        "Transparent tiers from single stems to luxury—always inquiry-based for now",
+        "Transparent tiers from single stems to luxury—add shop bouquets to cart or inquire for custom designs",
     },
   ];
 

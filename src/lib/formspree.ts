@@ -15,9 +15,13 @@ const envIds: Record<FormspreeFormType, string | undefined> = {
   waitlist: import.meta.env.VITE_FORMSPREE_WAITLIST_ID,
 };
 
+const isPlaceholderFormId = (id: string) =>
+  /^your[_-]/i.test(id) || id.includes("your_") || id === "placeholder";
+
 const resolveFormId = (type: FormspreeFormType) => {
   const fromEnv = envIds[type]?.trim();
-  return fromEnv || defaultFormIds[type];
+  if (fromEnv && !isPlaceholderFormId(fromEnv)) return fromEnv;
+  return defaultFormIds[type];
 };
 
 const envLabels: Record<FormspreeFormType, string> = {

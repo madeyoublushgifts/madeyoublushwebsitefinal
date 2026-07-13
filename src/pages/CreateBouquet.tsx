@@ -32,6 +32,7 @@ import {
   type MaterialGroup,
   type BouquetMaterialOption,
 } from "@/data/buildBouquetMaterials";
+import { priceBuildBouquetCents } from "@/data/catalogPrices";
 
 const STEM_CATEGORIES: StemCategory[] = ["main", "filler", "greenery"];
 const MATERIAL_GROUPS: MaterialGroup[] = ["wrapping", "ribbon", "addon"];
@@ -250,14 +251,11 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
   };
 
   const calculateTotal = () => {
-    const stemTotal = Object.entries(selectedStems).reduce((sum, [stemId, quantity]) => {
-      const stem = findStem(stemId);
-      return sum + (stem ? stem.price * quantity : 0);
-    }, 0);
-
-    const materialTotal = selectedMaterialEntries().reduce((sum, m) => sum + m.price, 0);
-
-    return Math.round((stemTotal + materialTotal) * 100) / 100;
+    const cents = priceBuildBouquetCents({
+      stems: selectedStems,
+      materialIds: selectedMaterialEntries().map((m) => m.id),
+    });
+    return (cents ?? 0) / 100;
   };
 
   const formatStemLineLabel = (stemId: string, quantity: number) => {
@@ -282,7 +280,12 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
   };
 
   const handlePlaceOrder = () => {
-    const total = calculateTotal();
+    const materialIds = selectedMaterialEntries().map((m) => m.id);
+    const amountCents = priceBuildBouquetCents({
+      stems: selectedStems,
+      materialIds,
+    });
+
     if (Object.keys(selectedStems).length === 0) {
       toast({
         title: "Add stems first",
@@ -294,7 +297,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
       return;
     }
 
-    if (total < 1) {
+    if (amountCents == null || amountCents < 100) {
       toast({
         title: "Invalid total",
         description: "Your bouquet total must be at least $1.00.",
@@ -302,6 +305,8 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
       });
       return;
     }
+
+    const total = amountCents / 100;
 
     if (isSubscription) {
       saveSubscriptionBuildDraft({
@@ -316,7 +321,11 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
       source: "build",
       itemName: "Custom bouquet",
       itemSummary: getSelectedItemsText(),
-      amountCents: Math.round(total * 100),
+      amountCents,
+      buildPricing: {
+        stems: { ...selectedStems },
+        materialIds,
+      },
     });
     toast({
       title: "Added to cart",
@@ -636,8 +645,8 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                     </h2>
                     <p className="text-lg lg:text-xl text-muted-foreground mt-3 max-w-2xl mx-auto">
                       Per-stem pricing reflects typical Toronto florist wholesale + hand-tied labour. Pick a
-                      colour for each flower stem you add—greenery stays natural. Final totals are confirmed
-                      when we reply to your inquiry.
+                      colour for each flower stem you add—greenery stays natural. Add to cart to pay online;
+                      we confirm stem availability before arranging.
                     </p>
                     {!step1Complete && floralColorErrors.length > 0 && (
                       <div

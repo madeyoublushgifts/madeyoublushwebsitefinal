@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -68,7 +68,6 @@ type ShopCardImage = string | { src: string; corner: QuadCorner };
 const BOUQUET_TIER_IDS = SHOP_BOUQUET_TIER_IDS;
 
 const Shop = () => {
-  const navigate = useNavigate();
   const { addItem } = useCart();
   useEffect(() => {
     const id = window.location.hash.slice(1);
@@ -223,7 +222,14 @@ const Shop = () => {
 
     const tierId = BOUQUET_TIER_IDS[bouquetId];
     const tier = tierId ? getBouquetTier(tierId) : undefined;
-    if (!tier) return;
+    if (!tier) {
+      toast({
+        title: "Could not add to cart",
+        description: "That bouquet tier could not be found. Please refresh and try again.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const paletteLabel = formatTierPaletteChoice(palette, bouquetId);
     addItem({

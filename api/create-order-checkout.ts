@@ -4,6 +4,8 @@ import {
   calculateHandlingFeeCents,
   HANDLING_FEE_LABEL,
 } from "../src/lib/orderFees";
+import { getBouquetTier } from "../src/data/bouquetTiers";
+import { priceBuildBouquetCents } from "../src/data/catalogPrices";
 
 const SITE_URL = (process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? "https://www.madeyoublush.ca").replace(
   /\/$/,
@@ -17,6 +19,11 @@ type CheckoutLineItem = {
   itemSummary?: string;
   amountCents?: number;
   source?: "shop" | "build";
+  tierId?: string;
+  buildPricing?: {
+    stems?: Record<string, number>;
+    materialIds?: string[];
+  };
 };
 
 function addDays(base: Date, days: number): Date {
@@ -38,12 +45,61 @@ function normalizeItems(body: Record<string, unknown>): CheckoutLineItem[] {
     return body.items as CheckoutLineItem[];
   }
 
-  const { itemName, itemSummary, amountCents, source } = body;
+  const { itemName, itemSummary, amountCents, source, tierId, buildPricing } = body;
   if (itemName && amountCents) {
-    return [{ itemName, itemSummary, amountCents, source } as CheckoutLineItem];
+    return [{ itemName, itemSummary, amountCents, source, tierId, buildPricing } as CheckoutLineItem];
   }
 
   return [];
+}
+
+function resolvePricedItem(item: CheckoutLineItem): { itemName: string; itemSummary: string; amountCents: number; source: "shop" | "build" } | { error: string } {
+  const source = item.source;
+  if (source !== "shop" && source !== "build") {
+    return { error: "Invalid order source on a cart item." };
+  }
+
+  const itemName = item.itemName?.trim();
+  if (!itemName) {
+    return { error: "One or more cart items is missing a name." };
+  }
+
+  const itemSummary = item.itemSummary?.trim() || itemName;
+
+  if (source === "shop") {
+    const tierId = item.tierId?.trim();
+    if (!tierId) {
+      return { error: "Shop bouquets must include a tier." };
+    }
+    const tier = getBouquetTier(tierId);
+    if (!tier) {
+      return { error: `Unknown bouquet tier: ${tierId}` };
+    }
+    return {
+      itemName: itemName || tier.name,
+      itemSummary,
+      amountCents: tier.priceCents,
+      source,
+    };
+  }
+
+  const stems = item.buildPricing?.stems;
+  const materialIds = item.buildPricing?.materialIds;
+  if (!stems || typeof stems !== "object" || !Array.isArray(materialIds)) {
+    return { error: "Custom bouquets must include stem and material details for checkout." };
+  }
+
+  const amountCents = priceBuildBouquetCents({ stems, materialIds });
+  if (amountCents == null || amountCents < 100) {
+    return { error: "Custom bouquet price could not be validated. Please rebuild and try again." };
+  }
+
+  return {
+    itemName,
+    itemSummary,
+    amountCents,
+    source,
+  };
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -82,16 +138,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: "Your cart is empty." });
   }
 
+  const pricedItems: { itemName: string; itemSummary: string; amountCents: number; source: "shop" | "build" }[] = [];
   for (const item of items) {
-    if (!item.itemName?.trim() || !item.amountCents || item.amountCents < 100) {
-      return res.status(400).json({ error: "One or more cart items has an invalid price." });
+    const resolved = resolvePricedItem(item);
+    if ("error" in resolved) {
+      return res.status(400).json({ error: resolved.error });
     }
-    if (item.source !== "shop" && item.source !== "build") {
-      return res.status(400).json({ error: "Invalid order source on a cart item." });
-    }
+    pricedItems.push(resolved);
   }
 
-  const subtotalCents = items.reduce((sum, item) => sum + Math.round(item.amountCents ?? 0), 0);
+  const subtotalCents = pricedItems.reduce((sum, item) => sum + item.amountCents, 0);
   if (subtotalCents < 100) {
     return res.status(400).json({ error: "Invalid order total." });
   }
@@ -108,11 +164,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     apiVersion: "2026-06-24.dahlia",
   });
 
-  const orderSummary = items
-    .map((item) => {
-      const label = item.itemSummary?.trim() || item.itemName?.trim() || "Item";
-      return `${item.itemName?.trim()}: ${label}`;
-    })
+  const orderSummary = pricedItems
+    .map((item) => `${item.itemName}: ${item.itemSummary}`)
     .join(" | ")
     .slice(0, 500);
 
@@ -121,15 +174,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       mode: "payment",
       customer_email: email.trim(),
       line_items: [
-        ...items.map((item) => ({
+        ...pricedItems.map((item) => ({
           quantity: 1,
           price_data: {
             currency: "cad",
-            unit_amount: Math.round(item.amountCents!),
+            unit_amount: item.amountCents,
             product_data: {
-              name: item.itemName!.trim(),
+              name: item.itemName,
               description:
-                item.itemSummary?.trim() ||
+                item.itemSummary ||
                 `${item.source === "build" ? "Custom bouquet" : "Shop bouquet"} · Delivery ${deliveryDate}`,
             },
           },
@@ -150,7 +203,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       cancel_url: `${SITE_URL}/checkout/cancel`,
       metadata: {
         orderType: "one_time",
-        itemCount: String(items.length),
+        itemCount: String(pricedItems.length),
         name: name.trim(),
         phone: phone?.trim() ?? "",
         address: address.trim(),
