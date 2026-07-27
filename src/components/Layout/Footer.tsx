@@ -42,7 +42,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/events" className={footerLinkClass}>
-                  Events & Bloom Bar
+                  Events, Bloom Bar & décor
                 </Link>
               </li>
               <li>

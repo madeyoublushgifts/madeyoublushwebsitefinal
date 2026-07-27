@@ -1,9 +1,16 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import FloralDivider from "@/components/FloralDivider";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   bloomBarBeachSunset,
   bloomBarIndoorCart,
@@ -67,31 +74,26 @@ const offerings = [
 const setupPhotos = [
   {
     src: bloomBarIndoorCart,
-    caption: "Bloom Bar + gift cart",
     alt: "Wooden gift cart beside a yellow flower stand with roses, hydrangeas, and greenery",
     rotate: -2.5,
   },
   {
     src: bloomBarOutdoorCart,
-    caption: "Outdoor market setup",
     alt: "White flower rack and wooden cart with blooms and cards on a sunny sidewalk",
     rotate: 2,
   },
   {
     src: bloomBarBeachSunset,
-    caption: "Sunset Bloom Bar",
     alt: "Yellow flower cart with priced stem buckets on a beach at sunset",
     rotate: -1.5,
   },
   {
     src: bloomBarIndoorStand,
-    caption: "Lobby pop-in",
     alt: "Indoor Bloom Bar with wooden cart and yellow tiered flower stand",
     rotate: 2.5,
   },
   {
     src: bloomBarSidewalk,
-    caption: "Street-side stems",
     alt: "Yellow flower stand and wooden cart with hydrangeas and roses outdoors",
     rotate: -2,
   },
@@ -100,22 +102,25 @@ const setupPhotos = [
 const steps = [
   {
     step: "01",
-    title: "Tell us the moment",
-    text: "Date, neighbourhood, guest count, palette, and whether you want a Bloom Bar, floral décor, or both.",
+    title: "Share your event details",
+    text: "Send us the date, location, guest count, colour palette, and whether you’d like a Bloom Bar, floral arrangements and décor, or both.",
   },
   {
     step: "02",
-    title: "We design the look",
-    text: "Stems, wrapping, ribbons, arrangements, and flow—styled in Made You Blush’s soft, approachable aesthetic.",
+    title: "We plan the florals with you",
+    text: "We’ll confirm the flowers, wrapping, and décor layout so everything fits your vibe and budget before the day.",
   },
   {
     step: "03",
-    title: "We show up; you host",
-    text: "We set up the station and/or décor, guests create (if it’s a Bloom Bar), and the space feels complete.",
+    title: "We set up; you enjoy the party",
+    text: "On the day, we arrive, set everything up, and handle the Bloom Bar or décor so you can focus on hosting.",
   },
 ];
 
 const Events = () => {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lightboxPhoto = lightboxIndex !== null ? setupPhotos[lightboxIndex] : null;
+
   return (
     <motion.div
       className="min-h-screen bg-background overflow-x-hidden"
@@ -148,13 +153,13 @@ const Events = () => {
               Private experiences
             </Badge>
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-              Bloom Bar
-              <span className="text-primary block">& make-your-own bouquets</span>
+              Bloom Bar & floral décor
+              <span className="text-primary block">arrangements for your celebration</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              Bring Made You Blush to your celebration—Bloom Bar stations, floral arrangements, and
-              décor for weddings, bridal showers, birthdays, anniversaries, and parties across Toronto
-              and the GTA.
+              Bring Made You Blush to your celebration—make-your-own bouquet stations, floral
+              arrangements, and décor for weddings, bridal showers, birthdays, anniversaries, and
+              parties across Toronto and the GTA.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <Button asChild size="lg" className="rounded-full min-h-12 w-full sm:w-auto">
@@ -210,26 +215,30 @@ const Events = () => {
           id="setup-gallery"
           className="pt-8 lg:pt-10 pb-16 lg:pb-20 bg-gradient-to-b from-secondary/30 via-background to-background scroll-mt-24"
         >
-          <motion.div className="container mx-auto px-4 lg:px-8 max-w-5xl space-y-10" {...fadeUp}>
+          <motion.div className="container mx-auto px-4 lg:px-8 max-w-6xl space-y-10" {...fadeUp}>
             <div className="text-center space-y-3 max-w-2xl mx-auto">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold">Setup inspiration</h2>
               <p className="text-muted-foreground text-lg">
-                Real Made You Blush Bloom Bar moments—carts, stem stands, and little gift touches.
+                Real Made You Blush setups—Bloom Bars, stem stands, carts, and floral décor touches.
+                Tap a photo to view it larger.
               </p>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-6 sm:gap-8 lg:gap-10">
+            <div className="flex flex-wrap justify-center gap-5 sm:gap-7 lg:gap-8">
               {setupPhotos.map((photo, index) => (
-                <motion.figure
+                <motion.button
                   key={photo.src}
-                  className="w-[9.5rem] sm:w-44 lg:w-52 shrink-0"
+                  type="button"
+                  aria-label={`View larger: ${photo.alt}`}
+                  onClick={() => setLightboxIndex(index)}
+                  className="w-[11.5rem] sm:w-56 md:w-64 lg:w-72 shrink-0 text-left cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
                   initial={{ opacity: 0, y: 28, rotate: photo.rotate }}
                   whileInView={{ opacity: 1, y: 0, rotate: photo.rotate }}
                   whileHover={{ rotate: 0, y: -6, transition: { duration: 0.25 } }}
                   transition={{ duration: 0.55, delay: index * 0.07 }}
                   viewport={{ once: true, amount: 0.2 }}
                 >
-                  <div className="relative bg-[#f7dde6] p-2.5 pb-9 shadow-[0_10px_28px_hsl(var(--primary)/0.16)] ring-1 ring-primary/15">
+                  <div className="relative bg-[#f7dde6] p-3 shadow-[0_10px_28px_hsl(var(--primary)/0.16)] ring-1 ring-primary/15">
                     <div
                       className="pointer-events-none absolute inset-x-3 top-2 h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent"
                       aria-hidden
@@ -241,14 +250,32 @@ const Events = () => {
                       loading="lazy"
                       decoding="async"
                     />
-                    <figcaption className="font-heading text-[11px] sm:text-xs text-center text-foreground/90 mt-3 px-1 leading-snug">
-                      {photo.caption}
-                    </figcaption>
                   </div>
-                </motion.figure>
+                </motion.button>
               ))}
             </div>
           </motion.div>
+
+          <Dialog
+            open={lightboxIndex !== null}
+            onOpenChange={(open) => {
+              if (!open) setLightboxIndex(null);
+            }}
+          >
+            <DialogContent className="max-w-[min(96vw,52rem)] sm:max-w-[min(96vw,52rem)] sm:max-h-[min(94dvh,56rem)] border-0 bg-transparent p-0 shadow-none sm:rounded-none overflow-visible">
+              <DialogTitle className="sr-only">Setup photo</DialogTitle>
+              <DialogDescription className="sr-only">
+                {lightboxPhoto?.alt ?? "Enlarged setup photo"}
+              </DialogDescription>
+              {lightboxPhoto && (
+                <img
+                  src={lightboxPhoto.src}
+                  alt={lightboxPhoto.alt}
+                  className="mx-auto max-h-[min(88dvh,52rem)] w-auto max-w-full object-contain rounded-md shadow-2xl"
+                />
+              )}
+            </DialogContent>
+          </Dialog>
         </section>
 
         <FloralDivider className="py-8 lg:py-10" />
@@ -294,7 +321,7 @@ const Events = () => {
             <div className="text-center space-y-3">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold">How it works</h2>
               <p className="text-muted-foreground max-w-xl mx-auto">
-                Simple for you. Special for your guests.
+                Three simple steps from inquiry to event day.
               </p>
             </div>
 
