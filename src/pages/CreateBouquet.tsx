@@ -562,7 +562,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
               viewport={{ once: true }}
             >
               {isSubscription
-                ? "Build Your Subscription Bouquet"
+                ? "Build Your Custom Bouquet"
                 : "Build a Custom Bouquet in Toronto"}
             </motion.h1>
             <motion.p

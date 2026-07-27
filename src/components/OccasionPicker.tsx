@@ -4,25 +4,36 @@ import { Label } from "@/components/ui/label";
 import {
   createOccasionId,
   occasionTypeOptions,
+  type OccasionType,
   type SubscriptionOccasion,
 } from "@/data/subscriptionOccasions";
-import { getMinDeliveryDate } from "@/data/subscriptionDates";
 import { Plus, Trash2 } from "lucide-react";
 
 type OccasionPickerProps = {
   occasions: SubscriptionOccasion[];
   onChange: (occasions: SubscriptionOccasion[]) => void;
   minDate: string;
+  /** When true, empty state encourages adding at least one date. */
+  required?: boolean;
+  title?: string;
+  description?: string;
 };
 
-const OccasionPicker = ({ occasions, onChange, minDate }: OccasionPickerProps) => {
-  const addOccasion = () => {
+const OccasionPicker = ({
+  occasions,
+  onChange,
+  minDate,
+  required = false,
+  title = "Special dates & occasions",
+  description = "Valentine’s, Mother’s Day, birthdays, anniversaries, holidays, or a custom date.",
+}: OccasionPickerProps) => {
+  const addOccasion = (type: OccasionType = "birthday") => {
     onChange([
       ...occasions,
       {
         id: createOccasionId(),
-        type: "birthday",
-        label: "",
+        type,
+        label: type === "custom" ? "" : "",
         date: minDate,
       },
     ]);
@@ -38,22 +49,31 @@ const OccasionPicker = ({ occasions, onChange, minDate }: OccasionPickerProps) =
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-medium">Special dates & occasions</p>
-          <p className="text-xs text-muted-foreground">
-            Birthdays, anniversaries, holidays, or events we can style blooms around.
+          <p className="text-sm font-medium">
+            {title}
+            {required ? " *" : ""}
           </p>
+          <p className="text-xs text-muted-foreground">{description}</p>
         </div>
-        <Button type="button" variant="outline" size="sm" onClick={addOccasion}>
-          <Plus className="h-4 w-4 mr-1" />
-          Add
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={() => addOccasion("birthday")}>
+            <Plus className="h-4 w-4 mr-1" />
+            Add date
+          </Button>
+          <Button type="button" variant="secondary" size="sm" onClick={() => addOccasion("custom")}>
+            <Plus className="h-4 w-4 mr-1" />
+            Add custom
+          </Button>
+        </div>
       </div>
 
       {occasions.length === 0 ? (
         <p className="text-sm text-muted-foreground rounded-lg border border-dashed border-border px-4 py-3">
-          Optional — add dates you&apos;d like us to remember for gifting.
+          {required
+            ? "Add at least one special date or occasion."
+            : "Optional — add dates you’d like us to remember for gifting."}
         </p>
       ) : (
         <div className="space-y-3">
@@ -81,20 +101,28 @@ const OccasionPicker = ({ occasions, onChange, minDate }: OccasionPickerProps) =
                 </select>
               </div>
               <div className="sm:col-span-4 space-y-1">
-                <Label className="text-xs">Label</Label>
+                <Label className="text-xs">
+                  {occasion.type === "custom" ? "Custom text *" : "Label"}
+                </Label>
                 <Input
                   value={occasion.label}
                   onChange={(e) => updateOccasion(occasion.id, { label: e.target.value })}
-                  placeholder="e.g. Mom's birthday"
+                  placeholder={
+                    occasion.type === "custom"
+                      ? "Describe the occasion…"
+                      : "e.g. Mom’s birthday"
+                  }
+                  required={occasion.type === "custom"}
                 />
               </div>
               <div className="sm:col-span-4 space-y-1">
-                <Label className="text-xs">Date</Label>
+                <Label className="text-xs">Chosen date *</Label>
                 <Input
                   type="date"
                   min={minDate}
                   value={occasion.date}
                   onChange={(e) => updateOccasion(occasion.id, { date: e.target.value })}
+                  required
                 />
               </div>
               <div className="sm:col-span-1 flex items-end justify-end">

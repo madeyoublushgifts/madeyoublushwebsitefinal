@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BrandLogo from "@/components/BrandLogo";
-import { Flower, Home, Mail, Menu, ShoppingBag, ShoppingCart, Sparkles, CalendarHeart, X } from "lucide-react";
+import { Flower, Home, Mail, Menu, ShoppingBag, ShoppingCart, Sparkles, CalendarHeart, PartyPopper, Store, X } from "lucide-react";
 import { isDemoMode } from "@/lib/demo";
 import { useEffect, useState } from "react";
 import { useCartCount } from "@/hooks/useCartCount";
@@ -15,6 +15,8 @@ const Header = () => {
     { name: "Home", href: "/", icon: Home },
     { name: "Shop", href: "/shop", icon: ShoppingBag },
     { name: "Subscription", href: "/subscription", icon: CalendarHeart },
+    { name: "Events", href: "/events", icon: PartyPopper },
+    { name: "Pop-ups", href: "/pop-ups", icon: Store },
     { name: "Coming Soon", href: "/coming-soon", icon: Sparkles },
     { name: "Contact", href: "/contact", icon: Mail },
   ];
@@ -49,18 +51,18 @@ const Header = () => {
           <BrandLogo />
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8" aria-label="Main navigation">
+          <nav className="hidden lg:flex items-center gap-2 xl:gap-3" aria-label="Main navigation">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`inline-flex items-center gap-2 text-sm font-medium rounded-full border-2 px-3 py-1.5 transition-all duration-200 ${
+                className={`inline-flex items-center gap-1.5 text-sm font-medium rounded-full border-2 px-2.5 py-1.5 transition-all duration-200 ${
                   isNavActive(item.href)
                     ? "border-primary/60 bg-primary/10 text-primary shadow-sm"
                     : "border-primary/25 text-muted-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/50"
                 }`}
               >
-                <item.icon className="h-4 w-4" />
+                <item.icon className="h-4 w-4 shrink-0" />
                 {item.name}
               </Link>
             ))}
@@ -85,7 +87,7 @@ const Header = () => {
               )}
             </Link>
 
-            <Button asChild variant="default" size="sm" className="hidden md:inline-flex">
+            <Button asChild variant="default" size="sm" className="hidden lg:inline-flex">
               <Link to="/create-bouquet">
                 <Flower className="h-4 w-4" />
                 Build a Bouquet
@@ -96,7 +98,7 @@ const Header = () => {
             <button
               type="button"
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              className="md:hidden inline-flex items-center justify-center min-h-11 min-w-11 p-2.5 rounded-md hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="lg:hidden inline-flex items-center justify-center min-h-11 min-w-11 p-2.5 rounded-md hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -107,7 +109,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3 max-h-[calc(100dvh-5.5rem)] overflow-y-auto overscroll-contain pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="lg:hidden border-t border-border bg-background px-4 py-4 space-y-3 max-h-[calc(100dvh-5.5rem)] overflow-y-auto overscroll-contain pb-[max(1rem,env(safe-area-inset-bottom))]">
           {navigation.map((item) => (
             <Link
               key={item.name}

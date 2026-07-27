@@ -38,7 +38,7 @@ export const bouquetTiers: BouquetTier[] = [
     id: "deluxe",
     shopBouquetId: 4,
     name: "Deluxe Bouquet",
-    description: "Fuller stems with lilies and layered blooms",
+    description: "Fuller stems with layered blooms and richer volume",
     priceLabel: "$56.99",
     priceCents: 5699,
   },

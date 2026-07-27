@@ -7,16 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Phone, Mail, Calendar } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { submitToFormspree } from "@/lib/formspree";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { instagram, tiktok } from "@/lib/social";
 import { googleBusiness } from "@/lib/seo";
-import LiveEventsCalendar from "@/components/LiveEventsCalendar";
-import PastEventsList from "@/components/PastEventsList";
-import { pastEvents, upcomingEvents } from "@/data/upcomingEvents";
 
 const Contact = () => {
   // ---------------------------
@@ -233,7 +231,15 @@ const Contact = () => {
           </h2>
           <p className="text-lg text-muted-foreground">
             We don’t have a permanent storefront yet—we’re Toronto-based and
-            popping up around the city. Stay tuned on{" "}
+            popping up around the city. See{" "}
+            <Link to="/pop-ups" className="text-primary underline-offset-4 hover:underline">
+              Pop-ups
+            </Link>{" "}
+            for upcoming dates and past markets, or{" "}
+            <Link to="/events" className="text-primary underline-offset-4 hover:underline">
+              Events
+            </Link>{" "}
+            for Bloom Bar and make-your-own bouquet experiences. Stay tuned on{" "}
             <a
               href={instagram.url}
               target="_blank"
@@ -250,9 +256,8 @@ const Contact = () => {
               className="text-primary underline-offset-4 hover:underline"
             >
               TikTok {tiktok.handle}
-            </a>{" "}
-            for vendor markets, bouquet-building experiences, special events, and
-            the next place you can find us in person.
+            </a>
+            .
           </p>
         </div>
 
@@ -284,8 +289,11 @@ const Contact = () => {
                     >
                       {tiktok.handle}
                     </a>{" "}
-                    on TikTok for pop-ups, markets, bouquet-building nights, and event
-                    dates—we’ll share locations as each one is confirmed.
+                    on TikTok, or visit our{" "}
+                    <Link to="/pop-ups" className="text-primary underline-offset-4 hover:underline">
+                      Pop-ups
+                    </Link>{" "}
+                    page for dates and past markets.
                   </p>
                 </>
               ),
@@ -346,91 +354,6 @@ const Contact = () => {
             </motion.div>
           ))}
         </div>
-      </motion.div>
-    </motion.div>
-  </div>
-</section>
-
-        <FloralDivider className="py-8 lg:py-10" />
-
-        {/* ================= WHERE TO FIND US NEXT ================= */}
-      <section className="pt-8 lg:pt-10 pb-20 bg-floral">
-  <div className="container mx-auto px-4 lg:px-8">
-    <motion.div
-      className="max-w-4xl mx-auto space-y-8"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      viewport={{ once: true }}
-    >
-      <motion.div
-        className="text-center space-y-4"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        viewport={{ once: true }}
-      >
-        <div className="inline-flex items-center justify-center gap-2 text-primary">
-          <Calendar className="h-8 w-8" />
-          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
-            Where to find us next
-          </h2>
-        </div>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Dates and neighbourhoods get announced on{" "}
-          <a
-            href={instagram.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary underline-offset-4 hover:underline"
-          >
-            Instagram {instagram.handle}
-          </a>{" "}
-          and{" "}
-          <a
-            href={tiktok.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary underline-offset-4 hover:underline"
-          >
-            TikTok {tiktok.handle}
-          </a>
-          . Tap{" "}
-          <a
-            href="#contact-form"
-            className="font-medium text-primary underline-offset-4 hover:underline"
-          >
-            Contact Us
-          </a>{" "}
-          to ask about a specific date or collab.
-        </p>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
-        viewport={{ once: true }}
-      >
-        <LiveEventsCalendar
-          events={upcomingEvents}
-          emptyMessage={
-            <p className="font-heading text-xl sm:text-2xl font-semibold text-foreground leading-relaxed max-w-xl mx-auto">
-              Stay Tuned! Look out for upcoming events, markets, vendors spots and pop-up shops!{" "}
-              <span className="text-primary">&lt;3</span>
-            </p>
-          }
-        />
-      </motion.div>
-
-      <motion.div
-        className="mt-10"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.1 }}
-        viewport={{ once: true }}
-      >
-        <PastEventsList events={pastEvents} />
       </motion.div>
     </motion.div>
   </div>

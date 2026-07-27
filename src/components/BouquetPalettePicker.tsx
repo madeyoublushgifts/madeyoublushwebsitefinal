@@ -13,22 +13,52 @@ type BouquetPalettePickerProps = {
   bouquetId: number;
   selection: TierPaletteSelection;
   onChange: (next: TierPaletteSelection) => void;
+  /** Allow selecting more than one colour template (subscription waitlist). */
+  allowMultipleTemplates?: boolean;
+  /** Minimum templates required when multi-select is on. */
+  minTemplates?: number;
 };
 
-const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalettePickerProps) => {
+const BouquetPalettePicker = ({
+  bouquetId,
+  selection,
+  onChange,
+  allowMultipleTemplates = false,
+  minTemplates = 1,
+}: BouquetPalettePickerProps) => {
   const pickerOnly = isSingleStemTier(bouquetId);
   const maxCustomColors = getMaxCustomColorsForTier(bouquetId);
+  const requiredTemplates = Math.max(1, minTemplates);
 
   const setMode = (mode: BouquetTierColorMode) => {
     onChange({
       mode,
-      templateId: mode === "template" ? selection.templateId : null,
+      templateIds: mode === "template" ? selection.templateIds : [],
       customColors: mode === "custom" ? selection.customColors : [],
     });
   };
 
   const selectTemplate = (templateId: string) => {
-    onChange({ mode: "template", templateId, customColors: [] });
+    if (!allowMultipleTemplates) {
+      onChange({ mode: "template", templateIds: [templateId], customColors: [] });
+      return;
+    }
+
+    const current = selection.templateIds;
+    if (current.includes(templateId)) {
+      onChange({
+        mode: "template",
+        templateIds: current.filter((id) => id !== templateId),
+        customColors: [],
+      });
+      return;
+    }
+
+    onChange({
+      mode: "template",
+      templateIds: [...current, templateId],
+      customColors: [],
+    });
   };
 
   const toggleCustomColor = (colorId: BouquetStemColor) => {
@@ -36,7 +66,7 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
     if (current.includes(colorId)) {
       onChange({
         mode: "custom",
-        templateId: null,
+        templateIds: [],
         customColors: current.filter((c) => c !== colorId),
       });
       return;
@@ -44,7 +74,7 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
     if (maxCustomColors === 1) {
       onChange({
         mode: "custom",
-        templateId: null,
+        templateIds: [],
         customColors: [colorId],
       });
       return;
@@ -52,7 +82,7 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
     if (current.length >= maxCustomColors) return;
     onChange({
       mode: "custom",
-      templateId: null,
+      templateIds: [],
       customColors: [...current, colorId],
     });
   };
@@ -77,13 +107,13 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
               aria-pressed={active}
               disabled={atMax}
               onClick={() => toggleCustomColor(color.id)}
-            className={cn(
-                    "h-8 w-8 sm:h-7 sm:w-7 rounded-full border-2 transition-all duration-200 shrink-0 active:scale-90",
-                    active
-                      ? "border-primary ring-2 ring-primary/40 scale-110 shadow-sm"
-                      : "border-border hover:border-primary hover:scale-105",
-                    atMax && "opacity-40 cursor-not-allowed"
-                  )}
+              className={cn(
+                "h-8 w-8 sm:h-7 sm:w-7 rounded-full border-2 transition-all duration-200 shrink-0 active:scale-90",
+                active
+                  ? "border-primary ring-2 ring-primary/40 scale-110 shadow-sm"
+                  : "border-border hover:border-primary hover:scale-105",
+                atMax && "opacity-40 cursor-not-allowed"
+              )}
               style={{ backgroundColor: color.hex }}
             />
           );
@@ -133,44 +163,55 @@ const BouquetPalettePicker = ({ bouquetId, selection, onChange }: BouquetPalette
       </div>
 
       {selection.mode === "template" ? (
-        <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto pr-0.5">
-          {bouquetColorTemplates.map((template) => {
-            const active = selection.templateId === template.id;
-            return (
-              <button
-                key={template.id}
-                type="button"
-                onClick={() => selectTemplate(template.id)}
-                className={cn(
-                  "flex items-center gap-2 rounded-lg border px-2.5 py-2 text-left transition-colors",
-                  active
-                    ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-                    : "border-border hover:border-primary/40"
-                )}
-              >
-                <div className="flex -space-x-1 shrink-0">
-                  {template.colors.map((colorId) => {
-                    const color = bouquetStemColors.find((c) => c.id === colorId);
-                    if (!color) return null;
-                    return (
-                      <span
-                        key={colorId}
-                        className="h-5 w-5 rounded-full border-2 border-background"
-                        style={{ backgroundColor: color.hex }}
-                        title={color.name}
-                      />
-                    );
-                  })}
-                </div>
-                <span className="min-w-0">
-                  <span className="block text-xs font-medium leading-tight">{template.name}</span>
-                  <span className="block text-[10px] text-muted-foreground leading-tight truncate">
-                    {template.description}
+        <div className="space-y-2">
+          {allowMultipleTemplates ? (
+            <p className="text-[10px] text-muted-foreground text-center">
+              Select at least {requiredTemplates} template
+              {requiredTemplates === 1 ? "" : "s"}
+              {selection.templateIds.length > 0
+                ? ` · ${selection.templateIds.length} selected`
+                : ""}
+            </p>
+          ) : null}
+          <div className="grid grid-cols-1 gap-2 max-h-56 overflow-y-auto pr-0.5">
+            {bouquetColorTemplates.map((template) => {
+              const active = selection.templateIds.includes(template.id);
+              return (
+                <button
+                  key={template.id}
+                  type="button"
+                  onClick={() => selectTemplate(template.id)}
+                  className={cn(
+                    "flex items-center gap-2 rounded-lg border px-2.5 py-2 text-left transition-colors",
+                    active
+                      ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                      : "border-border hover:border-primary/40"
+                  )}
+                >
+                  <div className="flex -space-x-1 shrink-0">
+                    {template.colors.map((colorId) => {
+                      const color = bouquetStemColors.find((c) => c.id === colorId);
+                      if (!color) return null;
+                      return (
+                        <span
+                          key={colorId}
+                          className="h-5 w-5 rounded-full border-2 border-background"
+                          style={{ backgroundColor: color.hex }}
+                          title={color.name}
+                        />
+                      );
+                    })}
+                  </div>
+                  <span className="min-w-0">
+                    <span className="block text-xs font-medium leading-tight">{template.name}</span>
+                    <span className="block text-[10px] text-muted-foreground leading-tight truncate">
+                      {template.description}
+                    </span>
                   </span>
-                </span>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
         </div>
       ) : (
         colorPicker

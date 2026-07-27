@@ -32,6 +32,7 @@ export const bouquetStemColors = [
   { id: "yellow", name: "Yellow", hex: "#EAB308" },
   { id: "orange", name: "Orange", hex: "#EA580C" },
   { id: "purple", name: "Purple", hex: "#9333EA" },
+  { id: "green", name: "Green", hex: "#16A34A" },
   { id: "white", name: "White", hex: "#F5F5F4" },
   { id: "pink", name: "Pink", hex: "#EC4899" },
 ] as const;

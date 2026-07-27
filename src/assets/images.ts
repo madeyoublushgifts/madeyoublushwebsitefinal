@@ -247,3 +247,12 @@ export const pastEventMidsommarMarket = pastEvent("midsommar-market-fox-theatre.
 export const pastEventMidsommarYellowRoses = pastEvent("midsommar-market-yellow-roses.png");
 export const pastEventMidsommarMauveBouquet = pastEvent("midsommar-market-mauve-bouquet.png");
 
+const bloomBar = (file: string) => `${base}images/bloom-bar/${file}`;
+
+/** Events page — Bloom Bar & setup examples */
+export const bloomBarIndoorCart = bloomBar("bloom-bar-indoor-cart.png");
+export const bloomBarOutdoorCart = bloomBar("bloom-bar-outdoor-cart.png");
+export const bloomBarBeachSunset = bloomBar("bloom-bar-beach-sunset.png");
+export const bloomBarIndoorStand = bloomBar("bloom-bar-indoor-stand.png");
+export const bloomBarSidewalk = bloomBar("bloom-bar-sidewalk.png");
+

@@ -109,11 +109,12 @@ const Subscription = () => {
           <motion.div className="container mx-auto px-4 lg:px-8 max-w-6xl" {...fadeUp}>
             <div className="text-center space-y-4 mb-10">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold">
-                Subscription waitlist
+                Recurring delivery subscription waitlist
               </h2>
               <p className="text-muted-foreground">
-                Tell us your cadence, bouquet preference, and special dates. No payment today—we&apos;ll
-                email you when delivery memberships open.
+                Choose recurring delivery or special dates & occasions only. Tell us your cadence,
+                bouquet preference, and the dates that matter. No payment today—we&apos;ll email you
+                when memberships open.
               </p>
             </div>
             <SubscriptionWaitlistForm />

@@ -1,4 +1,11 @@
-export type OccasionType = "birthday" | "anniversary" | "holiday" | "special_event";
+export type OccasionType =
+  | "valentines"
+  | "mothers_day"
+  | "anniversary"
+  | "birthday"
+  | "holiday"
+  | "special_occasion"
+  | "custom";
 
 export type SubscriptionOccasion = {
   id: string;
@@ -8,10 +15,13 @@ export type SubscriptionOccasion = {
 };
 
 export const occasionTypeOptions: Array<{ value: OccasionType; label: string }> = [
-  { value: "birthday", label: "Birthday" },
+  { value: "valentines", label: "Valentine's Day" },
+  { value: "mothers_day", label: "Mother's Day" },
   { value: "anniversary", label: "Anniversary" },
+  { value: "birthday", label: "Birthday" },
   { value: "holiday", label: "Holiday" },
-  { value: "special_event", label: "Special event" },
+  { value: "special_occasion", label: "Special occasion" },
+  { value: "custom", label: "Custom" },
 ];
 
 export function createOccasionId(): string {

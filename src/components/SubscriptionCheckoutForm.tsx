@@ -174,7 +174,11 @@ const SubscriptionCheckoutForm = () => {
             />
           </div>
 
-          <OccasionPicker value={occasions} onChange={setOccasions} />
+          <OccasionPicker
+            occasions={occasions}
+            onChange={setOccasions}
+            minDate={minDeliveryDate}
+          />
 
           <div className="space-y-2">
             <Label htmlFor="sub-notes">Notes (optional)</Label>

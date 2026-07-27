@@ -11,7 +11,7 @@ export type MarketEventPolaroid = {
   alt?: string;
 };
 
-/** Market & pop-up events for the Contact page calendar. */
+/** Market & pop-up events for the Pop-ups page calendar and scrapbook. */
 export type MarketEvent = {
   /** Local calendar date, e.g. "2026-06-20" */
   date: string;

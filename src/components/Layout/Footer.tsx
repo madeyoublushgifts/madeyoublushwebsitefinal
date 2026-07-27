@@ -41,6 +41,16 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/events" className={footerLinkClass}>
+                  Events & Bloom Bar
+                </Link>
+              </li>
+              <li>
+                <Link to="/pop-ups" className={footerLinkClass}>
+                  Pop-ups
+                </Link>
+              </li>
+              <li>
                 <Link to="/coming-soon" className={footerLinkClass}>
                   Coming Soon
                 </Link>

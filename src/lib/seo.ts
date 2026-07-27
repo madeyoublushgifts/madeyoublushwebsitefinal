@@ -75,8 +75,20 @@ const pages: Record<string, PageSeo> = {
   "/contact": {
     title: `Contact Us | ${siteConfig.name}`,
     description:
-      "Contact Made You Blush for bouquet inquiries, floral subscriptions, gift bundles, pop-up dates, partnerships, collaborations, and event florals across Toronto and the GTA.",
+      "Contact Made You Blush for bouquet inquiries, floral subscriptions, gift bundles, Bloom Bar experiences, pop-up dates, partnerships, and event florals across Toronto and the GTA.",
     path: "/contact",
+  },
+  "/events": {
+    title: `Bloom Bar, Floral Décor & Private Experiences Toronto | ${siteConfig.name}`,
+    description:
+      "Book a Made You Blush Bloom Bar, make-your-own bouquet station, or floral arrangements and décor for weddings, bridal showers, birthdays, anniversaries, and parties across Toronto and the GTA.",
+    path: "/events",
+  },
+  "/pop-ups": {
+    title: `Toronto Florist Pop-ups & Markets | ${siteConfig.name}`,
+    description:
+      "Find Made You Blush at Toronto markets and pop-ups—upcoming dates, past polaroids from Fox Theatre and more, plus collab inquiries.",
+    path: "/pop-ups",
   },
   "/coming-soon": {
     title: `Coming Soon — Bouquet Visualizer & Blush Notes | ${siteConfig.name}`,
@@ -85,15 +97,15 @@ const pages: Record<string, PageSeo> = {
     path: "/coming-soon",
   },
   "/subscription": {
-    title: `Floral Subscription Waitlist Toronto | ${siteConfig.name}`,
+    title: `Recurring Delivery Subscription Waitlist Toronto | ${siteConfig.name}`,
     description:
-      "Join the floral subscription waitlist in Toronto — choose bi-weekly, monthly, or annual delivery, pick a shop tier or custom build, and get notified when memberships launch.",
+      "Join the Made You Blush waitlist for recurring floral delivery or special dates & occasions only — choose cadence, bouquet style, colour templates, and get notified when memberships launch.",
     path: "/subscription",
   },
   "/subscription/build-bouquet": {
-    title: `Build Your Subscription Bouquet | ${siteConfig.name}`,
+    title: `Build Your Custom Bouquet | ${siteConfig.name}`,
     description:
-      "Design stems, wrap, and add-ons for your Made You Blush floral subscription waitlist — separate from one-time shop checkout.",
+      "Design stems, wrap, and add-ons for your Made You Blush subscription waitlist — separate from one-time shop checkout.",
     path: "/subscription/build-bouquet",
   },
   "/cart": {

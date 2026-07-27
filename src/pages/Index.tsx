@@ -194,7 +194,7 @@ const Index = () => {
     {
       title: "Luxury bouquet",
       description:
-        "$75 · Premium stems with orchids, lilies, and lush garden roses—wrapped for maximum wow on milestones and celebrations.",
+        "$75 · Premium stems with lush garden roses and layered blooms—wrapped for maximum wow on milestones and celebrations.",
       image: showcaseLuxuryBouquet,
       link: "/shop#bouquet-tiers",
     },

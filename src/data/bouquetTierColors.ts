@@ -13,7 +13,7 @@ export type BouquetColorTemplate = {
   colors: BouquetStemColor[];
 };
 
-/** Curated palettes for shop bouquet tiers—same stem colors as Build a Bouquet. */
+/** Curated palettes for shop bouquet tiers and subscription waitlist. */
 export const bouquetColorTemplates: BouquetColorTemplate[] = [
   {
     id: "blush-romance",
@@ -51,6 +51,60 @@ export const bouquetColorTemplates: BouquetColorTemplate[] = [
     description: "High-contrast red, yellow, and orange",
     colors: ["red", "yellow", "orange"],
   },
+  {
+    id: "meadow-green",
+    name: "Meadow Green",
+    description: "Fresh greens with soft white",
+    colors: ["green", "white"],
+  },
+  {
+    id: "peach-garden",
+    name: "Peach Garden",
+    description: "Peachy orange, pink, and cream",
+    colors: ["orange", "pink", "white"],
+  },
+  {
+    id: "lilac-dream",
+    name: "Lilac Dream",
+    description: "Lavender purple with blush pink",
+    colors: ["purple", "pink"],
+  },
+  {
+    id: "citrus-crush",
+    name: "Citrus Crush",
+    description: "Zesty yellow, orange, and green",
+    colors: ["yellow", "orange", "green"],
+  },
+  {
+    id: "midnight-rose",
+    name: "Midnight Rose",
+    description: "Romantic red with soft pink",
+    colors: ["red", "pink"],
+  },
+  {
+    id: "skyline-blue",
+    name: "Skyline Blue",
+    description: "Blue skies with purple dusk",
+    colors: ["blue", "purple", "white"],
+  },
+  {
+    id: "forest-blush",
+    name: "Forest Blush",
+    description: "Leafy green with pink blooms",
+    colors: ["green", "pink", "white"],
+  },
+  {
+    id: "candy-stripe",
+    name: "Candy Stripe",
+    description: "Playful pink, red, and white",
+    colors: ["pink", "red", "white"],
+  },
+  {
+    id: "golden-hour",
+    name: "Golden Hour",
+    description: "Warm yellow, orange, and soft pink",
+    colors: ["yellow", "orange", "pink"],
+  },
 ];
 
 export const MAX_TIER_CUSTOM_COLORS = 3;
@@ -66,28 +120,37 @@ export const isSingleStemTier = (bouquetId: number) => bouquetId === SINGLE_STEM
 
 export type TierPaletteSelection = {
   mode: BouquetTierColorMode;
-  templateId: string | null;
+  /** One or more colour templates (shop uses a single selection). */
+  templateIds: string[];
   customColors: BouquetStemColor[];
 };
 
 export const defaultTierPaletteSelection = (bouquetId?: number): TierPaletteSelection =>
   isSingleStemTier(bouquetId ?? -1)
-    ? { mode: "custom", templateId: null, customColors: [] }
-    : { mode: "template", templateId: null, customColors: [] };
+    ? { mode: "custom", templateIds: [], customColors: [] }
+    : { mode: "template", templateIds: [], customColors: [] };
 
 export const findColorTemplate = (id: string) =>
   bouquetColorTemplates.find((t) => t.id === id);
 
+export type TierPaletteCompleteOptions = {
+  /** Minimum templates required in template mode (subscription commitment). */
+  minTemplates?: number;
+};
+
 export const isTierPaletteComplete = (
   selection: TierPaletteSelection | undefined,
-  bouquetId?: number
+  bouquetId?: number,
+  options?: TierPaletteCompleteOptions
 ) => {
   if (!selection) return false;
   if (bouquetId !== undefined && isSingleStemTier(bouquetId)) {
     return selection.customColors.length === 1;
   }
   if (selection.mode === "template") {
-    return selection.templateId !== null && !!findColorTemplate(selection.templateId);
+    const valid = selection.templateIds.filter((id) => !!findColorTemplate(id));
+    const min = Math.max(1, options?.minTemplates ?? 1);
+    return valid.length >= min;
   }
   return selection.customColors.length > 0;
 };
@@ -101,11 +164,13 @@ export const formatTierPaletteChoice = (
     return `Colour: ${formatStemColorSummary(selection.customColors)}`;
   }
   if (selection.mode === "template") {
-    const template = selection.templateId
-      ? findColorTemplate(selection.templateId)
-      : undefined;
-    if (!template) return "";
-    return `Template: ${template.name} (${formatStemColorSummary(template.colors)})`;
+    const templates = selection.templateIds
+      .map((id) => findColorTemplate(id))
+      .filter((t): t is BouquetColorTemplate => !!t);
+    if (templates.length === 0) return "";
+    return `Templates: ${templates
+      .map((t) => `${t.name} (${formatStemColorSummary(t.colors)})`)
+      .join("; ")}`;
   }
   if (selection.customColors.length === 0) return "";
   return `Custom palette: ${formatStemColorSummary(selection.customColors)}`;
