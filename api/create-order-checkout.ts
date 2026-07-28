@@ -3,9 +3,9 @@ import Stripe from "stripe";
 import {
   calculateHandlingFeeCents,
   HANDLING_FEE_LABEL,
-} from "./lib/orderFees";
-import { getBouquetTier } from "./lib/bouquetTiers";
-import { priceBuildBouquetCents } from "./lib/catalogPrices";
+} from "./lib/orderFees.js";
+import { getBouquetTier } from "./lib/bouquetTiers.js";
+import { priceBuildBouquetCents } from "./lib/catalogPrices.js";
 
 const SITE_URL = (process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? "https://www.madeyoublush.ca").replace(
   /\/$/,
