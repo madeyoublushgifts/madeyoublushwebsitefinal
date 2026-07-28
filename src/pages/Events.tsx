@@ -262,7 +262,7 @@ const Events = () => {
               if (!open) setLightboxIndex(null);
             }}
           >
-            <DialogContent className="max-w-[min(96vw,52rem)] sm:max-w-[min(96vw,52rem)] sm:max-h-[min(94dvh,56rem)] border-0 bg-transparent p-0 shadow-none sm:rounded-none overflow-visible">
+            <DialogContent className="max-w-[min(96vw,52rem)] sm:max-w-[min(96vw,52rem)] sm:max-h-[min(94dvh,56rem)] border-0 bg-transparent p-0 shadow-none sm:rounded-none overflow-visible [&>button]:z-10 [&>button]:bg-black/60 [&>button]:text-white [&>button]:opacity-100 hover:[&>button]:bg-black/80">
               <DialogTitle className="sr-only">Setup photo</DialogTitle>
               <DialogDescription className="sr-only">
                 {lightboxPhoto?.alt ?? "Enlarged setup photo"}

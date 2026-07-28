@@ -606,7 +606,7 @@ const SubscriptionWaitlistForm = () => {
                   ? "Pick a delivery count (with month equivalents), or enter a custom number of deliveries."
                   : "Choose how many monthly deliveries you want in this term."}
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                 {(cadence !== "biweekly"
                   ? commitmentMonthOptions
                   : biweeklyDeliveryOptions
