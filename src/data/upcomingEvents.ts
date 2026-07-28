@@ -52,7 +52,7 @@ export const pastEvents: MarketEvent[] = [
       },
       {
         src: pastEventRiverdaleHubMiniBouquet,
-        caption: "Mini bouquet",
+        caption: "Little blush blooms",
         alt: "Pink rose and carnation mini bouquet from Riverdale Hub",
       },
     ],
