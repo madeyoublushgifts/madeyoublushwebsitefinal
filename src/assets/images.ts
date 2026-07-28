@@ -247,6 +247,10 @@ export const pastEventMidsommarMarket = pastEvent("midsommar-market-fox-theatre.
 export const pastEventMidsommarYellowRoses = pastEvent("midsommar-market-yellow-roses.png");
 export const pastEventMidsommarMauveBouquet = pastEvent("midsommar-market-mauve-bouquet.png");
 
+export const pastEventRiverdaleHubBoothCollab = pastEvent("riverdale-hub-booth-collab.png");
+export const pastEventRiverdaleHubBoothSign = pastEvent("riverdale-hub-booth-sign.png");
+export const pastEventRiverdaleHubMiniBouquet = pastEvent("riverdale-hub-mini-bouquet.png");
+
 const bloomBar = (file: string) => `${base}images/bloom-bar/${file}`;
 
 /** Events page — Bloom Bar & setup examples */
