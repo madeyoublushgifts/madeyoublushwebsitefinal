@@ -20,6 +20,8 @@ const Subscription = lazy(() => import("./pages/Subscription"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const SubscriptionBuildBouquet = lazy(() => import("./pages/SubscriptionBuildBouquet"));
+const EarlyAccessGiveaway = lazy(() => import("./pages/EarlyAccessGiveaway"));
+const EarlyAccessBuildBouquet = lazy(() => import("./pages/EarlyAccessBuildBouquet"));
 const CheckoutSuccess = lazy(() => import("./pages/CheckoutSuccess"));
 const CheckoutCancel = lazy(() => import("./pages/CheckoutCancel"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -77,6 +79,8 @@ const App = () => (
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/subscription/build-bouquet" element={<SubscriptionBuildBouquet />} />
+            <Route path="/early-access/monthly-mini" element={<EarlyAccessGiveaway />} />
+            <Route path="/early-access/monthly-mini/build" element={<EarlyAccessBuildBouquet />} />
             <Route path="/subscribe" element={<Navigate to="/subscription" replace />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />

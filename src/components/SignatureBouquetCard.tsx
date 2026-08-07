@@ -17,6 +17,10 @@ type SignatureBouquetCardProps = {
   onSizeChange: (sizeId: string) => void;
   /** When true, size picker only appears on the selected card (subscription flow). */
   singleSelectMode?: boolean;
+  /** Hide size picker (e.g. early-access mini lock). */
+  hideSizePicker?: boolean;
+  /** Shown instead of the size picker when hideSizePicker is true. */
+  lockedSizeLabel?: string;
 };
 
 const SignatureBouquetCard = ({
@@ -26,10 +30,16 @@ const SignatureBouquetCard = ({
   selectedSizeId,
   onSizeChange,
   singleSelectMode = false,
+  hideSizePicker = false,
+  lockedSizeLabel,
 }: SignatureBouquetCardProps) => {
   const sizeTier = getSignatureSizeTier(selectedSizeId);
   const fromPrice = signatureSizeTiers[0]?.priceLabel ?? bouquet.price;
-  const priceLabel = selected && sizeTier ? sizeTier.priceLabel : `From ${fromPrice}`;
+  const priceLabel = hideSizePicker
+    ? lockedSizeLabel ?? "Mini"
+    : selected && sizeTier
+      ? sizeTier.priceLabel
+      : `From ${fromPrice}`;
 
   const handleSizeChange = (sizeId: string) => {
     onSizeChange(sizeId);
@@ -92,7 +102,11 @@ const SignatureBouquetCard = ({
             <p className="text-muted-foreground text-sm leading-relaxed">{bouquet.description}</p>
           </div>
 
-          {singleSelectMode && !selected ? (
+          {hideSizePicker ? (
+            lockedSizeLabel ? (
+              <p className="text-xs font-medium text-primary">{lockedSizeLabel}</p>
+            ) : null
+          ) : singleSelectMode && !selected ? (
             <p className="text-xs text-muted-foreground">Tap to select, then choose a size.</p>
           ) : (
             <BouquetSizePicker value={selectedSizeId} onChange={handleSizeChange} />

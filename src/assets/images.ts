@@ -170,6 +170,8 @@ export const stemRose = myb("myb-stem-rose.png");
 export const stemCallaLily = myb("myb-stem-calla-lily.png");
 
 export const stemCarnation = myb("myb-stem-carnation.png");
+/** Early-access stock preview — red carnation */
+export const stemCarnationRed = myb("myb-stem-carnation-red.png");
 
 export const stemLily = myb("myb-stem-lily.png");
 
@@ -184,6 +186,8 @@ export const stemCushions = myb("myb-stem-cushions.png");
 export const stemMagnums = myb("myb-stem-magnums.png");
 
 export const stemLimonium = myb("myb-stem-limonium.png");
+/** Early-access stock preview — pink limonium */
+export const stemLimoniumPink = myb("myb-stem-limonium-pink.png");
 
 export const stemBabysBreath = myb("myb-stem-babys-breath.png");
 
@@ -197,9 +201,7 @@ export const stemPittosporum = myb("myb-stem-pittosporum.png");
 
 export const stemRuscus = myb("myb-stem-ruscus.png");
 
-export const stemBabyEucalyptus = myb("myb-stem-baby-eucalyptus.png");
-
-export const stemSilverDollarEucalyptus = myb("myb-stem-silver-dollar-eucalyptus.png");
+export const stemEucalyptus = myb("myb-stem-eucalyptus.png");
 
 export const customRose1 = stemRose;
 
@@ -209,9 +211,9 @@ export const customOrchid = myb("myb-stem-orchids.png");
 
 export const customCarnations = stemCarnation;
 
-export const customPeonies = stemBabyEucalyptus;
+export const customPeonies = stemEucalyptus;
 
-export const customEucalyptus = stemSilverDollarEucalyptus;
+export const customEucalyptus = stemEucalyptus;
 
 // Build-a-bouquet — wrapping, ribbons, add-ons (step 2)
 

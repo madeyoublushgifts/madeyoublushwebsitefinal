@@ -128,6 +128,18 @@ const pages: Record<string, PageSeo> = {
     description: "Your checkout was cancelled. Return to the shop anytime.",
     path: "/checkout/cancel",
   },
+  "/early-access/monthly-mini": {
+    title: `Early Access Free Mini Bouquet | ${siteConfig.name}`,
+    description:
+      "Invite-only early access: claim one complimentary mini bouquet month from Made You Blush. No payment required.",
+    path: "/early-access/monthly-mini",
+  },
+  "/early-access/monthly-mini/build": {
+    title: `Build Your Free Mini Bouquet | ${siteConfig.name}`,
+    description:
+      "Design a custom mini bouquet for your Made You Blush early-access giveaway claim.",
+    path: "/early-access/monthly-mini/build",
+  },
 };
 
 export function getPageSeo(pathname: string): PageSeo {

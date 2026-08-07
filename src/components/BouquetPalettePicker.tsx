@@ -3,6 +3,7 @@ import {
   bouquetStemColors,
   getMaxCustomColorsForTier,
   isSingleStemTier,
+  type BouquetColorTemplate,
   type BouquetStemColor,
   type BouquetTierColorMode,
   type TierPaletteSelection,
@@ -17,6 +18,10 @@ type BouquetPalettePickerProps = {
   allowMultipleTemplates?: boolean;
   /** Minimum templates required when multi-select is on. */
   minTemplates?: number;
+  /** Override template list (e.g. early-access stock-limited palettes). */
+  templates?: BouquetColorTemplate[];
+  /** Override colour swatches for the custom picker. */
+  colors?: { id: BouquetStemColor; name: string; hex: string }[];
 };
 
 const BouquetPalettePicker = ({
@@ -25,6 +30,8 @@ const BouquetPalettePicker = ({
   onChange,
   allowMultipleTemplates = false,
   minTemplates = 1,
+  templates = bouquetColorTemplates,
+  colors = bouquetStemColors,
 }: BouquetPalettePickerProps) => {
   const pickerOnly = isSingleStemTier(bouquetId);
   const maxCustomColors = getMaxCustomColorsForTier(bouquetId);
@@ -95,7 +102,7 @@ const BouquetPalettePicker = ({
           : `Pick up to ${maxCustomColors} colours`}
       </p>
       <div className="flex flex-wrap gap-1.5 justify-center">
-        {bouquetStemColors.map((color) => {
+        {colors.map((color) => {
           const active = selection.customColors.includes(color.id);
           const atMax = !active && selection.customColors.length >= maxCustomColors;
           return (
@@ -174,7 +181,7 @@ const BouquetPalettePicker = ({
             </p>
           ) : null}
           <div className="grid grid-cols-1 gap-2 max-h-56 overflow-y-auto pr-0.5">
-            {bouquetColorTemplates.map((template) => {
+            {templates.map((template) => {
               const active = selection.templateIds.includes(template.id);
               return (
                 <button
@@ -190,7 +197,7 @@ const BouquetPalettePicker = ({
                 >
                   <div className="flex -space-x-1 shrink-0">
                     {template.colors.map((colorId) => {
-                      const color = bouquetStemColors.find((c) => c.id === colorId);
+                      const color = colors.find((c) => c.id === colorId) ?? bouquetStemColors.find((c) => c.id === colorId);
                       if (!color) return null;
                       return (
                         <span

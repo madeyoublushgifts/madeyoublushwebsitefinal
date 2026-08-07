@@ -20,8 +20,7 @@ import {
   stemStatice,
   stemPittosporum,
   stemRuscus,
-  stemBabyEucalyptus,
-  stemSilverDollarEucalyptus,
+  stemEucalyptus,
 } from "@/assets/images";
 
 export type StemCategory = "main" | "filler" | "greenery";
@@ -232,19 +231,11 @@ export const buildBouquetStems: StemOption[] = [
     category: "greenery",
   },
   {
-    id: "baby-eucalyptus",
-    name: "Baby Eucalyptus",
+    id: "eucalyptus",
+    name: "Eucalyptus Stem",
     price: 1.5,
-    image: stemBabyEucalyptus,
-    description: "Small round leaves, soft movement",
-    category: "greenery",
-  },
-  {
-    id: "silver-dollar-eucalyptus",
-    name: "Silver Dollar Eucalyptus",
-    price: 2,
-    image: stemSilverDollarEucalyptus,
-    description: "Silvery rounds—Toronto favourite",
+    image: stemEucalyptus,
+    description: "Dusty sage coin leaves on a single stem",
     category: "greenery",
   },
 ];

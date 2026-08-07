@@ -22,8 +22,7 @@ export const STEM_PRICES_CAD: Record<string, number> = {
   statice: 3,
   pittosporum: 2,
   ruscus: 1.5,
-  "baby-eucalyptus": 1.5,
-  "silver-dollar-eucalyptus": 2,
+  "eucalyptus": 1.5,
 };
 
 export const MATERIAL_PRICES_CAD: Record<string, number> = {
