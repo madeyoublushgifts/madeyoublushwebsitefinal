@@ -2,12 +2,13 @@
  * One-off: load a paid Checkout Session from Stripe and send the same
  * customer + merchant confirmation emails as api/stripe-webhook.ts.
  *
- *   npx tsx --env-file=.env.vercel.prod.tmp scripts/resend-order-emails-once.ts cs_live_...
+ *   npx tsx --env-file=.env.production.local scripts/resend-order-emails-once.ts cs_live_...
  *
  * Set ORDER_EMAIL_OVERRIDE=info@madeyoublush.ca to route BOTH emails there
  * (avoids re-emailing the original customer). Does not charge again.
  */
 import Stripe from "stripe";
+import { resolveOrderCustomerNames } from "../api/lib/orderCustomerNames.js";
 import {
   buildPaidOrderCustomerEmail,
   buildPaidOrderMerchantEmail,
@@ -19,7 +20,7 @@ async function main() {
   const sessionId = process.argv[2];
   if (!sessionId?.startsWith("cs_")) {
     console.error(
-      "Usage: npx tsx --env-file=.env.vercel.prod.tmp scripts/resend-order-emails-once.ts <cs_...>"
+      "Usage: npx tsx --env-file=.env.production.local scripts/resend-order-emails-once.ts <cs_...>"
     );
     process.exit(1);
   }
@@ -50,8 +51,7 @@ async function main() {
   const meta = session.metadata ?? {};
   const originalCustomerEmail =
     session.customer_details?.email?.trim() || session.customer_email?.trim() || "";
-  const customerName =
-    meta.name?.trim() || session.customer_details?.name?.trim() || "Customer";
+  const { customerName, recipientName } = resolveOrderCustomerNames(session);
 
   if (!originalCustomerEmail) {
     console.error("Session missing customer email");
@@ -79,6 +79,7 @@ async function main() {
   const details = {
     customerName,
     customerEmail: originalCustomerEmail,
+    recipientName,
     phone: meta.phone,
     address: meta.address,
     deliveryDate: meta.deliveryDate,
@@ -91,6 +92,8 @@ async function main() {
       : undefined,
     sessionId: session.id,
   };
+
+  console.log("Resolved names:", { customerName, recipientName: recipientName ?? "(none)" });
 
   const customerEmailContent = buildPaidOrderCustomerEmail(details);
   const merchantEmailContent = buildPaidOrderMerchantEmail(details);

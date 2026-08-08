@@ -6,6 +6,7 @@
  *   npx tsx scripts/resend-order-emails-from-fixture.ts scripts/_njere-session-fixture.json
  */
 import fs from "node:fs";
+import { resolveOrderCustomerNames } from "../api/lib/orderCustomerNames.js";
 import {
   buildPaidOrderCustomerEmail,
   buildPaidOrderMerchantEmail,
@@ -45,8 +46,7 @@ async function main() {
   const meta = session.metadata ?? {};
   const originalCustomerEmail =
     session.customer_details?.email?.trim() || session.customer_email?.trim() || "";
-  const customerName =
-    meta.name?.trim() || session.customer_details?.name?.trim() || "Customer";
+  const { customerName, recipientName } = resolveOrderCustomerNames(session);
 
   if (!originalCustomerEmail) {
     console.error("Fixture missing customer email");
@@ -68,6 +68,7 @@ async function main() {
   const details = {
     customerName,
     customerEmail: originalCustomerEmail,
+    recipientName,
     phone: meta.phone,
     address: meta.address,
     deliveryDate: meta.deliveryDate,
@@ -80,6 +81,7 @@ async function main() {
       : undefined,
     sessionId: session.id,
   };
+  console.log("Resolved names:", { customerName, recipientName: recipientName ?? "(none)" });
 
   const customerEmailContent = buildPaidOrderCustomerEmail(details);
   const merchantEmailContent = buildPaidOrderMerchantEmail(details);

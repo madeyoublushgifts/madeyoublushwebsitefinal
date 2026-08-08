@@ -11,7 +11,10 @@ export type OrderCheckoutLineItem = {
 };
 
 export type OrderCheckoutPayload = {
-  name: string;
+  /** Person who is paying / placing the order */
+  customerName: string;
+  /** Person receiving the delivery (if different from purchaser) */
+  recipientName?: string;
   email: string;
   phone?: string;
   address: string;

@@ -120,7 +120,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const body = (req.body ?? {}) as Record<string, unknown>;
-  const { name, email, phone, address, deliveryDate, notes } = body as {
+  const { customerName, recipientName, name, email, phone, address, deliveryDate, notes } = body as {
+    customerName?: string;
+    recipientName?: string;
+    /** @deprecated Prefer customerName; kept for older clients */
     name?: string;
     email?: string;
     phone?: string;
@@ -129,7 +132,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     notes?: string;
   };
 
-  if (!name?.trim() || !email?.trim() || !address?.trim()) {
+  const purchaserName = (customerName ?? name)?.trim() ?? "";
+  const deliverToName = recipientName?.trim() ?? "";
+
+  if (!purchaserName || !email?.trim() || !address?.trim()) {
     return res.status(400).json({ error: "Name, email, and delivery address are required." });
   }
 
@@ -204,7 +210,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       metadata: {
         orderType: "one_time",
         itemCount: String(pricedItems.length),
-        name: name.trim(),
+        // Purchaser (person who paid / placed the order). Kept as `name` for older readers.
+        customerName: purchaserName,
+        name: purchaserName,
+        // Recipient of the delivery when different from purchaser.
+        recipientName:
+          deliverToName && deliverToName.toLowerCase() !== purchaserName.toLowerCase()
+            ? deliverToName
+            : "",
         phone: phone?.trim() ?? "",
         address: address.trim(),
         deliveryDate,

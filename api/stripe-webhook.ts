@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import type { Readable } from "node:stream";
 import Stripe from "stripe";
+import { resolveOrderCustomerNames } from "./lib/orderCustomerNames.js";
 import {
   buildPaidOrderCustomerEmail,
   buildPaidOrderMerchantEmail,
@@ -70,8 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       session.customer_details?.email?.trim() ||
       session.customer_email?.trim() ||
       "";
-    const customerName =
-      meta.name?.trim() || session.customer_details?.name?.trim() || "Customer";
+    const { customerName, recipientName } = resolveOrderCustomerNames(session);
 
     if (!customerEmail) {
       console.error("stripe-webhook: checkout session missing customer email", session.id);
@@ -105,6 +105,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const details = {
       customerName,
       customerEmail,
+      recipientName,
       phone: meta.phone,
       address: meta.address,
       deliveryDate: meta.deliveryDate,

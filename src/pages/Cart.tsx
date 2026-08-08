@@ -28,7 +28,8 @@ const Cart = () => {
   const { items, count, subtotalCents, handlingFeeCents, totalCents, isEmpty, removeItem } =
     useCart();
 
-  const [name, setName] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [recipientName, setRecipientName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -65,7 +66,8 @@ const Cart = () => {
 
     try {
       await redirectToOrderCheckout({
-        name,
+        customerName,
+        recipientName: recipientName.trim() || undefined,
         email,
         phone,
         address,
@@ -159,24 +161,37 @@ const Cart = () => {
                     <form id="checkout-form" onSubmit={handleSubmit} className="space-y-5">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="co-name">Full name *</Label>
+                          <Label htmlFor="co-customer-name">Your name *</Label>
                           <Input
-                            id="co-name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            id="co-customer-name"
+                            value={customerName}
+                            onChange={(e) => setCustomerName(e.target.value)}
                             required
+                            autoComplete="name"
+                            placeholder="Person placing this order"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="co-email">Email *</Label>
+                          <Label htmlFor="co-email">Your email *</Label>
                           <Input
                             id="co-email"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            autoComplete="email"
                           />
                         </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="co-recipient-name">Recipient name (if different)</Label>
+                        <Input
+                          id="co-recipient-name"
+                          value={recipientName}
+                          onChange={(e) => setRecipientName(e.target.value)}
+                          placeholder="Who should receive the flowers"
+                        />
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

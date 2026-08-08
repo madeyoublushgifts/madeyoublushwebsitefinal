@@ -233,8 +233,11 @@ export function wrapBrandedEmail(opts: {
 }
 
 export type OrderEmailDetails = {
+  /** Purchaser / person who paid */
   customerName: string;
   customerEmail: string;
+  /** Delivery recipient when different from purchaser */
+  recipientName?: string;
   phone?: string;
   address?: string;
   deliveryDate?: string;
@@ -246,13 +249,21 @@ export type OrderEmailDetails = {
   sessionId?: string;
 };
 
+function recipientRows(details: OrderEmailDetails): EmailRow[] {
+  const recipient = details.recipientName?.trim();
+  if (!recipient) return [];
+  if (recipient.toLowerCase() === details.customerName.trim().toLowerCase()) return [];
+  return [{ label: "Recipient", value: recipient }];
+}
+
 export function buildPaidOrderCustomerEmail(details: OrderEmailDetails): EmailContent {
   return wrapBrandedEmail({
     title: "Order confirmation",
     intro: `Hi ${details.customerName || "there"}, thank you for your order with ${BUSINESS_NAME}. We have received your payment and will prepare your arrangement with care.`,
     rows: [
-      { label: "Name", value: details.customerName },
+      { label: "Customer", value: details.customerName },
       { label: "Email", value: details.customerEmail },
+      ...recipientRows(details),
       { label: "Phone", value: details.phone },
       { label: "Delivery address", value: details.address },
       { label: "Delivery date", value: details.deliveryDate },
@@ -275,6 +286,7 @@ export function buildPaidOrderMerchantEmail(details: OrderEmailDetails): EmailCo
     rows: [
       { label: "Customer", value: details.customerName },
       { label: "Email", value: details.customerEmail },
+      ...recipientRows(details),
       { label: "Phone", value: details.phone },
       { label: "Delivery address", value: details.address },
       { label: "Delivery date", value: details.deliveryDate },
