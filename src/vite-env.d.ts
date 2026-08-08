@@ -8,13 +8,13 @@ interface ImportMetaEnv {
   readonly VITE_STRIPE_BIWEEKLY_AMOUNT_CENTS?: string;
   readonly VITE_STRIPE_MONTHLY_AMOUNT_CENTS?: string;
   readonly VITE_STRIPE_ANNUAL_AMOUNT_CENTS?: string;
-  readonly VITE_FORMSPREE_CONTACT_ID?: string;
-  readonly VITE_FORMSPREE_INQUIRY_ID?: string;
-  readonly VITE_FORMSPREE_BUILD_BOUQUET_ID?: string;
-  readonly VITE_FORMSPREE_WAITLIST_ID?: string;
   readonly VITE_FORMBRICKS_APP_URL?: string;
   readonly VITE_FORMBRICKS_ENVIRONMENT_ID?: string;
+  /** Early-access survey ID (legacy name kept for compatibility). */
   readonly VITE_FORMBRICKS_SURVEY_ID?: string;
+  readonly VITE_FORMBRICKS_CONTACT_SURVEY_ID?: string;
+  readonly VITE_FORMBRICKS_INQUIRY_SURVEY_ID?: string;
+  readonly VITE_FORMBRICKS_WAITLIST_SURVEY_ID?: string;
 }
 
 interface ImportMeta {
@@ -35,4 +35,3 @@ declare module "*.png" {
   const src: string;
   export default src;
 }
-

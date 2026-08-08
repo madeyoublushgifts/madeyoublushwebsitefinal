@@ -9,17 +9,22 @@
 
 Dashboard: [vercel.com/madeyoublushgifts-4416s-projects/flora-bloom-download-main](https://vercel.com/madeyoublushgifts-4416s-projects/flora-bloom-download-main)
 
-## Formspree (required for forms)
+## Formbricks (forms)
 
-In Vercel → **Project → Settings → Environment Variables**, add for **Production**, **Preview**, and **Development**:
+Contact, shop inquiry, subscription waitlist, and early-access submit via Formbricks Client Response API. Production IDs are baked into the build.
 
-| Variable | Value |
-|----------|--------|
-| `VITE_FORMSPREE_CONTACT_ID` | from [formspree.io](https://formspree.io) |
-| `VITE_FORMSPREE_INQUIRY_ID` | from Formspree |
-| `VITE_FORMSPREE_WAITLIST_ID` | from Formspree |
+Optional overrides in Vercel → **Project → Settings → Environment Variables** (Production / Preview / Development):
 
-Then **Deployments → … → Redeploy** (or push any commit to `main`) so the build picks them up.
+| Variable | Purpose |
+|----------|---------|
+| `VITE_FORMBRICKS_APP_URL` | Formbricks app URL (default `https://app.formbricks.com`) |
+| `VITE_FORMBRICKS_ENVIRONMENT_ID` | Environment ID |
+| `VITE_FORMBRICKS_SURVEY_ID` | Early-access survey |
+| `VITE_FORMBRICKS_CONTACT_SURVEY_ID` | Contact survey |
+| `VITE_FORMBRICKS_INQUIRY_SURVEY_ID` | Shop inquiry survey |
+| `VITE_FORMBRICKS_WAITLIST_SURVEY_ID` | Waitlist survey |
+
+Redeploy after changing env vars so the Vite build picks them up.
 
 ## Custom domain
 

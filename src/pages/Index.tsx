@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
-import { submitToFormspree } from "@/lib/formspree";
+import { submitToFormbricksContact } from "@/lib/formbricks";
 
 // ================= ASSETS =================
 import {
@@ -157,16 +157,12 @@ const Index = () => {
     setIsContactSubmitting(true);
 
     try {
-      await submitToFormspree("contact", {
-        _subject: contactForm.subject.trim()
-          ? `Made You Blush — ${contactForm.subject.trim()}`
-          : "Made You Blush — homepage contact form",
-        _replyto: contactForm.email,
-        source: "Homepage Get in Touch",
+      await submitToFormbricksContact({
         name: contactForm.name,
         email: contactForm.email,
         subject: contactForm.subject,
         message: contactForm.message,
+        source: "Homepage Get in Touch",
       });
 
       toast({

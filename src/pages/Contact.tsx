@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { submitToFormspree } from "@/lib/formspree";
+import { submitToFormbricksContact } from "@/lib/formbricks";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -32,13 +32,11 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      await submitToFormspree("contact", {
-        _subject: "Made You Blush — contact form",
-        _replyto: formData.email,
-        source: "Contact page",
+      await submitToFormbricksContact({
         name: formData.name,
         email: formData.email,
         message: formData.message,
+        source: "Contact page",
       });
 
       toast({

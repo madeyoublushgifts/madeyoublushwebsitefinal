@@ -39,7 +39,7 @@ import {
   type PaymentPlan,
   type SubscriptionCadence,
 } from "@/data/subscriptionPlans";
-import { submitToFormspree } from "@/lib/formspree";
+import { submitToFormbricksWaitlist } from "@/lib/formbricks";
 import {
   clearSubscriptionBuildDraft,
   loadSubscriptionBuildDraft,
@@ -376,32 +376,27 @@ const SubscriptionWaitlistForm = () => {
     setIsSubmitting(true);
 
     try {
-      await submitToFormspree("waitlist", {
-        _subject:
-          waitlistPath === "special_dates"
-            ? "Special dates waitlist — Made You Blush"
-            : "Recurring delivery subscription waitlist — Made You Blush",
-        _replyto: email,
-        source: "Subscription page",
-        waitlistPath:
-          waitlistPath === "special_dates"
-            ? "Special Dates & Occasions Only"
-            : "Recurring Delivery Subscription Waitlist",
+      await submitToFormbricksWaitlist({
         name,
         email,
         phone,
         deliveryAddress: address,
+        waitlistPath:
+          waitlistPath === "special_dates"
+            ? "Special Dates & Occasions Only"
+            : "Recurring Delivery Subscription Waitlist",
         cadence: cadenceLabel,
         paymentPlan: paymentPlanLabel,
-        commitmentMonths: commitmentLabel,
+        commitment: commitmentLabel,
         firstDeliveryDate: deliveryDate,
         bouquetSource: sourceLabel,
-        bouquetTier: tierSummary,
+        bouquetDetails: tierSummary,
         occasions: occasions.length
           ? occasions.map((o) => `${o.type}: ${o.label || "(no label)"} (${o.date})`).join("; ")
           : "None added",
         receiverNotes,
         bouquetNotes: notes,
+        source: "Subscription page",
       });
 
       toast({

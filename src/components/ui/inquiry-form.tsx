@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
-import { submitToFormspree, type FormspreeFormType } from "@/lib/formspree";
+import { submitToFormbricksInquiry } from "@/lib/formbricks";
 import { ClipboardCheck, Loader2 } from "lucide-react";
 
 interface InquiryFormProps {
@@ -21,10 +21,8 @@ interface InquiryFormProps {
   title?: string;
   description?: string;
   itemName?: string;
-  /** Helps you filter Formspree submissions (e.g. Shop vs Build a Bouquet). */
+  /** Helps filter Formbricks submissions (e.g. Shop vs Build a Bouquet). */
   source?: string;
-  /** Which Formspree form receives the submission (defaults to shop inquiry). */
-  formType?: FormspreeFormType;
   /** Card / snail-mail add-ons only—message text for the handwritten note. */
   showPersonalMessage?: boolean;
 }
@@ -36,7 +34,6 @@ const InquiryForm = ({
   description = "We’ll reply with Made You Blush availability, pickup or delivery options, and any personalization ideas.",
   itemName,
   source = "Website",
-  formType = "inquiry",
   showPersonalMessage = false,
 }: InquiryFormProps) => {
   const [formData, setFormData] = useState({
@@ -54,19 +51,15 @@ const InquiryForm = ({
     setIsSubmitting(true);
 
     try {
-      await submitToFormspree(formType, {
-        _subject: itemName
-          ? `Inquiry: ${itemName}`
-          : "Made You Blush — product inquiry",
-        _replyto: formData.email,
-        source,
-        item: itemName ?? "",
+      await submitToFormbricksInquiry({
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
-        address: formData.address,
+        deliveryAddress: formData.address,
+        item: itemName ?? "",
         isGift: formData.isGift,
-        personalMessage: showPersonalMessage ? formData.message : "",
+        personalMessage: showPersonalMessage ? formData.message : undefined,
+        source,
       });
 
       toast({

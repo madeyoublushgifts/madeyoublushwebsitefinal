@@ -6,7 +6,7 @@ Toronto floral subscription & gift shop — Vite, React, TypeScript, Tailwind.
 
 ```bash
 npm install
-cp .env.example .env   # add Formspree form IDs
+cp .env.example .env   # Formbricks defaults are baked in; override if needed
 npm run dev            # http://localhost:8080
 ```
 
@@ -17,7 +17,7 @@ npm run build
 npm run preview
 ```
 
-See **[DEPLOY.md](./DEPLOY.md)** for Vercel/Netlify, custom domain, and Formspree setup.
+See **[DEPLOY.md](./DEPLOY.md)** for Vercel/Netlify, custom domain, and Formbricks setup.
 
 ## Push to GitHub
 

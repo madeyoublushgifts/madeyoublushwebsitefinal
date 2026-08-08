@@ -6,22 +6,16 @@ This project is a **Vite + React** site. Production output is the `dist/` folder
 
 ## Before you go live (required)
 
-### 1. Formspree (contact & inquiry forms)
+### 1. Formbricks (contact, inquiry, waitlist, early-access)
 
-1. Sign up at [formspree.io](https://formspree.io).
-2. Create **three** forms: Contact, Inquiry, Waitlist.
-3. Copy each form ID (the code after `/f/` in the form URL).
-4. In the project folder, copy `.env.example` to `.env`:
+Forms use the [Formbricks](https://formbricks.com) Client Response API. Production environment and survey IDs are baked into the app; optional overrides live in `.env.example`.
 
-```env
-VITE_FORMSPREE_CONTACT_ID=your_contact_form_id
-VITE_FORMSPREE_INQUIRY_ID=your_inquiry_form_id
-VITE_FORMSPREE_WAITLIST_ID=your_waitlist_form_id
-```
+1. In the project folder, copy `.env.example` to `.env` (optional — defaults work for Made You Blush).
+2. Only set `VITE_FORMBRICKS_*` if you recreate surveys in another Formbricks environment.
 
 **Never commit `.env`** — it is already in `.gitignore`.
 
-Forms will not work on the live site until these IDs are set in your host’s **Environment Variables** (same names as above).
+No Formspree account or form IDs are required.
 
 ### 2. Test a production build locally
 
@@ -60,13 +54,7 @@ Replace `YOUR_USERNAME` and repo name with yours.
 
 1. Sign up at [vercel.com](https://vercel.com) → **Add New Project** → Import your GitHub repo.
 2. Framework preset: **Vite** (auto-detected).
-3. **Environment Variables** (Settings → Environment Variables), add:
-
-   | Name | Value |
-   |------|--------|
-   | `VITE_FORMSPREE_CONTACT_ID` | your ID |
-   | `VITE_FORMSPREE_INQUIRY_ID` | your ID |
-   | `VITE_FORMSPREE_WAITLIST_ID` | your ID |
+3. **Environment Variables** (Settings → Environment Variables): Formbricks IDs are optional — defaults are baked into the app. Add `VITE_FORMBRICKS_*` only if overriding (see `.env.example` / `VERCEL.md`).
 
 4. Deploy. You get a URL like `made-you-blush.vercel.app`.
 
@@ -90,7 +78,7 @@ Replace `YOUR_USERNAME` and repo name with yours.
 2. Build command: `npm run build`  
    Publish directory: `dist`  
    (already in `netlify.toml`.)
-3. **Site configuration → Environment variables** — add the three `VITE_FORMSPREE_*` variables.
+3. **Site configuration → Environment variables** — Formbricks overrides optional (see `.env.example`).
 4. **Domain management** → Add custom domain → follow Netlify’s DNS instructions.
 
 `public/_redirects` handles SPA routing on Netlify.
@@ -101,7 +89,7 @@ Replace `YOUR_USERNAME` and repo name with yours.
 
 1. [dash.cloudflare.com](https://dash.cloudflare.com) → Pages → Create project → Connect Git.
 2. Build: `npm run build`, output: `dist`.
-3. Add the three `VITE_FORMSPREE_*` env vars.
+3. Add optional `VITE_FORMBRICKS_*` env vars only if overriding defaults.
 4. **Custom domains** → attach a domain on Cloudflare (easiest if DNS is already on Cloudflare).
 
 Add a **Redirect rule** or `_redirects` / `public/_redirects` for `/*` → `/index.html` (200).
@@ -112,7 +100,7 @@ Add a **Redirect rule** or `_redirects` / `public/_redirects` for `/*` → `/ind
 
 If you only need something live fast:
 
-1. Set `.env` locally with Formspree IDs.
+1. Set `.env` locally if you need Formbricks overrides (defaults work).
 2. Run `npm run build`.
 3. Drag the **`dist`** folder onto [Netlify Drop](https://app.netlify.com/drop).
 
@@ -124,7 +112,7 @@ If you only need something live fast:
 
 - [ ] Home, Shop, Build a Bouquet, Contact, Coming Soon all load
 - [ ] Direct links work (e.g. `/shop`, `/contact`) — refresh each once
-- [ ] Contact form submits (check Formspree inbox)
+- [ ] Contact form submits (check Formbricks responses)
 - [ ] Shop / Build a Bouquet inquiry submits
 - [ ] Coming Soon waitlist submits
 - [ ] Instagram & TikTok links open correctly

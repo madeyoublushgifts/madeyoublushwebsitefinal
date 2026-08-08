@@ -43,7 +43,7 @@ export async function redirectToOrderCheckout(payload: OrderCheckoutPayload): Pr
   window.location.href = data.url;
 }
 
-/** Serialized for Formspree subscription waitlist */
+/** Serialized for subscription waitlist */
 export type SubscriptionWaitlistPayload = {
   name: string;
   email: string;
