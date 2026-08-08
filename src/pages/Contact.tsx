@@ -115,18 +115,19 @@ const Contact = () => {
   <div className="container mx-auto px-4 lg:px-8">
     <motion.div
       className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16"
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.15 }}
     >
       {/* ---------- Contact Form ---------- */}
+      {/* Vertical-only motion: horizontal x slides clip under overflow-x-hidden on mobile */}
       <motion.div
         className="space-y-8"
-        initial={{ opacity: 0, x: -50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        viewport={{ once: true }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        viewport={{ once: true, amount: 0.15 }}
       >
         {/* Section Title */}
         <div>
@@ -144,10 +145,10 @@ const Contact = () => {
 
         {/* Contact Form Card */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          viewport={{ once: true, amount: 0.15 }}
         >
           <Card className="border-0 shadow-elegant bg-card-gradient">
             <CardContent className="p-5 sm:p-6">
@@ -217,10 +218,10 @@ const Contact = () => {
       {/* ---------- Contact Information ---------- */}
       <motion.div
         className="space-y-8"
-        initial={{ opacity: 0, x: 50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        viewport={{ once: true }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.15 }}
+        viewport={{ once: true, amount: 0.15 }}
       >
         {/* Section Title */}
         <div>

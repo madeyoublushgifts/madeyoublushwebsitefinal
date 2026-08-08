@@ -330,10 +330,10 @@ const Events = () => {
                 <motion.li
                   key={item.step}
                   className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-start text-center sm:text-left"
-                  initial={{ opacity: 0, x: -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.55, delay: index * 0.1 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.2 }}
                 >
                   <span className="font-heading text-3xl font-bold text-primary/80 shrink-0 w-14 text-center">
                     {item.step}
