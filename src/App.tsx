@@ -8,6 +8,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import DemoBanner from "./components/DemoBanner";
 import Seo from "./components/Seo";
 import { CartProvider } from "./context/CartContext";
+import { isIndexablePath } from "./lib/seo";
 import Index from "./pages/Index";
 
 const Shop = lazy(() => import("./pages/Shop"));
@@ -28,24 +29,10 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
-const INDEXABLE_ROUTES = new Set([
-  "/",
-  "/shop",
-  "/create-bouquet",
-  "/contact",
-  "/coming-soon",
-  "/subscription",
-  "/events",
-  "/pop-ups",
-]);
-
 const AppSeo = () => {
   const { pathname } = useLocation();
-  const noindex =
-    !INDEXABLE_ROUTES.has(pathname) ||
-    pathname.startsWith("/checkout/") ||
-    pathname === "/checkout" ||
-    pathname === "/cart";
+  // Early-access, cart, checkout, build-bouquet tools, 404 → noindex, nofollow
+  const noindex = !isIndexablePath(pathname);
   return <Seo noindex={noindex} />;
 };
 

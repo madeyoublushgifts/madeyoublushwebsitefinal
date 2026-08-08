@@ -2,16 +2,15 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import {
   absoluteUrl,
-  floristJsonLd,
+  getJsonLdForPath,
   getPageSeo,
   siteConfig,
-  websiteJsonLd,
   type PageSeo,
 } from "@/lib/seo";
 
 type SeoProps = Partial<PageSeo> & {
   noindex?: boolean;
-  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[] | null;
 };
 
 function upsertMeta(
@@ -122,21 +121,31 @@ const Seo = ({ title, description, path, noindex, jsonLd }: SeoProps) => {
       );
     }
 
-    const schemas = jsonLd ?? [websiteJsonLd(), floristJsonLd()];
-    const payload = Array.isArray(schemas) ? schemas : [schemas];
+    // Prefer explicit jsonLd; otherwise path-based defaults.
+    // Static homepage JSON-LD in index.html is replaced on hydrate so it stays in sync.
+    const schemas =
+      jsonLd === null
+        ? []
+        : jsonLd !== undefined
+          ? Array.isArray(jsonLd)
+            ? jsonLd
+            : [jsonLd]
+          : noindex
+            ? []
+            : getJsonLdForPath(pathname);
 
     document
-      .querySelectorAll('script[data-seo-jsonld="true"]')
+      .querySelectorAll('script[data-seo-jsonld="true"], script[data-seo-static="true"]')
       .forEach((node) => node.remove());
 
-    for (const schema of payload) {
+    for (const schema of schemas) {
       const script = document.createElement("script");
       script.type = "application/ld+json";
       script.setAttribute("data-seo-jsonld", "true");
       script.textContent = JSON.stringify(schema);
       document.head.appendChild(script);
     }
-  }, [pageTitle, pageDescription, canonical, ogImage, noindex, jsonLd]);
+  }, [pageTitle, pageDescription, canonical, ogImage, noindex, jsonLd, pathname]);
 
   return null;
 };

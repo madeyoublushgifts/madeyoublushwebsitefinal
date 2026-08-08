@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
+# Unlisted giveaway + checkout tooling
+Disallow: /early-access/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /subscription/build-bouquet
+
 Sitemap: https://www.madeyoublush.ca/sitemap.xml

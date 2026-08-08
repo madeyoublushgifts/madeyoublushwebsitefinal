@@ -17,6 +17,9 @@ export const googleBusiness = {
     "https://www.google.com/search?kgmid=/g/11zcsyt5bx&hl=en-CA&q=Made+You+Blush",
 } as const;
 
+/** E.164 — used in JSON-LD / tel: links (no separators). */
+export const PHONE_E164 = "+16475508476";
+
 export const siteConfig = {
   name: "Made You Blush",
   tagline: "Affordable Toronto Florist, Custom Bouquets & Gift Shop",
@@ -24,7 +27,7 @@ export const siteConfig = {
     "Made You Blush — Toronto florist and gift shop for affordable hand-tied bouquets, custom flower gifts, floral subscriptions, pop-ups, and bouquet-building experiences. Inquire for pickup or delivery across the GTA.",
   locale: "en_CA",
   email: "madeyoublushgifts@gmail.com",
-  phone: "+1-647-550-8476",
+  phone: PHONE_E164,
   city: "Toronto",
   region: "ON",
   country: "CA",
@@ -46,6 +49,24 @@ export const siteConfig = {
     "Toronto gift shop flowers",
   ],
 } as const;
+
+/** Public marketing routes that should be indexed + listed in sitemap. */
+export const INDEXABLE_ROUTES = [
+  "/",
+  "/shop",
+  "/create-bouquet",
+  "/contact",
+  "/coming-soon",
+  "/subscription",
+  "/events",
+  "/pop-ups",
+] as const;
+
+export type IndexableRoute = (typeof INDEXABLE_ROUTES)[number];
+
+export function isIndexablePath(pathname: string): boolean {
+  return (INDEXABLE_ROUTES as readonly string[]).includes(pathname);
+}
 
 export type PageSeo = {
   title: string;
@@ -157,13 +178,44 @@ export function absoluteUrl(path = "/"): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-export function floristJsonLd() {
-  const businessId = `${SITE_URL}/#business`;
+const businessId = () => `${SITE_URL}/#business`;
+const organizationId = () => `${SITE_URL}/#organization`;
+const websiteId = () => `${SITE_URL}/#website`;
 
+/** Organization — brand entity (no fake street address). */
+export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
-    "@type": "Florist",
-    "@id": businessId,
+    "@type": "Organization",
+    "@id": organizationId(),
+    name: siteConfig.name,
+    url: SITE_URL,
+    logo: absoluteUrl("/og-image.png"),
+    image: absoluteUrl("/og-image.png"),
+    description: siteConfig.defaultDescription,
+    telephone: siteConfig.phone,
+    email: siteConfig.email,
+    sameAs: [...siteConfig.sameAs, googleBusiness.profileUrl],
+    areaServed: [
+      { "@type": "City", name: "Toronto" },
+      {
+        "@type": "AdministrativeArea",
+        name: "Greater Toronto Area",
+        containedInPlace: { "@type": "Country", name: "Canada" },
+      },
+    ],
+  };
+}
+
+/**
+ * Florist / LocalBusiness — NAP without inventing a street address.
+ * Service-area business: city + region + areaServed / GeoCircle.
+ */
+export function floristJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": ["Florist", "LocalBusiness"],
+    "@id": businessId(),
     name: siteConfig.name,
     url: SITE_URL,
     logo: absoluteUrl("/og-image.png"),
@@ -173,6 +225,7 @@ export function floristJsonLd() {
     email: siteConfig.email,
     priceRange: siteConfig.priceRange,
     additionalType: "https://schema.org/GiftShop",
+    parentOrganization: { "@id": organizationId() },
     address: {
       "@type": "PostalAddress",
       addressLocality: siteConfig.city,
@@ -217,11 +270,33 @@ export function websiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": `${SITE_URL}/#website`,
+    "@id": websiteId(),
     name: siteConfig.name,
     url: SITE_URL,
     description: siteConfig.defaultDescription,
     inLanguage: "en-CA",
-    publisher: { "@id": `${SITE_URL}/#business` },
+    publisher: { "@id": organizationId() },
+    about: { "@id": businessId() },
   };
+}
+
+/** Full business graph for homepage + Contact (and static index.html). */
+export function primaryJsonLd(): Record<string, unknown>[] {
+  return [organizationJsonLd(), floristJsonLd(), websiteJsonLd()];
+}
+
+/**
+ * Default JSON-LD for a route.
+ * - Home / Contact: Organization + Florist + WebSite
+ * - Other indexable marketing pages: WebSite only
+ * - Noindex / tool pages: none
+ */
+export function getJsonLdForPath(pathname: string): Record<string, unknown>[] {
+  if (pathname === "/" || pathname === "/contact") {
+    return primaryJsonLd();
+  }
+  if (isIndexablePath(pathname)) {
+    return [websiteJsonLd()];
+  }
+  return [];
 }
