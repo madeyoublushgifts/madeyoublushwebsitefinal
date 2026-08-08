@@ -26,6 +26,24 @@ Optional overrides in Vercel → **Project → Settings → Environment Variable
 
 Redeploy after changing env vars so the Vite build picks them up.
 
+## Stripe + Resend (order emails)
+
+Server-only variables (do **not** prefix with `VITE_`):
+
+| Variable | Purpose |
+|----------|---------|
+| `STRIPE_SECRET_KEY` | Creates Checkout sessions |
+| `STRIPE_WEBHOOK_SECRET` | Verifies `POST /api/stripe-webhook` (`checkout.session.completed`) |
+| `RESEND_API_KEY` | Sends customer + merchant confirmation emails |
+| `ORDER_FROM_EMAIL` | Optional; default `info@madeyoublush.ca` |
+| `ORDER_NOTIFY_EMAIL` | Optional merchant To; default `info@madeyoublush.ca` |
+| `SITE_URL` / `VITE_SITE_URL` | Checkout success/cancel redirects |
+
+Webhook URL: `https://www.madeyoublush.ca/api/stripe-webhook`  
+Early-access notify: `POST /api/early-access-notify` (called by the client after Formbricks succeeds)
+
+Verify **madeyoublush.ca** in [Resend Domains](https://resend.com/domains) before relying on production sends from `info@madeyoublush.ca`.
+
 ## Custom domain
 
 1. Vercel → **Settings → Domains**

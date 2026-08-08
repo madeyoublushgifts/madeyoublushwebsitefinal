@@ -151,21 +151,53 @@ const EarlyAccessGiveawayForm = () => {
 
     setIsSubmitting(true);
 
+    const claimPayload = {
+      name,
+      email,
+      phone,
+      deliveryAddress: address,
+      firstDeliveryDate: deliveryDate,
+      bouquetSource: sourceLabel,
+      bouquetDetails: bouquetSummary,
+      receiverNotes,
+      bouquetNotes: notes,
+    };
+
     try {
-      await submitToFormbricksEarlyAccess({
-        name,
-        email,
-        phone,
-        deliveryAddress: address,
-        firstDeliveryDate: deliveryDate,
-        bouquetSource: sourceLabel,
-        bouquetDetails: bouquetSummary,
-        receiverNotes,
-        bouquetNotes: notes,
-      });
+      await submitToFormbricksEarlyAccess(claimPayload);
 
       clearSubscriptionBuildDraft();
       setSubmitted(true);
+
+      // Emails are best-effort after Formbricks success (secrets stay server-side).
+      try {
+        const notifyRes = await fetch("/api/early-access-notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(claimPayload),
+        });
+        if (!notifyRes.ok) {
+          const errBody = (await notifyRes.json().catch(() => null)) as {
+            error?: string;
+          } | null;
+          console.error(
+            "early-access-notify failed:",
+            errBody?.error ?? notifyRes.statusText
+          );
+          toast({
+            title: "Claim saved",
+            description:
+              "Confirmation email may be delayed — we'll still follow up soon.",
+          });
+        }
+      } catch (notifyErr) {
+        console.error("early-access-notify failed:", notifyErr);
+        toast({
+          title: "Claim saved",
+          description:
+            "Confirmation email may be delayed — we'll still follow up soon.",
+        });
+      }
     } catch (err) {
       toast({
         title: "Could not claim bouquet",

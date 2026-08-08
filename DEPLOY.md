@@ -17,7 +17,27 @@ Forms use the [Formbricks](https://formbricks.com) Client Response API. Producti
 
 No Formspree account or form IDs are required.
 
-### 2. Test a production build locally
+### 2. Resend (order + early-access confirmation emails)
+
+Paid Stripe checkout and early-access claims send customer + merchant emails via [Resend](https://resend.com).
+
+1. Create an API key at [resend.com/api-keys](https://resend.com/api-keys).
+2. Verify domain **madeyoublush.ca** at [resend.com/domains](https://resend.com/domains) (add the DNS records Resend shows — typically SPF, DKIM, and optional DMARC).
+3. After the domain is **Verified**, you can send from `info@madeyoublush.ca` (no separate “create mailbox” step in Resend).
+4. Set server env vars (Vercel → Environment Variables):
+
+| Variable | Required | Notes |
+|----------|----------|--------|
+| `RESEND_API_KEY` | Yes | Server-only |
+| `ORDER_FROM_EMAIL` | No | Default `info@madeyoublush.ca` |
+| `ORDER_NOTIFY_EMAIL` | No | Merchant copy; default `info@madeyoublush.ca` |
+| `STRIPE_WEBHOOK_SECRET` | Yes (for paid orders) | From Stripe webhook endpoint (below) |
+
+5. In Stripe Dashboard → **Developers → Webhooks**, add endpoint: `https://www.madeyoublush.ca/api/stripe-webhook` listening for `checkout.session.completed`. Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
+
+From address used in code: `Made You Blush <info@madeyoublush.ca>`.
+
+### 3. Test a production build locally
 
 ```powershell
 cd c:\Users\nashi\Downloads\flora-bloom-download-main
@@ -54,11 +74,11 @@ Replace `YOUR_USERNAME` and repo name with yours.
 
 1. Sign up at [vercel.com](https://vercel.com) → **Add New Project** → Import your GitHub repo.
 2. Framework preset: **Vite** (auto-detected).
-3. **Environment Variables** (Settings → Environment Variables): Formbricks IDs are optional — defaults are baked into the app. Add `VITE_FORMBRICKS_*` only if overriding (see `.env.example` / `VERCEL.md`).
+3. **Environment Variables** (Settings → Environment Variables): Formbricks IDs are optional — defaults are baked into the app. Add `VITE_FORMBRICKS_*` only if overriding (see `.env.example` / `VERCEL.md`). Also add server secrets: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY` (and optional `ORDER_FROM_EMAIL` / `ORDER_NOTIFY_EMAIL`).
 
 4. Deploy. You get a URL like `made-you-blush.vercel.app`.
 
-`vercel.json` in this repo already routes all paths to `index.html` (required for React Router).
+`vercel.json` in this repo already routes SPA paths to `index.html` while leaving `/api/*` serverless functions alone (`create-order-checkout`, `stripe-webhook`, `early-access-notify`, etc.).
 
 ### Connect your domain on Vercel
 
@@ -115,6 +135,8 @@ If you only need something live fast:
 - [ ] Contact form submits (check Formbricks responses)
 - [ ] Shop / Build a Bouquet inquiry submits
 - [ ] Coming Soon waitlist submits
+- [ ] Paid order confirmation emails (customer + info@) after Stripe checkout
+- [ ] Early-access claim emails after Formbricks submit
 - [ ] Instagram & TikTok links open correctly
 - [ ] Images load under `/images/myb/`
 
