@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import FloralDivider from "@/components/FloralDivider";
 import LiveEventsCalendar from "@/components/LiveEventsCalendar";
 import PastEventsList from "@/components/PastEventsList";
+import ContactInquiryForm from "@/components/ContactInquiryForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { pastEvents, upcomingEvents } from "@/data/upcomingEvents";
@@ -103,9 +103,12 @@ const PopUps = () => {
                   TikTok {tiktok.handle}
                 </a>
                 . Hosting a market or want us at your venue?{" "}
-                <Link to="/contact" className="font-medium text-primary underline-offset-4 hover:underline">
+                <a
+                  href="#inquire"
+                  className="font-medium text-primary underline-offset-4 hover:underline"
+                >
                   Get in touch
-                </Link>
+                </a>
                 .
               </p>
             </div>
@@ -124,7 +127,7 @@ const PopUps = () => {
 
         <FloralDivider className="py-8 lg:py-10" />
 
-        <section id="past-popups" className="pt-8 lg:pt-10 pb-16 lg:pb-24 bg-background scroll-mt-24">
+        <section id="past-popups" className="pt-8 lg:pt-10 pb-16 lg:pb-20 bg-background scroll-mt-24">
           <motion.div className="container mx-auto px-4 lg:px-8 max-w-5xl space-y-10" {...fadeUp}>
             <div className="text-center space-y-3 max-w-2xl mx-auto">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold">Past pop-ups</h2>
@@ -143,9 +146,38 @@ const PopUps = () => {
 
             <div className="text-center pt-4">
               <Button asChild size="lg" className="rounded-full min-h-12">
-                <Link to="/contact">Ask about a collab or market</Link>
+                <a href="#inquire">Ask about a collab or market</a>
               </Button>
             </div>
+          </motion.div>
+        </section>
+
+        <FloralDivider className="py-8 lg:py-10" />
+
+        <section
+          id="inquire"
+          className="pt-8 lg:pt-10 pb-16 lg:pb-24 bg-gradient-to-b from-primary/5 via-background to-background scroll-mt-24"
+        >
+          <motion.div className="container mx-auto px-4 lg:px-8 max-w-xl space-y-8" {...fadeUp}>
+            <div className="text-center space-y-3">
+              <h2 className="font-heading text-3xl sm:text-4xl font-bold">
+                Host us at your market
+              </h2>
+              <p className="text-muted-foreground text-lg leading-relaxed">
+                Markets, theatres, studios, brand collabs—tell us the date, neighbourhood, and vibe.
+                We&apos;ll reply with availability.
+              </p>
+            </div>
+
+            <ContactInquiryForm
+              source="Pop-ups page"
+              defaultSubject="Pop-up inquiry"
+              interestLabel="Market or venue"
+              interestPlaceholder="Market name, venue, or neighbourhood"
+              messagePlaceholder="Dates, foot traffic vibe, booth size, and anything else we should know…"
+              submitLabel="Send pop-up inquiry"
+              idPrefix="popup-inquire"
+            />
           </motion.div>
         </section>
       </main>

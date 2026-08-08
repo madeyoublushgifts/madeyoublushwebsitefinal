@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import FloralDivider from "@/components/FloralDivider";
+import ContactInquiryForm from "@/components/ContactInquiryForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -27,7 +28,6 @@ import {
   PartyPopper,
   Sparkles,
   Users,
-  Wine,
 } from "lucide-react";
 
 const fadeUp = {
@@ -163,10 +163,10 @@ const Events = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <Button asChild size="lg" className="rounded-full min-h-12 w-full sm:w-auto">
-                <Link to="/contact">
+                <a href="#inquire">
                   <Flower2 className="mr-2 h-5 w-5" />
                   Book an experience
-                </Link>
+                </a>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full min-h-12 w-full sm:w-auto">
                 <a href="#setup-gallery">
@@ -350,27 +350,37 @@ const Events = () => {
 
         <FloralDivider className="py-8 lg:py-10" />
 
-        <section className="pt-8 lg:pt-10 pb-16 lg:pb-24 bg-background">
+        <section
+          id="inquire"
+          className="pt-8 lg:pt-10 pb-16 lg:pb-24 bg-background scroll-mt-24"
+        >
           <motion.div
-            className="container mx-auto px-4 lg:px-8 max-w-3xl text-center space-y-6"
+            className="container mx-auto px-4 lg:px-8 max-w-xl space-y-8"
             {...fadeUp}
           >
-            <Users className="h-10 w-10 text-primary mx-auto" />
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold">
-              Ready to plan your event?
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Share your date, guest count, budget range, and vibe—we&apos;ll reply with options for
-              a Bloom Bar, floral arrangements and décor, or a lighter activity kit.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-              <Button asChild size="lg" className="rounded-full min-h-12 w-full sm:w-auto">
-                <Link to="/contact">
-                  <Wine className="mr-2 h-5 w-5" />
-                  Inquire for your event
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full min-h-12 w-full sm:w-auto">
+            <div className="text-center space-y-4">
+              <Users className="h-10 w-10 text-primary mx-auto" />
+              <h2 className="font-heading text-3xl sm:text-4xl font-bold">
+                Ready to plan your event?
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Share your date, guest count, budget range, and vibe—we&apos;ll reply with options
+                for a Bloom Bar, floral arrangements and décor, or a lighter activity kit.
+              </p>
+            </div>
+
+            <ContactInquiryForm
+              source="Events page"
+              defaultSubject="Event inquiry"
+              interestLabel="Occasion"
+              interestPlaceholder="Wedding, bridal shower, birthday, anniversary…"
+              messagePlaceholder="Date, location, guest count, budget range, and whether you’d like a Bloom Bar, décor, or both…"
+              submitLabel="Send event inquiry"
+              idPrefix="event-inquire"
+            />
+
+            <div className="text-center pt-2">
+              <Button asChild variant="outline" size="lg" className="rounded-full min-h-12">
                 <Link to="/pop-ups">See our pop-ups</Link>
               </Button>
             </div>
