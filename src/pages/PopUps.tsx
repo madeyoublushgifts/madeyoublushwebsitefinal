@@ -102,12 +102,12 @@ const PopUps = () => {
                 >
                   TikTok {tiktok.handle}
                 </a>
-                . Hosting a market or want us at your venue?{" "}
+                . Want to collab?{" "}
                 <a
                   href="#inquire"
                   className="font-medium text-primary underline-offset-4 hover:underline"
                 >
-                  Get in touch
+                  Collab with us!
                 </a>
                 .
               </p>
@@ -146,7 +146,7 @@ const PopUps = () => {
 
             <div className="text-center pt-4">
               <Button asChild size="lg" className="rounded-full min-h-12">
-                <a href="#inquire">Ask about a collab or market</a>
+                <a href="#inquire">Collab with us!</a>
               </Button>
             </div>
           </motion.div>
@@ -161,7 +161,7 @@ const PopUps = () => {
           <motion.div className="container mx-auto px-4 lg:px-8 max-w-xl space-y-8" {...fadeUp}>
             <div className="text-center space-y-3">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold">
-                Host us at your market
+                Collab with us!
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed">
                 Markets, theatres, studios, brand collabs—tell us the date, neighbourhood, and vibe.
