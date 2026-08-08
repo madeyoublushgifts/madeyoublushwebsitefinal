@@ -12,6 +12,9 @@ interface ImportMetaEnv {
   readonly VITE_FORMSPREE_INQUIRY_ID?: string;
   readonly VITE_FORMSPREE_BUILD_BOUQUET_ID?: string;
   readonly VITE_FORMSPREE_WAITLIST_ID?: string;
+  readonly VITE_FORMBRICKS_APP_URL?: string;
+  readonly VITE_FORMBRICKS_ENVIRONMENT_ID?: string;
+  readonly VITE_FORMBRICKS_SURVEY_ID?: string;
 }
 
 interface ImportMeta {

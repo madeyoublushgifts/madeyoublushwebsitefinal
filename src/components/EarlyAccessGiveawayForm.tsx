@@ -19,7 +19,7 @@ import {
   isEarlyAccessPaletteComplete,
 } from "@/data/earlyAccessStock";
 import { formatDisplayDate } from "@/data/subscriptionDates";
-import { submitToFormspree } from "@/lib/formspree";
+import { submitToFormbricksEarlyAccess } from "@/lib/formbricks";
 import {
   clearSubscriptionBuildDraft,
   loadSubscriptionBuildDraft,
@@ -152,14 +152,7 @@ const EarlyAccessGiveawayForm = () => {
     setIsSubmitting(true);
 
     try {
-      await submitToFormspree("waitlist", {
-        _subject: "Early access free mini (1 month) — Made You Blush",
-        _replyto: email,
-        source: "Early access giveaway page",
-        giveawayType: "Early access — free mini bouquet (1 month)",
-        commitment: "1 month",
-        bouquetTier: "Mini",
-        waitlistPath: "Early Access Free Mini Giveaway",
+      await submitToFormbricksEarlyAccess({
         name,
         email,
         phone,
