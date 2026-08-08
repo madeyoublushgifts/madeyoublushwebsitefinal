@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import {
-  buildEarlyAccessCustomerHtml,
-  buildEarlyAccessMerchantHtml,
+  buildEarlyAccessCustomerEmail,
+  buildEarlyAccessMerchantEmail,
   sendCustomerAndMerchantEmails,
 } from "./lib/sendOrderEmails.js";
 
@@ -59,13 +59,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   };
 
   try {
+    const customerEmailContent = buildEarlyAccessCustomerEmail(details);
+    const merchantEmailContent = buildEarlyAccessMerchantEmail(details);
+
     await sendCustomerAndMerchantEmails({
       customerEmail: email,
       customerName: name,
       subjectCustomer: "Your Made You Blush early-access claim is confirmed",
       subjectMerchant: `Early-access claim — ${name}`,
-      htmlCustomer: buildEarlyAccessCustomerHtml(details),
-      htmlMerchant: buildEarlyAccessMerchantHtml(details),
+      htmlCustomer: customerEmailContent.html,
+      htmlMerchant: merchantEmailContent.html,
+      textCustomer: customerEmailContent.text,
+      textMerchant: merchantEmailContent.text,
     });
 
     return res.status(200).json({ ok: true });

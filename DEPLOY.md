@@ -19,23 +19,31 @@ No Formspree account or form IDs are required.
 
 ### 2. Resend (order + early-access confirmation emails)
 
-Paid Stripe checkout and early-access claims send customer + merchant emails via [Resend](https://resend.com).
+Paid Stripe checkout and early-access claims send customer + merchant emails via [Resend](https://resend.com). Emails are multipart (`text/plain` + `text/html`) with `Reply-To: info@madeyoublush.ca`.
 
 1. Create an API key at [resend.com/api-keys](https://resend.com/api-keys).
-2. Verify domain **madeyoublush.ca** at [resend.com/domains](https://resend.com/domains) (add the DNS records Resend shows — typically SPF, DKIM, and optional DMARC).
+2. Verify domain **madeyoublush.ca** at [resend.com/domains](https://resend.com/domains). Confirm **SPF** and **DKIM** show as verified (Resend lists the exact DNS records).
 3. After the domain is **Verified**, you can send from `info@madeyoublush.ca` (no separate “create mailbox” step in Resend).
-4. Set server env vars (Vercel → Environment Variables):
+4. **Receiving mail:** Keep Squarespace email forwarding `info@madeyoublush.ca` → Gmail. Do not delete it — that is how the merchant inbox receives mail at `info@`. Squarespace already publishes DMARC for the domain as part of forwarding; if the DNS UI blocks a custom `_dmarc` TXT, leave Squarespace’s record as-is (do not fight it, and do not require a `send.` subdomain).
+
+5. Set server env vars (Vercel → Environment Variables):
 
 | Variable | Required | Notes |
 |----------|----------|--------|
 | `RESEND_API_KEY` | Yes | Server-only |
-| `ORDER_FROM_EMAIL` | No | Default `info@madeyoublush.ca` |
-| `ORDER_NOTIFY_EMAIL` | No | Merchant copy; default `info@madeyoublush.ca` |
+| `ORDER_FROM_EMAIL` | No | Default `info@madeyoublush.ca` (also used for Reply-To). Must stay on the verified domain — Resend cannot send From a Gmail address. Do **not** switch From to a `send.` subdomain. |
+| `ORDER_NOTIFY_EMAIL` | No | Merchant copy **To**; default `info@madeyoublush.ca` (forwards to Gmail via Squarespace) |
 | `STRIPE_WEBHOOK_SECRET` | Yes (for paid orders) | From Stripe webhook endpoint (below) |
 
-5. In Stripe Dashboard → **Developers → Webhooks**, add endpoint: `https://www.madeyoublush.ca/api/stripe-webhook` listening for `checkout.session.completed`. Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
+6. In Stripe Dashboard → **Developers → Webhooks**, add endpoint: `https://www.madeyoublush.ca/api/stripe-webhook` listening for `checkout.session.completed`. Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
 
-From address used in code: `Made You Blush <info@madeyoublush.ca>`.
+**From address in code:** `Made You Blush <info@madeyoublush.ca>` (display name + verified domain). Customer confirmations go to the checkout email; merchant copies go **To** `ORDER_NOTIFY_EMAIL` (`info@` by default, then Squarespace → Gmail). Both messages are sent **From** `info@madeyoublush.ca`.
+
+**Deliverability notes**
+
+- If a message already landed in spam, mark it **Not spam** once in Gmail — that helps train the filter for this sender.
+- Reputation builds from consistent real transactional mail (orders / claims), not bulk blasts. Squarespace’s existing DMARC plus good sender reputation improves inbox placement over time.
+- A `send.madeyoublush.ca` From subdomain is **not** required while root-domain Resend auth (SPF/DKIM) is healthy.
 
 ### 3. Test a production build locally
 

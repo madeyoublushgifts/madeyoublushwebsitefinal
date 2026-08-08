@@ -2,8 +2,8 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import type { Readable } from "node:stream";
 import Stripe from "stripe";
 import {
-  buildPaidOrderCustomerHtml,
-  buildPaidOrderMerchantHtml,
+  buildPaidOrderCustomerEmail,
+  buildPaidOrderMerchantEmail,
   formatCadFromCents,
   sendCustomerAndMerchantEmails,
 } from "./lib/sendOrderEmails.js";
@@ -116,13 +116,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       sessionId: session.id,
     };
 
+    const customerEmailContent = buildPaidOrderCustomerEmail(details);
+    const merchantEmailContent = buildPaidOrderMerchantEmail(details);
+
     await sendCustomerAndMerchantEmails({
       customerEmail,
       customerName,
       subjectCustomer: "Your Made You Blush order is confirmed",
       subjectMerchant: `New order — ${customerName}`,
-      htmlCustomer: buildPaidOrderCustomerHtml(details),
-      htmlMerchant: buildPaidOrderMerchantHtml(details),
+      htmlCustomer: customerEmailContent.html,
+      htmlMerchant: merchantEmailContent.html,
+      textCustomer: customerEmailContent.text,
+      textMerchant: merchantEmailContent.text,
       idempotencyKeyCustomer: `order-customer-${session.id}`,
       idempotencyKeyMerchant: `order-merchant-${session.id}`,
     });

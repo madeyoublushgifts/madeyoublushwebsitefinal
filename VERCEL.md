@@ -35,14 +35,14 @@ Server-only variables (do **not** prefix with `VITE_`):
 | `STRIPE_SECRET_KEY` | Creates Checkout sessions |
 | `STRIPE_WEBHOOK_SECRET` | Verifies `POST /api/stripe-webhook` (`checkout.session.completed`) |
 | `RESEND_API_KEY` | Sends customer + merchant confirmation emails |
-| `ORDER_FROM_EMAIL` | Optional; default `info@madeyoublush.ca` |
-| `ORDER_NOTIFY_EMAIL` | Optional merchant To; default `info@madeyoublush.ca` |
+| `ORDER_FROM_EMAIL` | Optional; default `info@madeyoublush.ca` (verified domain only — not Gmail; do not use a `send.` subdomain) |
+| `ORDER_NOTIFY_EMAIL` | Optional merchant To; default `info@madeyoublush.ca` (Squarespace forwards to Gmail) |
 | `SITE_URL` / `VITE_SITE_URL` | Checkout success/cancel redirects |
 
 Webhook URL: `https://www.madeyoublush.ca/api/stripe-webhook`  
 Early-access notify: `POST /api/early-access-notify` (called by the client after Formbricks succeeds)
 
-Verify **madeyoublush.ca** in [Resend Domains](https://resend.com/domains) before relying on production sends from `info@madeyoublush.ca`.
+Verify **madeyoublush.ca** in [Resend Domains](https://resend.com/domains) before relying on production sends from `info@madeyoublush.ca`. Confirm SPF + DKIM are verified. Keep Squarespace `info@` → Gmail forwarding for receiving; leave Squarespace’s managed DMARC alone if the host blocks a custom `_dmarc` (see `DEPLOY.md`).
 
 ## Custom domain
 

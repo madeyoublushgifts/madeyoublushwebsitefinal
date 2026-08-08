@@ -3,6 +3,13 @@ import { Resend } from "resend";
 const DEFAULT_FROM_EMAIL = "info@madeyoublush.ca";
 const DEFAULT_NOTIFY_EMAIL = "info@madeyoublush.ca";
 const FROM_NAME = "Made You Blush";
+const BUSINESS_NAME = "Made You Blush";
+const SERVICE_AREA = "Toronto / GTA";
+
+export type EmailContent = {
+  html: string;
+  text: string;
+};
 
 export type SendCustomerAndMerchantEmailsArgs = {
   customerEmail: string;
@@ -11,14 +18,23 @@ export type SendCustomerAndMerchantEmailsArgs = {
   subjectMerchant: string;
   htmlCustomer: string;
   htmlMerchant: string;
+  textCustomer: string;
+  textMerchant: string;
   /** Optional Resend idempotency keys (e.g. Stripe session id). */
   idempotencyKeyCustomer?: string;
   idempotencyKeyMerchant?: string;
 };
 
+function getFromEmail(): string {
+  return (process.env.ORDER_FROM_EMAIL ?? DEFAULT_FROM_EMAIL).trim() || DEFAULT_FROM_EMAIL;
+}
+
 function getFromAddress(): string {
-  const email = (process.env.ORDER_FROM_EMAIL ?? DEFAULT_FROM_EMAIL).trim() || DEFAULT_FROM_EMAIL;
-  return `${FROM_NAME} <${email}>`;
+  return `${FROM_NAME} <${getFromEmail()}>`;
+}
+
+function getReplyTo(): string {
+  return getFromEmail();
 }
 
 function getMerchantNotifyEmail(): string {
@@ -31,6 +47,8 @@ export async function sendCustomerAndMerchantEmails({
   subjectMerchant,
   htmlCustomer,
   htmlMerchant,
+  textCustomer,
+  textMerchant,
   idempotencyKeyCustomer,
   idempotencyKeyMerchant,
 }: SendCustomerAndMerchantEmailsArgs): Promise<{
@@ -49,6 +67,7 @@ export async function sendCustomerAndMerchantEmails({
 
   const resend = new Resend(apiKey);
   const from = getFromAddress();
+  const replyTo = getReplyTo();
   const merchantTo = getMerchantNotifyEmail();
 
   const [customerResult, merchantResult] = await Promise.all([
@@ -56,8 +75,10 @@ export async function sendCustomerAndMerchantEmails({
       {
         from,
         to: [toCustomer],
+        replyTo,
         subject: subjectCustomer,
         html: htmlCustomer,
+        text: textCustomer,
       },
       idempotencyKeyCustomer ? { idempotencyKey: idempotencyKeyCustomer } : undefined
     ),
@@ -65,8 +86,10 @@ export async function sendCustomerAndMerchantEmails({
       {
         from,
         to: [merchantTo],
+        replyTo,
         subject: subjectMerchant,
         html: htmlMerchant,
+        text: textMerchant,
       },
       idempotencyKeyMerchant ? { idempotencyKey: idempotencyKeyMerchant } : undefined
     ),
@@ -94,18 +117,32 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-function row(label: string, value: string | undefined | null): string {
-  const trimmed = value?.trim();
-  if (!trimmed) return "";
-  return `
+type EmailRow = { label: string; value?: string | null };
+
+function normalizeRows(rows: EmailRow[]): Array<{ label: string; value: string }> {
+  return rows
+    .map((r) => ({ label: r.label, value: r.value?.trim() ?? "" }))
+    .filter((r) => r.value.length > 0);
+}
+
+function htmlRows(rows: Array<{ label: string; value: string }>): string {
+  return rows
+    .map(
+      (r) => `
     <tr>
-      <td style="padding:10px 0;border-bottom:1px solid #f0e4e8;vertical-align:top;width:140px;color:#8a6b74;font-size:13px;">
-        ${escapeHtml(label)}
+      <td style="padding:10px 0;border-bottom:1px solid #eee5e8;vertical-align:top;width:140px;color:#7a656b;font-size:13px;">
+        ${escapeHtml(r.label)}
       </td>
-      <td style="padding:10px 0;border-bottom:1px solid #f0e4e8;color:#3d2c2e;font-size:14px;line-height:1.5;">
-        ${escapeHtml(trimmed).replace(/\n/g, "<br />")}
+      <td style="padding:10px 0;border-bottom:1px solid #eee5e8;color:#3d2c2e;font-size:14px;line-height:1.5;">
+        ${escapeHtml(r.value).replace(/\n/g, "<br />")}
       </td>
-    </tr>`;
+    </tr>`
+    )
+    .join("");
+}
+
+function textRows(rows: Array<{ label: string; value: string }>): string {
+  return rows.map((r) => `${r.label}: ${r.value}`).join("\n");
 }
 
 export function formatCadFromCents(cents: number | string | null | undefined): string {
@@ -117,41 +154,56 @@ export function formatCadFromCents(cents: number | string | null | undefined): s
   }).format(n / 100);
 }
 
+const DEFAULT_CUSTOMER_REASON =
+  "You received this email because you placed an order with Made You Blush.";
+const DEFAULT_MERCHANT_REASON =
+  "Internal copy: a customer order or claim was submitted on madeyoublush.ca.";
+
 export function wrapBrandedEmail(opts: {
   title: string;
   intro: string;
-  rowsHtml: string;
+  rows: EmailRow[];
   footerNote?: string;
-}): string {
+  reasonLine?: string;
+}): EmailContent {
+  const rows = normalizeRows(opts.rows);
   const footer =
     opts.footerNote?.trim() ||
-    "Questions? Reply to this email or write to info@madeyoublush.ca.";
+    `Questions? Reply to this email or write to ${getFromEmail()}.`;
+  const reason = opts.reasonLine?.trim() || DEFAULT_CUSTOMER_REASON;
+  const contactLine = `${BUSINESS_NAME} · Florals for ${SERVICE_AREA} · ${getFromEmail()}`;
 
-  return `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${escapeHtml(opts.title)}</title>
 </head>
-<body style="margin:0;padding:0;background:#faf4f6;font-family:Georgia,'Times New Roman',serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf4f6;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#f7f3f4;font-family:Georgia,'Times New Roman',serif;color:#3d2c2e;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f3f4;padding:28px 14px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #f0e4e8;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border:1px solid #ebe3e6;">
           <tr>
-            <td style="background:linear-gradient(135deg,#f7d6df 0%,#f3ebe8 100%);padding:28px 28px 22px;">
-              <p style="margin:0 0 6px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#9a6b78;">Made You Blush</p>
-              <h1 style="margin:0;font-size:24px;line-height:1.3;color:#3d2c2e;font-weight:normal;">${escapeHtml(opts.title)}</h1>
+            <td style="padding:26px 28px 18px;border-bottom:1px solid #ebe3e6;">
+              <p style="margin:0 0 8px;font-size:14px;line-height:1.4;color:#8a6b74;">${escapeHtml(BUSINESS_NAME)}</p>
+              <h1 style="margin:0;font-size:22px;line-height:1.35;color:#3d2c2e;font-weight:normal;">${escapeHtml(opts.title)}</h1>
             </td>
           </tr>
           <tr>
-            <td style="padding:28px;">
-              <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#5c454c;">${escapeHtml(opts.intro)}</p>
+            <td style="padding:24px 28px 8px;">
+              <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#5c454c;">${escapeHtml(opts.intro)}</p>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                ${opts.rowsHtml}
+                ${htmlRows(rows)}
               </table>
-              <p style="margin:24px 0 0;font-size:13px;line-height:1.55;color:#8a6b74;">${escapeHtml(footer)}</p>
+              <p style="margin:22px 0 0;font-size:14px;line-height:1.55;color:#5c454c;">${escapeHtml(footer)}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 28px 26px;">
+              <p style="margin:0 0 8px;font-size:12px;line-height:1.5;color:#8a6b74;">${escapeHtml(contactLine)}</p>
+              <p style="margin:0;font-size:12px;line-height:1.5;color:#9a858b;">${escapeHtml(reason)}</p>
             </td>
           </tr>
         </table>
@@ -160,6 +212,24 @@ export function wrapBrandedEmail(opts: {
   </table>
 </body>
 </html>`;
+
+  const text = [
+    BUSINESS_NAME,
+    opts.title,
+    "",
+    opts.intro,
+    "",
+    textRows(rows),
+    "",
+    footer,
+    "",
+    contactLine,
+    reason,
+  ]
+    .filter((line, i, arr) => !(line === "" && arr[i - 1] === ""))
+    .join("\n");
+
+  return { html, text };
 }
 
 export type OrderEmailDetails = {
@@ -176,44 +246,47 @@ export type OrderEmailDetails = {
   sessionId?: string;
 };
 
-export function buildPaidOrderCustomerHtml(details: OrderEmailDetails): string {
+export function buildPaidOrderCustomerEmail(details: OrderEmailDetails): EmailContent {
   return wrapBrandedEmail({
-    title: "Order confirmed",
-    intro: `Hi ${details.customerName || "there"}, thank you for your order. We've received your payment and will prepare your bouquet with care.`,
-    rowsHtml: [
-      row("Name", details.customerName),
-      row("Email", details.customerEmail),
-      row("Phone", details.phone),
-      row("Delivery address", details.address),
-      row("Delivery date", details.deliveryDate),
-      row("Order", details.orderSummary),
-      row("Subtotal", details.subtotalLabel),
-      row("Handling fee", details.handlingFeeLabel),
-      row("Total paid", details.amountLabel),
-      row("Notes", details.notes),
-    ].join(""),
+    title: "Order confirmation",
+    intro: `Hi ${details.customerName || "there"}, thank you for your order with ${BUSINESS_NAME}. We have received your payment and will prepare your arrangement with care.`,
+    rows: [
+      { label: "Name", value: details.customerName },
+      { label: "Email", value: details.customerEmail },
+      { label: "Phone", value: details.phone },
+      { label: "Delivery address", value: details.address },
+      { label: "Delivery date", value: details.deliveryDate },
+      { label: "Order", value: details.orderSummary },
+      { label: "Subtotal", value: details.subtotalLabel },
+      { label: "Handling fee", value: details.handlingFeeLabel },
+      { label: "Total paid", value: details.amountLabel },
+      { label: "Notes", value: details.notes },
+    ],
     footerNote:
-      "We'll be in touch if we need anything else before delivery. Thank you for choosing Made You Blush.",
+      "We will be in touch if we need anything before delivery. Reply to this email anytime with questions.",
+    reasonLine: DEFAULT_CUSTOMER_REASON,
   });
 }
 
-export function buildPaidOrderMerchantHtml(details: OrderEmailDetails): string {
+export function buildPaidOrderMerchantEmail(details: OrderEmailDetails): EmailContent {
   return wrapBrandedEmail({
     title: "New paid order",
-    intro: "A Stripe checkout payment completed. Customer and delivery details below.",
-    rowsHtml: [
-      row("Customer", details.customerName),
-      row("Email", details.customerEmail),
-      row("Phone", details.phone),
-      row("Delivery address", details.address),
-      row("Delivery date", details.deliveryDate),
-      row("Order summary", details.orderSummary),
-      row("Subtotal", details.subtotalLabel),
-      row("Handling fee", details.handlingFeeLabel),
-      row("Amount paid", details.amountLabel),
-      row("Notes", details.notes),
-      row("Stripe session", details.sessionId),
-    ].join(""),
+    intro: "A Stripe checkout payment completed. Customer and delivery details are below.",
+    rows: [
+      { label: "Customer", value: details.customerName },
+      { label: "Email", value: details.customerEmail },
+      { label: "Phone", value: details.phone },
+      { label: "Delivery address", value: details.address },
+      { label: "Delivery date", value: details.deliveryDate },
+      { label: "Order summary", value: details.orderSummary },
+      { label: "Subtotal", value: details.subtotalLabel },
+      { label: "Handling fee", value: details.handlingFeeLabel },
+      { label: "Amount paid", value: details.amountLabel },
+      { label: "Notes", value: details.notes },
+      { label: "Stripe session", value: details.sessionId },
+    ],
+    footerNote: `Merchant notification for ${BUSINESS_NAME} (${SERVICE_AREA}).`,
+    reasonLine: DEFAULT_MERCHANT_REASON,
   });
 }
 
@@ -229,40 +302,44 @@ export type EarlyAccessEmailDetails = {
   bouquetNotes?: string;
 };
 
-export function buildEarlyAccessCustomerHtml(details: EarlyAccessEmailDetails): string {
+export function buildEarlyAccessCustomerEmail(details: EarlyAccessEmailDetails): EmailContent {
   return wrapBrandedEmail({
     title: "Early-access claim received",
-    intro: `Hi ${details.customerName || "there"}, your free mini bouquet claim is confirmed. We'll follow up with delivery details soon.`,
-    rowsHtml: [
-      row("Name", details.customerName),
-      row("Email", details.customerEmail),
-      row("Phone", details.phone),
-      row("Delivery address", details.deliveryAddress),
-      row("Preferred delivery", details.firstDeliveryDate),
-      row("Bouquet style", details.bouquetSource),
-      row("Bouquet details", details.bouquetDetails),
-      row("About the receiver", details.receiverNotes),
-      row("Notes", details.bouquetNotes),
-    ].join(""),
+    intro: `Hi ${details.customerName || "there"}, thank you for claiming an early-access mini bouquet from ${BUSINESS_NAME}. We have your details and will follow up about delivery soon.`,
+    rows: [
+      { label: "Name", value: details.customerName },
+      { label: "Email", value: details.customerEmail },
+      { label: "Phone", value: details.phone },
+      { label: "Delivery address", value: details.deliveryAddress },
+      { label: "Preferred delivery", value: details.firstDeliveryDate },
+      { label: "Bouquet style", value: details.bouquetSource },
+      { label: "Bouquet details", value: details.bouquetDetails },
+      { label: "About the receiver", value: details.receiverNotes },
+      { label: "Notes", value: details.bouquetNotes },
+    ],
     footerNote:
-      "No payment is required for this early-access giveaway. Keep an eye on your inbox — a little blush is on its way.",
+      "No payment is due for this early-access claim. Reply to this email if your details change.",
+    reasonLine:
+      "You received this email because you submitted an early-access claim with Made You Blush.",
   });
 }
 
-export function buildEarlyAccessMerchantHtml(details: EarlyAccessEmailDetails): string {
+export function buildEarlyAccessMerchantEmail(details: EarlyAccessEmailDetails): EmailContent {
   return wrapBrandedEmail({
     title: "New early-access claim",
-    intro: "Someone claimed a free early-access mini bouquet. Details below.",
-    rowsHtml: [
-      row("Customer", details.customerName),
-      row("Email", details.customerEmail),
-      row("Phone", details.phone),
-      row("Delivery address", details.deliveryAddress),
-      row("Preferred delivery", details.firstDeliveryDate),
-      row("Bouquet style", details.bouquetSource),
-      row("Bouquet details", details.bouquetDetails),
-      row("About the receiver", details.receiverNotes),
-      row("Notes", details.bouquetNotes),
-    ].join(""),
+    intro: "Someone claimed an early-access mini bouquet. Details are below.",
+    rows: [
+      { label: "Customer", value: details.customerName },
+      { label: "Email", value: details.customerEmail },
+      { label: "Phone", value: details.phone },
+      { label: "Delivery address", value: details.deliveryAddress },
+      { label: "Preferred delivery", value: details.firstDeliveryDate },
+      { label: "Bouquet style", value: details.bouquetSource },
+      { label: "Bouquet details", value: details.bouquetDetails },
+      { label: "About the receiver", value: details.receiverNotes },
+      { label: "Notes", value: details.bouquetNotes },
+    ],
+    footerNote: `Merchant notification for ${BUSINESS_NAME} (${SERVICE_AREA}).`,
+    reasonLine: DEFAULT_MERCHANT_REASON,
   });
 }
