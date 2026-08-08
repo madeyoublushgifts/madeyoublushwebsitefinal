@@ -3,8 +3,16 @@ import {
   bouquetStemColors,
   formatStemColorSummary,
   type BouquetStemColor,
+  type StemCategory,
 } from "@/data/buildBouquetStems";
 import { stemCarnationRed, stemLimoniumPink } from "@/assets/images";
+
+/** Max stem units per category for the early-access mini giveaway builder. */
+export const EARLY_ACCESS_STEM_LIMITS: Record<StemCategory, number> = {
+  main: 4,
+  filler: 3,
+  greenery: 3,
+};
 
 /** Stock locked from the Aug 14 custom order — early-access giveaway only. */
 export const EARLY_ACCESS_PALETTE_COLORS: BouquetStemColor[] = ["pink", "white", "yellow"];

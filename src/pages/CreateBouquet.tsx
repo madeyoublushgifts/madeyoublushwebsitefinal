@@ -37,6 +37,7 @@ import {
   EARLY_ACCESS_STEM_COLORS,
   EARLY_ACCESS_STEM_IDS,
   EARLY_ACCESS_STEM_IMAGES,
+  EARLY_ACCESS_STEM_LIMITS,
   EARLY_ACCESS_WRAPPING_COLOR,
   EARLY_ACCESS_WRAPPING_ID,
   earlyAccessColorsForStem,
@@ -182,8 +183,32 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
     return items;
   };
 
+  const countStemsInCategory = (
+    stems: Record<string, number>,
+    category: StemCategory
+  ) =>
+    Object.entries(stems).reduce((sum, [id, qty]) => {
+      const s = findStem(id);
+      return s?.category === category ? sum + qty : sum;
+    }, 0);
+
   const updateStemQuantity = (stemId: string, change: number) => {
     const stem = findStem(stemId);
+    if (!stem) return;
+
+    if (isEarlyAccess && change > 0) {
+      const limit = EARLY_ACCESS_STEM_LIMITS[stem.category];
+      const used = countStemsInCategory(selectedStems, stem.category);
+      if (used + change > limit) {
+        toast({
+          title: "Stem limit reached",
+          description: `You can choose up to ${limit} ${stemCategoryLabels[stem.category].title.toLowerCase()}.`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     setSelectedStems((prevStems) => {
       const newQuantity = (prevStems[stemId] || 0) + change;
       const nextStems =
@@ -194,7 +219,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
             })()
           : { ...prevStems, [stemId]: newQuantity };
 
-      if (stem && stemNeedsColor(stemId, stem.category)) {
+      if (stemNeedsColor(stemId, stem.category)) {
         setStemColors((prevColors) => {
           if (newQuantity <= 0) {
             const { [stemId]: _, ...rest } = prevColors;
@@ -539,6 +564,10 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
     const showStemColorError = !step1Complete && showColors && missingCount > 0;
     const stemImage =
       (isEarlyAccess && EARLY_ACCESS_STEM_IMAGES[stem.id]) || stem.image;
+    const categoryAtLimit =
+      isEarlyAccess &&
+      countStemsInCategory(selectedStems, stem.category) >=
+        EARLY_ACCESS_STEM_LIMITS[stem.category];
 
     return (
       <motion.div
@@ -577,7 +606,12 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                   size="icon"
                   className="shrink-0"
                   onClick={() => updateStemQuantity(stem.id, 1)}
-                  aria-label={`Add one ${stem.name}`}
+                  disabled={categoryAtLimit}
+                  aria-label={
+                    categoryAtLimit
+                      ? `${stemCategoryLabels[stem.category].title} limit reached`
+                      : `Add one ${stem.name}`
+                  }
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -736,6 +770,11 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                     const stems = availableStems.filter((s) => s.category === category);
                     if (stems.length === 0) return null;
                     const { title, subtitle } = stemCategoryLabels[category];
+                    const limit = EARLY_ACCESS_STEM_LIMITS[category];
+                    const used = isEarlyAccess
+                      ? countStemsInCategory(selectedStems, category)
+                      : 0;
+                    const remaining = Math.max(0, limit - used);
                     return (
                       <div key={category} className="space-y-8">
                         <div className="text-center space-y-2">
@@ -745,6 +784,15 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                               ? "Stock stems only — colours limited to what we have on hand."
                               : subtitle}
                           </p>
+                          {isEarlyAccess && (
+                            <p className="text-sm text-muted-foreground">
+                              {used === 0
+                                ? `Choose up to ${limit} ${title.toLowerCase()}`
+                                : remaining === 0
+                                  ? `${used} of ${limit} selected · limit reached`
+                                  : `${used} of ${limit} selected · ${remaining} remaining`}
+                            </p>
+                          )}
                           <div className="flex justify-center">
                             <div className="w-16 h-1 bg-primary rounded-full" />
                           </div>
