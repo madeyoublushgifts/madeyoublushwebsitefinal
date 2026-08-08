@@ -15,6 +15,8 @@ type EarlyAccessNotifyBody = {
   bouquetDetails?: string;
   receiverNotes?: string;
   bouquetNotes?: string;
+  giveawayId?: string;
+  monthsCount?: number | string;
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -39,12 +41,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const bouquetDetails = body.bouquetDetails?.trim() ?? "";
   const receiverNotes = body.receiverNotes?.trim() ?? "";
   const bouquetNotes = body.bouquetNotes?.trim() ?? "";
+  const giveawayId = body.giveawayId?.trim() ?? "";
+  const parsedMonths =
+    typeof body.monthsCount === "number"
+      ? body.monthsCount
+      : typeof body.monthsCount === "string"
+        ? Number.parseInt(body.monthsCount, 10)
+        : NaN;
+  const monthsCount =
+    Number.isFinite(parsedMonths) && parsedMonths > 0
+      ? parsedMonths
+      : giveawayId === "three-month-mini" || /3[- ]month/i.test(bouquetSource)
+        ? 3
+        : 1;
 
   if (!name || !email || !deliveryAddress) {
     return res.status(400).json({
       error: "Name, email, and delivery address are required.",
     });
   }
+
+  const isThreeMonth = monthsCount >= 3;
 
   const details = {
     customerName: name,
@@ -56,6 +73,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     bouquetDetails,
     receiverNotes,
     bouquetNotes,
+    monthsCount,
+    giveawayId: giveawayId || undefined,
   };
 
   try {
@@ -65,8 +84,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await sendCustomerAndMerchantEmails({
       customerEmail: email,
       customerName: name,
-      subjectCustomer: "Your Made You Blush early-access claim is confirmed",
-      subjectMerchant: `Early-access claim — ${name}`,
+      subjectCustomer: isThreeMonth
+        ? "Your Made You Blush 3-month mini giveaway claim is confirmed"
+        : "Your Made You Blush early-access claim is confirmed",
+      subjectMerchant: isThreeMonth
+        ? `3-month mini giveaway claim — ${name}`
+        : `Early-access claim — ${name}`,
       htmlCustomer: customerEmailContent.html,
       htmlMerchant: merchantEmailContent.html,
       textCustomer: customerEmailContent.text,

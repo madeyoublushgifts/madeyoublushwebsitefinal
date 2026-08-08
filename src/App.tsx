@@ -66,8 +66,22 @@ const App = () => (
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/subscription/build-bouquet" element={<SubscriptionBuildBouquet />} />
-            <Route path="/early-access/monthly-mini" element={<EarlyAccessGiveaway />} />
-            <Route path="/early-access/monthly-mini/build" element={<EarlyAccessBuildBouquet />} />
+            <Route
+              path="/early-access/monthly-mini"
+              element={<EarlyAccessGiveaway giveawayId="monthly-mini" />}
+            />
+            <Route
+              path="/early-access/monthly-mini/build"
+              element={<EarlyAccessBuildBouquet giveawayId="monthly-mini" />}
+            />
+            <Route
+              path="/early-access/three-month-mini"
+              element={<EarlyAccessGiveaway giveawayId="three-month-mini" />}
+            />
+            <Route
+              path="/early-access/three-month-mini/build"
+              element={<EarlyAccessBuildBouquet giveawayId="three-month-mini" />}
+            />
             <Route path="/subscribe" element={<Navigate to="/subscription" replace />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />

@@ -10,6 +10,11 @@ import { Progress } from "@/components/ui/progress";
 import { Plus, Minus, ChevronRight, ChevronLeft, ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { saveSubscriptionBuildDraft } from "@/lib/subscriptionBuildDraft";
+import { saveEarlyAccessBuildDraft } from "@/lib/earlyAccessBuildDraft";
+import type {
+  EarlyAccessBuilderVariant,
+  EarlyAccessGiveawayId,
+} from "@/data/earlyAccessGiveaways";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -56,11 +61,27 @@ type StemColorSelection = (BouquetStemColor | null)[];
 
 type CreateBouquetProps = {
   mode?: "order" | "subscription" | "early-access";
+  /** Stock-locked giveaway catalog vs full CreateBouquet catalog. */
+  earlyAccessVariant?: EarlyAccessBuilderVariant;
+  /** Where to return after saving an early-access build (include #claim). */
+  returnPath?: string;
+  giveawayId?: EarlyAccessGiveawayId;
+  buildMonth?: number;
 };
 
-const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
+const CreateBouquet = ({
+  mode = "order",
+  earlyAccessVariant = "stock",
+  returnPath,
+  giveawayId,
+  buildMonth = 1,
+}: CreateBouquetProps) => {
   const isSubscription = mode === "subscription";
   const isEarlyAccess = mode === "early-access";
+  /** Month-1 style stock caps (stems, colours, pink cotton only). */
+  const isEarlyAccessStock = isEarlyAccess && earlyAccessVariant === "stock";
+  /** Full catalog early-access build (months 2–3). */
+  const isEarlyAccessFull = isEarlyAccess && earlyAccessVariant === "full";
   const isWaitlistStyle = isSubscription || isEarlyAccess;
   const navigate = useNavigate();
   const { addItem } = useCart();
@@ -74,24 +95,28 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
   const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    if (!isEarlyAccess) return;
+    if (!isEarlyAccessStock) return;
     setSelectedWrapping(EARLY_ACCESS_WRAPPING_ID);
     setWrappingColor(EARLY_ACCESS_WRAPPING_COLOR);
     setSelectedRibbon(null);
     setRibbonColor(null);
     setSelectedAddons({});
-  }, [isEarlyAccess]);
+  }, [isEarlyAccessStock]);
 
   const stemCategories: StemCategory[] = STEM_CATEGORIES;
-  const materialGroups: MaterialGroup[] = isEarlyAccess ? ["wrapping"] : MATERIAL_GROUPS;
-  const availableStems = isEarlyAccess
+  const materialGroups: MaterialGroup[] = isEarlyAccessStock
+    ? ["wrapping"]
+    : MATERIAL_GROUPS;
+  const availableStems = isEarlyAccessStock
     ? buildBouquetStems.filter((s) =>
         (EARLY_ACCESS_STEM_IDS as readonly string[]).includes(s.id)
       )
     : buildBouquetStems;
 
   const stemNeedsColor = (stemId: string, category: StemCategory) =>
-    isEarlyAccess ? earlyAccessStemSupportsColor(stemId) : stemSupportsColor(stemId, category);
+    isEarlyAccessStock
+      ? earlyAccessStemSupportsColor(stemId)
+      : stemSupportsColor(stemId, category);
 
   const steps = isWaitlistStyle
     ? [
@@ -120,7 +145,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
       ];
 
   const selectWrapping = (id: string) => {
-    if (isEarlyAccess) {
+    if (isEarlyAccessStock) {
       setSelectedWrapping(EARLY_ACCESS_WRAPPING_ID);
       setWrappingColor(EARLY_ACCESS_WRAPPING_COLOR);
       return;
@@ -196,7 +221,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
     const stem = findStem(stemId);
     if (!stem) return;
 
-    if (isEarlyAccess && change > 0) {
+    if (isEarlyAccessStock && change > 0) {
       const limit = EARLY_ACCESS_STEM_LIMITS[stem.category];
       const used = countStemsInCategory(selectedStems, stem.category);
       if (used + change > limit) {
@@ -227,7 +252,9 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
           }
           const current = prevColors[stemId] ?? [];
           if (change > 0) {
-            const stockColors = isEarlyAccess ? EARLY_ACCESS_STEM_COLORS[stemId] : undefined;
+            const stockColors = isEarlyAccessStock
+              ? EARLY_ACCESS_STEM_COLORS[stemId]
+              : undefined;
             const autoColor =
               stockColors && stockColors.length === 1 ? stockColors[0] : null;
             return {
@@ -375,11 +402,21 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
     const total = amountCents / 100;
 
     if (isWaitlistStyle) {
-      saveSubscriptionBuildDraft({
-        summary: getSelectedItemsText(),
-        estimatedTotal: total,
-      });
-      navigate(isEarlyAccess ? "/early-access/monthly-mini#claim" : "/subscription#waitlist");
+      if (isEarlyAccess && giveawayId) {
+        saveEarlyAccessBuildDraft(giveawayId, buildMonth, {
+          summary: getSelectedItemsText(),
+          estimatedTotal: total,
+        });
+        navigate(
+          returnPath ?? "/early-access/monthly-mini#claim"
+        );
+      } else {
+        saveSubscriptionBuildDraft({
+          summary: getSelectedItemsText(),
+          estimatedTotal: total,
+        });
+        navigate("/subscription#waitlist");
+      }
       return;
     }
 
@@ -417,7 +454,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
     selected: BouquetStemColor | null,
     onSelect: (color: BouquetStemColor) => void,
     ariaPrefix: string,
-    colorOptions = bouquetStemColors
+    colorOptions: readonly { id: BouquetStemColor; name: string; hex: string }[] = bouquetStemColors
   ) => (
     <div className="flex flex-wrap gap-1.5 justify-center">
       {colorOptions.map((color) => {
@@ -452,7 +489,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
         selected,
         (c) => setStemColorAtIndex(stemId, index, c),
         `Stem ${index + 1}`,
-        isEarlyAccess ? earlyAccessColorsForStem(stemId) : bouquetStemColors
+        isEarlyAccessStock ? earlyAccessColorsForStem(stemId) : bouquetStemColors
       )}
     </div>
   );
@@ -468,7 +505,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
           : null;
     const setActiveColor = (color: BouquetStemColor) => {
       if (item.group === "wrapping") {
-        setWrappingColor(isEarlyAccess ? EARLY_ACCESS_WRAPPING_COLOR : color);
+        setWrappingColor(isEarlyAccessStock ? EARLY_ACCESS_WRAPPING_COLOR : color);
       } else if (item.group === "ribbon") setRibbonColor(color);
     };
 
@@ -500,13 +537,15 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <p className="text-xs font-medium text-center text-muted-foreground">
-                  {isEarlyAccess ? "Wrapping colour (locked to stock)" : "Choose colour"}
+                  {isEarlyAccessStock
+                    ? "Wrapping colour (locked to stock)"
+                    : "Choose colour"}
                 </p>
                 {renderColorSwatches(
                   activeColor,
                   setActiveColor,
                   item.name,
-                  isEarlyAccess
+                  isEarlyAccessStock
                     ? earlyAccessColorsForStem("rose").filter((c) => c.id === "pink")
                     : bouquetStemColors
                 )}
@@ -519,7 +558,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
   };
 
   const renderMaterialGroup = (group: MaterialGroup) => {
-    const items = isEarlyAccess
+    const items = isEarlyAccessStock
       ? materialsByGroup(group).filter((m) => m.id === EARLY_ACCESS_WRAPPING_ID)
       : materialsByGroup(group);
     const { title, subtitle, pickOne } = materialGroupLabels[group];
@@ -528,11 +567,11 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
         <div className="text-center space-y-2">
           <h3 className="font-heading text-2xl font-semibold">{title}</h3>
           <p className="text-muted-foreground">
-            {isEarlyAccess
+            {isEarlyAccessStock
               ? "Pink cotton wrapping only — matched to current giveaway stock."
               : subtitle}
           </p>
-          {pickOne && !isEarlyAccess && (
+          {pickOne && !isEarlyAccessStock && (
             <p className="text-xs text-muted-foreground">Tap again to clear your choice</p>
           )}
           <div className="flex justify-center">
@@ -563,9 +602,9 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
     const missingCount = showColors ? Math.max(0, qty - filledCount) : 0;
     const showStemColorError = !step1Complete && showColors && missingCount > 0;
     const stemImage =
-      (isEarlyAccess && EARLY_ACCESS_STEM_IMAGES[stem.id]) || stem.image;
+      (isEarlyAccessStock && EARLY_ACCESS_STEM_IMAGES[stem.id]) || stem.image;
     const categoryAtLimit =
-      isEarlyAccess &&
+      isEarlyAccessStock &&
       countStemsInCategory(selectedStems, stem.category) >=
         EARLY_ACCESS_STEM_LIMITS[stem.category];
 
@@ -669,9 +708,11 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
               transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              {isEarlyAccess
+              {isEarlyAccessStock
                 ? "Current stock: daisy, hydrangea, ranunculus, roses, red/white carnations, baby's breath, ruscus, eucalyptus stem, pink limonium, yellow solidago, and pink cotton wrapping."
-                : isSubscription
+                : isEarlyAccessFull
+                  ? "Full custom catalog for this giveaway month — stems, wrap, ribbon, and add-ons. Save to return to your claim form."
+                  : isSubscription
                   ? "Design stems, wrap, and add-ons for recurring delivery. This builder is for the subscription waitlist—not one-time shop checkout."
                   : "Design your own bouquet online—pick stems, wrapping, ribbon, and add-ons with transparent Toronto florist pricing. We confirm availability and GTA pickup or delivery before anything is cut."}
             </motion.p>
@@ -771,7 +812,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                     if (stems.length === 0) return null;
                     const { title, subtitle } = stemCategoryLabels[category];
                     const limit = EARLY_ACCESS_STEM_LIMITS[category];
-                    const used = isEarlyAccess
+                    const used = isEarlyAccessStock
                       ? countStemsInCategory(selectedStems, category)
                       : 0;
                     const remaining = Math.max(0, limit - used);
@@ -780,11 +821,11 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                         <div className="text-center space-y-2">
                           <h3 className="font-heading text-2xl font-semibold">{title}</h3>
                           <p className="text-muted-foreground">
-                            {isEarlyAccess
+                            {isEarlyAccessStock
                               ? "Stock stems only — colours limited to what we have on hand."
                               : subtitle}
                           </p>
-                          {isEarlyAccess && (
+                          {isEarlyAccessStock && (
                             <p className="text-sm text-muted-foreground">
                               {used === 0
                                 ? `Choose up to ${limit} ${title.toLowerCase()}`
@@ -828,7 +869,7 @@ const CreateBouquet = ({ mode = "order" }: CreateBouquetProps) => {
                       Choose Materials & Presentation
                     </h2>
                     <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto">
-                      {isEarlyAccess
+                      {isEarlyAccessStock
                         ? "Wrapping is locked to pink cotton for this giveaway stock."
                         : "Pick at least one wrap, ribbon, or add-on. Wrapping and ribbon are one choice each; add-ons can be combined."}
                     </p>

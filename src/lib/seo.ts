@@ -161,6 +161,18 @@ const pages: Record<string, PageSeo> = {
       "Design a custom mini bouquet for your Made You Blush early-access giveaway claim.",
     path: "/early-access/monthly-mini/build",
   },
+  "/early-access/three-month-mini": {
+    title: `Early Access 3-Month Mini Subscription | ${siteConfig.name}`,
+    description:
+      "Invite-only early access: claim a complimentary 3-month mini bouquet subscription from Made You Blush. No payment required.",
+    path: "/early-access/three-month-mini",
+  },
+  "/early-access/three-month-mini/build": {
+    title: `Build Your Free Mini Bouquet | ${siteConfig.name}`,
+    description:
+      "Design a custom mini bouquet for your Made You Blush 3-month early-access giveaway claim.",
+    path: "/early-access/three-month-mini/build",
+  },
 };
 
 export function getPageSeo(pathname: string): PageSeo {

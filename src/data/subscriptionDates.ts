@@ -33,3 +33,10 @@ export function formatDisplayDate(dateStr: string): string {
     day: "numeric",
   });
 }
+
+/** Add calendar months to an ISO date (`YYYY-MM-DD`), keeping midday to avoid DST shifts. */
+export function addMonthsIso(dateStr: string, months: number): string {
+  const d = new Date(`${dateStr}T12:00:00`);
+  d.setMonth(d.getMonth() + months);
+  return toDateInputValue(d);
+}

@@ -70,6 +70,9 @@ export type FormbricksEarlyAccessFields = {
   bouquetDetails: string;
   receiverNotes?: string;
   bouquetNotes?: string;
+  /** Optional campaign id for notify emails; not mapped to Formbricks questions. */
+  giveawayId?: string;
+  monthsCount?: number;
 };
 
 export type FormbricksContactFields = {
@@ -208,8 +211,20 @@ export async function submitToFormbricksEarlyAccess(
 
   await submitFormbricksResponse({
     surveyId,
-    data: buildQuestionData(EARLY_ACCESS_QUESTION_IDS, fields),
-    metaSource: "early-access",
+    data: buildQuestionData(EARLY_ACCESS_QUESTION_IDS, {
+      name: fields.name,
+      email: fields.email,
+      phone: fields.phone,
+      deliveryAddress: fields.deliveryAddress,
+      firstDeliveryDate: fields.firstDeliveryDate,
+      bouquetSource: fields.bouquetSource,
+      bouquetDetails: fields.bouquetDetails,
+      receiverNotes: fields.receiverNotes,
+      bouquetNotes: fields.bouquetNotes,
+    }),
+    metaSource: fields.giveawayId
+      ? `early-access:${fields.giveawayId}`
+      : "early-access",
   });
 }
 

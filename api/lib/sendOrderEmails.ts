@@ -312,20 +312,36 @@ export type EarlyAccessEmailDetails = {
   bouquetDetails?: string;
   receiverNotes?: string;
   bouquetNotes?: string;
+  monthsCount?: number;
+  giveawayId?: string;
 };
 
 export function buildEarlyAccessCustomerEmail(details: EarlyAccessEmailDetails): EmailContent {
+  const isThreeMonth = (details.monthsCount ?? 1) >= 3;
   return wrapBrandedEmail({
-    title: "Early-access claim received",
-    intro: `Hi ${details.customerName || "there"}, thank you for claiming an early-access mini bouquet from ${BUSINESS_NAME}. We have your details and will follow up about delivery soon.`,
+    title: isThreeMonth
+      ? "3-month mini giveaway claim received"
+      : "Early-access claim received",
+    intro: isThreeMonth
+      ? `Hi ${details.customerName || "there"}, thank you for claiming a free 3-month mini bouquet subscription from ${BUSINESS_NAME}. We have your plan details and will follow up about deliveries soon.`
+      : `Hi ${details.customerName || "there"}, thank you for claiming an early-access mini bouquet from ${BUSINESS_NAME}. We have your details and will follow up about delivery soon.`,
     rows: [
       { label: "Name", value: details.customerName },
       { label: "Email", value: details.customerEmail },
       { label: "Phone", value: details.phone },
-      { label: "Delivery address", value: details.deliveryAddress },
-      { label: "Preferred delivery", value: details.firstDeliveryDate },
+      {
+        label: isThreeMonth ? "Delivery addresses (Month 1 / 2 / 3)" : "Delivery address",
+        value: details.deliveryAddress,
+      },
+      {
+        label: isThreeMonth ? "First delivery" : "Preferred delivery",
+        value: details.firstDeliveryDate,
+      },
       { label: "Bouquet style", value: details.bouquetSource },
-      { label: "Bouquet details", value: details.bouquetDetails },
+      {
+        label: isThreeMonth ? "3-month plan" : "Bouquet details",
+        value: details.bouquetDetails,
+      },
       { label: "About the receiver", value: details.receiverNotes },
       { label: "Notes", value: details.bouquetNotes },
     ],
@@ -337,17 +353,32 @@ export function buildEarlyAccessCustomerEmail(details: EarlyAccessEmailDetails):
 }
 
 export function buildEarlyAccessMerchantEmail(details: EarlyAccessEmailDetails): EmailContent {
+  const isThreeMonth = (details.monthsCount ?? 1) >= 3;
   return wrapBrandedEmail({
-    title: "New early-access claim",
-    intro: "Someone claimed an early-access mini bouquet. Details are below.",
+    title: isThreeMonth
+      ? "New 3-month mini giveaway claim"
+      : "New early-access claim",
+    intro: isThreeMonth
+      ? "Someone claimed a free 3-month mini bouquet subscription. Plan details (including per-month delivery addresses and notes) are below."
+      : "Someone claimed an early-access mini bouquet. Details are below.",
     rows: [
       { label: "Customer", value: details.customerName },
       { label: "Email", value: details.customerEmail },
       { label: "Phone", value: details.phone },
-      { label: "Delivery address", value: details.deliveryAddress },
-      { label: "Preferred delivery", value: details.firstDeliveryDate },
+      { label: "Giveaway", value: details.giveawayId },
+      {
+        label: isThreeMonth ? "Delivery addresses (Month 1 / 2 / 3)" : "Delivery address",
+        value: details.deliveryAddress,
+      },
+      {
+        label: isThreeMonth ? "First delivery" : "Preferred delivery",
+        value: details.firstDeliveryDate,
+      },
       { label: "Bouquet style", value: details.bouquetSource },
-      { label: "Bouquet details", value: details.bouquetDetails },
+      {
+        label: isThreeMonth ? "3-month plan" : "Bouquet details",
+        value: details.bouquetDetails,
+      },
       { label: "About the receiver", value: details.receiverNotes },
       { label: "Notes", value: details.bouquetNotes },
     ],
