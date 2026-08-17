@@ -7,10 +7,6 @@ export const CHECKOUT_BRANDING: Stripe.Checkout.SessionCreateParams.BrandingSett
   button_color: "#BF5A75",
   display_name: "Made You Blush",
   font_family: "lora",
-  logo: {
-    type: "url",
-    url: "https://www.madeyoublush.ca/images/logo-made-you-blush.png",
-  },
 };
 
 export function checkoutDeliveryNote(deliveryDate: string): Stripe.Checkout.SessionCreateParams.CustomText {
