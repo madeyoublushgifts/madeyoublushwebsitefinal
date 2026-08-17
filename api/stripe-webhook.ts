@@ -3,10 +3,12 @@ import type { Readable } from "node:stream";
 import Stripe from "stripe";
 import { resolveOrderCustomerNames } from "./lib/orderCustomerNames.js";
 import {
+  buildFailedOrderMerchantEmail,
   buildPaidOrderCustomerEmail,
   buildPaidOrderMerchantEmail,
   formatCadFromCents,
   sendCustomerAndMerchantEmails,
+  sendMerchantEmail,
 } from "./lib/sendOrderEmails.js";
 
 export const config = {
@@ -53,7 +55,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: `Webhook Error: ${message}` });
   }
 
-  if (event.type !== "checkout.session.completed") {
+  const isPaidFulfillment =
+    event.type === "checkout.session.completed" ||
+    event.type === "checkout.session.async_payment_succeeded";
+  const isFailedAsync = event.type === "checkout.session.async_payment_failed";
+
+  if (!isPaidFulfillment && !isFailedAsync) {
     return res.status(200).json({ received: true, ignored: event.type });
   }
 
@@ -116,6 +123,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       handlingFeeLabel,
       sessionId: session.id,
     };
+
+    if (isFailedAsync) {
+      const merchantEmailContent = buildFailedOrderMerchantEmail(details);
+      await sendMerchantEmail({
+        subject: `Payment failed — ${customerName}`,
+        html: merchantEmailContent.html,
+        text: merchantEmailContent.text,
+        idempotencyKey: `order-failed-${session.id}`,
+      });
+      return res.status(200).json({ received: true, emailed: "failed" });
+    }
 
     const customerEmailContent = buildPaidOrderCustomerEmail(details);
     const merchantEmailContent = buildPaidOrderMerchantEmail(details);

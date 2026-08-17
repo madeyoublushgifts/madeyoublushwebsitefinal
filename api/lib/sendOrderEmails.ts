@@ -108,6 +108,40 @@ export async function sendCustomerAndMerchantEmails({
   };
 }
 
+export async function sendMerchantEmail({
+  subject,
+  html,
+  text,
+  idempotencyKey,
+}: {
+  subject: string;
+  html: string;
+  text: string;
+  idempotencyKey?: string;
+}): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY is not configured.");
+  }
+
+  const resend = new Resend(apiKey);
+  const result = await resend.emails.send(
+    {
+      from: getFromAddress(),
+      to: [getMerchantNotifyEmail()],
+      replyTo: getReplyTo(),
+      subject,
+      html,
+      text,
+    },
+    idempotencyKey ? { idempotencyKey } : undefined
+  );
+
+  if (result.error) {
+    throw new Error(`Merchant email failed: ${result.error.message}`);
+  }
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -276,6 +310,26 @@ export function buildPaidOrderCustomerEmail(details: OrderEmailDetails): EmailCo
     footerNote:
       "We will be in touch if we need anything before delivery. Reply to this email anytime with questions.",
     reasonLine: DEFAULT_CUSTOMER_REASON,
+  });
+}
+
+export function buildFailedOrderMerchantEmail(details: OrderEmailDetails): EmailContent {
+  return wrapBrandedEmail({
+    title: "Payment failed",
+    intro: "A delayed checkout payment (for example Klarna) did not complete. The customer was not charged.",
+    rows: [
+      { label: "Customer", value: details.customerName },
+      { label: "Email", value: details.customerEmail },
+      ...recipientRows(details),
+      { label: "Phone", value: details.phone },
+      { label: "Delivery address", value: details.address },
+      { label: "Delivery date", value: details.deliveryDate },
+      { label: "Order summary", value: details.orderSummary },
+      { label: "Amount", value: details.amountLabel },
+      { label: "Stripe session", value: details.sessionId },
+    ],
+    footerNote: `Merchant notification for ${BUSINESS_NAME} (${SERVICE_AREA}).`,
+    reasonLine: DEFAULT_MERCHANT_REASON,
   });
 }
 

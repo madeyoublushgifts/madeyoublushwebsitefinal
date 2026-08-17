@@ -6,6 +6,7 @@ import {
 } from "./lib/orderFees.js";
 import { getBouquetTier } from "./lib/bouquetTiers.js";
 import { priceBuildBouquetCents } from "./lib/catalogPrices.js";
+import { CHECKOUT_BRANDING, checkoutDeliveryNote } from "./lib/stripeCheckoutAppearance.js";
 
 const SITE_URL = (process.env.VITE_SITE_URL ?? process.env.SITE_URL ?? "https://www.madeyoublush.ca").replace(
   /\/$/,
@@ -179,6 +180,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_email: email.trim(),
+      integration_identifier: "myb_order_n4k8qm2p",
+      branding_settings: CHECKOUT_BRANDING,
+      custom_text: checkoutDeliveryNote(deliveryDate),
+      payment_intent_data: {
+        receipt_email: email.trim(),
+        description: `Made You Blush order · ${purchaserName} · Delivery ${deliveryDate}`,
+      },
       line_items: [
         ...pricedItems.map((item) => ({
           quantity: 1,

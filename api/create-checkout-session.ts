@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
+import { CHECKOUT_BRANDING, checkoutDeliveryNote } from "./lib/stripeCheckoutAppearance.js";
 
 type Cadence = "biweekly" | "monthly" | "annual";
 
@@ -117,6 +118,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer_email: email.trim(),
+      integration_identifier: "myb_subsc_r7w3ld9c",
+      branding_settings: CHECKOUT_BRANDING,
+      custom_text: checkoutDeliveryNote(deliveryDate),
       line_items: [
         {
           quantity: 1,

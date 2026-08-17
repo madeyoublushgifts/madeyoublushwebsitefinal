@@ -1,5 +1,5 @@
-/** Handling fee: 3% of subtotal + $0.30 CAD */
-export const HANDLING_FEE_PERCENT = 0.03;
+/** Handling fee: 4% of subtotal + $0.30 CAD */
+export const HANDLING_FEE_PERCENT = 0.04;
 export const HANDLING_FEE_FIXED_CENTS = 30;
 
 /** Customer-facing label (formula kept internal via HANDLING_FEE_PERCENT / HANDLING_FEE_FIXED_CENTS). */
